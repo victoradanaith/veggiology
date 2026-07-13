@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Veggiology — Cafe Menu</title>
+<style>
+  :root{
+    --ink:#14301F;
+    --paper:#F4F7F0;
+    --card:#FFFFFF;
+    --leaf:#3E7C4F;
+    --line:#DCE5D8;
+    --muted:#5C6B5E;
+    --beet:#B23A5E;
+    --carrot:#D97D2E;
+    --matcha:#7A9B4E;
+    --citrus:#E8A13C;
+    --radius:18px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans Thai",sans-serif;
+    background:var(--paper);color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+  }
+  .serif{font-family:Georgia,"Times New Roman",serif}
+
+  /* ---------- Header ---------- */
+  header{padding:28px 20px 10px;text-align:center}
+  .wordmark{font-size:26px;letter-spacing:.28em;font-weight:700}
+  .wordmark span{color:var(--leaf)}
+  .tagline{font-size:12.5px;color:var(--muted);margin-top:6px;font-style:italic}
+
+  /* ---------- Category chips ---------- */
+  nav{
+    position:sticky;top:0;z-index:10;background:var(--paper);
+    padding:12px 0 12px;border-bottom:1px solid var(--line);
+  }
+  .chips{display:flex;gap:8px;overflow-x:auto;padding:0 20px;scrollbar-width:none}
+  .chips::-webkit-scrollbar{display:none}
+  .chip{
+    flex:0 0 auto;padding:8px 16px;border-radius:999px;font-size:13.5px;
+    border:1px solid var(--line);background:var(--card);color:var(--ink);
+    cursor:pointer;transition:all .18s;
+  }
+  .chip.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+
+  /* ---------- Grid ---------- */
+  main{padding:18px 16px 60px;max-width:860px;margin:0 auto}
+  .count{font-size:12px;color:var(--muted);margin:2px 4px 12px}
+  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+  @media(min-width:640px){.grid{grid-template-columns:repeat(3,1fr)}}
+
+  .card{
+    background:var(--card);border-radius:var(--radius);overflow:hidden;
+    border:1px solid var(--line);cursor:pointer;
+    transition:transform .18s, box-shadow .18s;
+    text-align:left;padding:0;display:block;width:100%;
+  }
+  .card:active{transform:scale(.97)}
+  @media(hover:hover){.card:hover{transform:translateY(-3px);box-shadow:0 10px 24px rgba(20,48,31,.12)}}
+  .card:focus-visible{outline:3px solid var(--leaf);outline-offset:2px}
+
+  .photo{aspect-ratio:1/1;position:relative;display:flex;align-items:center;justify-content:center}
+  .photo .glass{font-size:44px;filter:saturate(1.1)}
+  .photo .ph-note{
+    position:absolute;bottom:8px;right:10px;font-size:9px;letter-spacing:.08em;
+    color:rgba(255,255,255,.85);text-transform:uppercase;
+  }
+  .card-body{padding:12px 13px 14px}
+  .card-name{font-size:14.5px;font-weight:700;line-height:1.25}
+  .card-cat{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:3px}
+  .card-foot{display:flex;justify-content:space-between;align-items:center;margin-top:9px}
+  .price{font-size:14px;font-weight:700}
+  .price small{font-weight:400;color:var(--muted)}
+  .badges{display:flex;gap:4px}
+  .badge{
+    font-size:9px;font-weight:700;letter-spacing:.05em;padding:3px 7px;border-radius:999px;
+    background:#EAF2E6;color:var(--leaf);text-transform:uppercase;
+  }
+  .badge.video{background:#FDF1E3;color:var(--carrot)}
+
+  /* ---------- Modal (bottom sheet) ---------- */
+  .backdrop{
+    position:fixed;inset:0;background:rgba(20,48,31,.45);backdrop-filter:blur(3px);
+    opacity:0;pointer-events:none;transition:opacity .25s;z-index:50;
+  }
+  .backdrop.open{opacity:1;pointer-events:auto}
+  .sheet{
+    position:fixed;left:0;right:0;bottom:0;z-index:60;
+    background:var(--card);border-radius:26px 26px 0 0;
+    max-height:88dvh;overflow-y:auto;
+    transform:translateY(105%);transition:transform .32s cubic-bezier(.32,.72,.28,1);
+    max-width:640px;margin:0 auto;
+  }
+  .sheet.open{transform:translateY(0)}
+  .grab{width:42px;height:5px;border-radius:99px;background:var(--line);margin:10px auto 0}
+  .close{
+    position:absolute;top:14px;right:16px;width:34px;height:34px;border-radius:50%;
+    border:none;background:var(--paper);color:var(--ink);font-size:17px;cursor:pointer;z-index:2;
+  }
+  .m-photo{height:190px;display:flex;align-items:center;justify-content:center;margin:14px 18px 0;border-radius:18px;position:relative}
+  .m-photo .glass{font-size:74px}
+  .m-body{padding:18px 22px 34px}
+  .m-cat{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .m-name{font-size:24px;font-weight:800;margin-top:4px;line-height:1.15}
+  .m-badges{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
+  .m-badges .badge{font-size:10.5px;padding:5px 11px}
+
+  .benefits{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px}
+  .benefit{
+    font-size:12px;padding:6px 12px;border-radius:999px;
+    border:1px solid var(--line);color:var(--ink);background:var(--paper);
+  }
+  .sec{margin-top:20px}
+  .sec h3{font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:9px}
+  .ing{font-size:14.5px;line-height:1.85;color:var(--ink)}
+  .org-note{font-size:11.5px;color:var(--muted);margin-top:8px}
+  .org-note b{color:var(--leaf)}
+
+  .sizes{display:flex;flex-direction:column;gap:8px}
+  .size-row{
+    display:flex;justify-content:space-between;align-items:center;
+    background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:11px 15px;
+    font-size:14.5px;
+  }
+  .size-row b{font-size:15.5px}
+  .fresh{
+    margin-top:16px;display:flex;align-items:center;gap:10px;
+    font-size:12.5px;color:var(--muted);border-top:1px dashed var(--line);padding-top:14px;
+  }
+  .fresh .dot{width:9px;height:9px;border-radius:50%;background:var(--leaf);flex:0 0 auto}
+
+  .video-wrap{
+    margin-top:8px;aspect-ratio:16/9;border-radius:14px;overflow:hidden;
+    background:#000;border:1px solid var(--line);position:relative;
+  }
+  .video-wrap iframe{width:100%;height:100%;border:0;display:block}
+  .video-facade{width:100%;height:100%;padding:0;border:0;cursor:pointer;position:relative;background:#000;display:block}
+  .video-facade img{width:100%;height:100%;object-fit:cover;opacity:.85}
+  .video-facade .play{
+    position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+    width:62px;height:44px;border-radius:12px;background:rgba(20,48,31,.92);
+    display:flex;align-items:center;justify-content:center;
+    color:#fff;font-size:20px;
+  }
+  .vat{font-size:11px;color:var(--muted);text-align:center;margin-top:18px}
+
+  footer{padding:34px 20px 46px;text-align:center;font-size:12px;color:var(--muted);border-top:1px solid var(--line)}
+  footer .q{font-style:italic;max-width:420px;margin:0 auto 8px;line-height:1.7}
+
+  @media(prefers-reduced-motion:reduce){
+    *{transition:none !important}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wordmark serif">VEGGI<span>OLOGY</span></div>
+  <div class="tagline">Organic fruits &amp; vegetables from local farmers</div>
+</header>
+
+<nav><div class="chips" id="chips"></div></nav>
+
+<main>
+  <div class="count" id="count"></div>
+  <div class="grid" id="grid"></div>
+</main>
+
+<footer>
+  <div class="q serif">"อาหารไม่ใช่สิ่งที่กินแก้หิวเท่านั้น แต่อาหารคือชีวิตทั้งชีวิตของเรา"</div>
+  <div>Veggiology Cafe · menu.veggiology.com</div>
+</footer>
+
+<div class="backdrop" id="backdrop"></div>
+<div class="sheet" id="sheet" role="dialog" aria-modal="true">
+  <div class="grab"></div>
+  <button class="close" id="closeBtn" aria-label="Close">✕</button>
+  <div id="sheetContent"></div>
+</div>
+
+<script>
+/* ── Menu data — in production this loads from the Google Sheet ── */
+const MENU = [
+ {cat:"Cold-Pressed Juice",name:"Gravity Green",emoji:"🥬",color:"linear-gradient(150deg,#4E8A5A,#2E5D3C)",
+  benefits:["Detoxifying","Antioxidant","Anticancer"],
+  ing:[["Thai Watercress",1],["Green Cos",1],["Parsley",0],["Celery",1],["Cucumber",1],["Granny Smith Apple",0],["Passion Fruit",1]],
+  sizes:[["260 ml","180.-"],["500 ml","290.-"]],fresh:"Bold Veggie · consume within 2 days",tags:["Vegan"],video:"MzU7Or34fXI"},
+
+ {cat:"Cold-Pressed Juice",name:"Happy Cells",emoji:"🥕",color:"linear-gradient(150deg,#E8963C,#C96A20)",
+  benefits:["Glow Skin","Good Eyesight","Colon Cleanser"],
+  ing:[["Carrot",1],["Honey Pear",0],["Granny Smith Apple",0],["Passion Fruit",1],["Chia Seeds",1]],
+  sizes:[["260 ml","180.-"],["500 ml","290.-"]],fresh:"Fresh Fruit · consume within 4 days",tags:["Vegan"],video:"MzU7Or34fXI"},
+
+ {cat:"Cold-Pressed Juice",name:"Unicorn Milk",emoji:"🌸",color:"linear-gradient(150deg,#D46A8C,#A93A62)",
+  benefits:["Skin Glowing","Increase Red Blood Cell","Healthy Heart & Bone"],
+  ing:[["Cashew",1],["Sprouted Almond",0],["Beetroot",1],["Coconut Water",1],["Coconut Flower Nectar",1],["Alkaline Water",0]],
+  sizes:[["260 ml","180.-"],["500 ml","290.-"]],fresh:"Smooth Plant Milk · consume within 2 days",tags:["Vegan"],video:"MzU7Or34fXI"},
+
+ {cat:"Slushies",name:"Pure Double Orange Slushie",emoji:"🍊",color:"linear-gradient(150deg,#F2A93B,#E07A1F)",
+  benefits:["Immune Booster","100% Freshly Squeezed"],
+  ing:[["Honey Murcott Orange Juice",0],["Navel Orange Juice",0],["Cold-Pressed Apple Juice",0],["House-Made Candied Orange",0],["Wild Honey & Chia Seeds Jelly",1],["Thyme Leaf",0]],
+  sizes:[["Regular","250.-"]],fresh:"Citrus variety may vary by season",tags:[]},
+
+ {cat:"Thick Smoothies",name:"Earth Rhapsody",emoji:"🫐",color:"linear-gradient(150deg,#6B4E8E,#43305F)",
+  benefits:["Antioxidant","Heart Health"],
+  ing:[["Beetroot",1],["Cacao",1],["Watercress",1],["Blueberry",0],["Dates",0],["Banana",1],["Golden Flaxseed",1],["Housemade Sprouted Almond Milk",0]],
+  sizes:[["Regular","195.-"]],fresh:"Blended to order",tags:["Vegan"]},
+
+ {cat:"Smoothie Bowls",name:"Island Blessing",emoji:"🥥",color:"linear-gradient(150deg,#C9B08A,#9C7F55)",
+  benefits:["Energy","Healthy Fats"],
+  ing:[["Cashew",1],["Coconut Water",1],["Coconut Meat",1],["Banana",1],["Housemade Almond Butter",0],["Housemade Almond Milk",0],["Himalayan Pink Salt",0],["Vanilla",0]],
+  sizes:[["Bowl","290.-"]],fresh:"Topped with dried figs, puffed rice, perilla seeds & granola shot",tags:["Vegan"]},
+
+ {cat:"Matcha",name:"Coco Matcha",emoji:"🍵",color:"linear-gradient(150deg,#8CAB5E,#5F7C38)",
+  benefits:["Clean Energy","Focus & Balance","Radiant Skin"],
+  ing:[["Signature Matcha Blend",0],["Young Coconut Water — cracked fresh",1]],
+  sizes:[["Regular","185.-"]],fresh:"Our signature",tags:["Vegan"]},
+
+ {cat:"Salads",name:"Citrus Teriyaki Chicken Salad",emoji:"🥗",color:"linear-gradient(150deg,#7BA05B,#4C6E33)",
+  benefits:["High Protein","Antibiotic-Free Chicken"],
+  ing:[["Teriyaki Chicken Breast",0],["Navel Orange",0],["Salad Greens",1],["Wild Rocket",0],["Baby Spinach",0],["Sunflower Sprouts",1],["Cherry Tomatoes",1],["Honey Pear",0],["Toasted Sprouted Almond",0]],
+  sizes:[["Regular","360.-"]],fresh:"Housemade teriyaki sauce",tags:[]},
+
+ {cat:"Noodles",name:"Egg Noodles · Spicy Korean Chicken",emoji:"🍜",color:"linear-gradient(150deg,#C75B45,#963A28)",
+  benefits:["Additive-Free Noodles","Hormone-Free Chicken"],
+  ing:[["Additive-free Egg Noodles",0],["Korean-Style Chicken Breast",0],["Housemade Spicy Korean Sauce",0],["Carrot",1],["Pak Choi",1],["Sweet Corn",1],["Onsen Egg",1]],
+  sizes:[["Regular","180.-"]],fresh:"Spice level: medium",tags:[]},
+
+ {cat:"Desserts",name:"Unbaked Brownies",emoji:"🍫",color:"linear-gradient(150deg,#6E4B33,#472C1B)",
+  benefits:["No Sugar","House Made"],
+  ing:[["Cashew",1],["Almond",0],["Cashew Milk",1],["Dates",0],["Cocoa Powder",0],["Himalayan Pink Salt",0]],
+  sizes:[["Piece","75.-"]],fresh:"With chocolate ganache",tags:["Vegan","Gluten-Free"]},
+];
+
+const cats = ["All", ...new Set(MENU.map(m=>m.cat))];
+const chipsEl=document.getElementById('chips'),grid=document.getElementById('grid'),
+      countEl=document.getElementById('count'),backdrop=document.getElementById('backdrop'),
+      sheet=document.getElementById('sheet'),sheetContent=document.getElementById('sheetContent');
+let active="All", lastFocus=null;
+
+function renderChips(){
+  chipsEl.innerHTML = cats.map(c=>
+    `<button class="chip ${c===active?'active':''}" onclick="setCat('${c}')">${c}</button>`).join('');
+}
+function setCat(c){active=c;renderChips();renderGrid();}
+function renderGrid(){
+  const items = MENU.filter(m=>active==="All"||m.cat===active);
+  countEl.textContent = `${items.length} items · prices exclude 7% VAT`;
+  grid.innerHTML = items.map(m=>{
+    const i = MENU.indexOf(m);
+    return `<button class="card" onclick="openItem(${i})">
+      <div class="photo" style="background:${m.color}">
+        <div class="glass">${m.emoji}</div>
+        <div class="ph-note">photo</div>
+      </div>
+      <div class="card-body">
+        <div class="card-name">${m.name}</div>
+        <div class="card-cat">${m.cat}</div>
+        <div class="card-foot">
+          <div class="price">${m.sizes[0][1].replace('.-','')}<small>.-</small></div>
+          <div class="badges">
+            ${m.video?'<span class="badge video">▶ story</span>':''}
+            ${m.tags.map(t=>`<span class="badge">${t}</span>`).join('')}
+          </div>
+        </div>
+      </div>
+    </button>`;
+  }).join('');
+}
+function openItem(i){
+  const m=MENU[i];
+  lastFocus=document.activeElement;
+  sheetContent.innerHTML=`
+    <div class="m-photo" style="background:${m.color}">
+      <div class="glass">${m.emoji}</div>
+      <div class="ph-note">photo placeholder — real photo goes here</div>
+    </div>
+    <div class="m-body">
+      <div class="m-cat">${m.cat}</div>
+      <h2 class="m-name serif">${m.name}</h2>
+      <div class="m-badges">
+        ${m.tags.map(t=>`<span class="badge">${t}</span>`).join('')}
+      </div>
+      <div class="benefits">${m.benefits.map(b=>`<span class="benefit">${b}</span>`).join('')}</div>
+      <div class="sec">
+        <h3>Ingredients</h3>
+        <div class="ing">${m.ing.map(([n,org])=>org?`<b style="color:var(--leaf)">*</b>${n}`:n).join(' · ')}</div>
+        <div class="org-note"><b>*</b> Organic ingredient</div>
+      </div>
+      <div class="sec">
+        <h3>Size &amp; Price</h3>
+        <div class="sizes">${m.sizes.map(([s,p])=>`<div class="size-row"><span>${s}</span><b>${p}</b></div>`).join('')}</div>
+      </div>
+      <div class="fresh"><span class="dot"></span>${m.fresh}</div>
+      ${m.video?`<div class="sec"><h3>The story of this drink</h3><div class="video-wrap"><button class="video-facade" onclick="playVideo(this,'${m.video}')" aria-label="Play video"><img src="https://img.youtube.com/vi/${m.video}/hqdefault.jpg" alt="${m.name} video"><span class="play">▶</span></button></div></div>`:''}
+      <div class="vat">All prices are subject to 7% VAT · ราคานี้ยังไม่รวมภาษีมูลค่าเพิ่ม 7%</div>
+    </div>`;
+  backdrop.classList.add('open');sheet.classList.add('open');
+  document.body.style.overflow='hidden';
+  document.getElementById('closeBtn').focus();
+}
+function closeItem(){
+  backdrop.classList.remove('open');sheet.classList.remove('open');
+  document.body.style.overflow='';
+  if(lastFocus)lastFocus.focus();
+}
+function playVideo(btn,id){
+  if(location.protocol==='file:'){
+    // Local preview: YouTube blocks embeds without a real origin — open on YouTube instead
+    window.open('https://youtu.be/'+id,'_blank');
+    return;
+  }
+  btn.parentElement.innerHTML =
+    `<iframe src="https://www.youtube-nocookie.com/embed/${id}?autoplay=1" title="Menu story video" `+
+    `allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen `+
+    `referrerpolicy="strict-origin-when-cross-origin"></iframe>`;
+}
+backdrop.onclick=closeItem;
+document.getElementById('closeBtn').onclick=closeItem;
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeItem();});
+
+renderChips();renderGrid();
+</script>
+</body>
+</html>
