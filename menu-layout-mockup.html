@@ -1,0 +1,443 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Veggiology — Cafe Menu Layout Mockup</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Archivo:wght@700;800&family=Prompt:wght@300;500&display=swap" rel="stylesheet">
+<style>
+  /*
+    หมายเหตุฟอนต์: PP Woodland และ TT Drugs เป็นฟอนต์ลิขสิทธิ์ของแบรนด์ (โหลดจาก wixstatic
+    ไม่ได้เมื่อเปิดไฟล์นี้แบบ local เพราะมีการล็อก referrer ไว้กับโดเมนจริงเท่านั้น)
+    ม็อคอัพนี้จึงใช้ฟอนต์ทดแทนที่บุคลิกใกล้เคียงจาก Google Fonts แทน:
+      PP Woodland  -> Fraunces (900)   ตัวเซอริฟหนา โค้งมน ใกล้เคียงบุคลิก display เดิม
+      TT Drugs     -> Archivo (800)    กรอเทสก์หนา ใช้กับปุ่ม/ป้ายราคา/แท็กสั้นๆ
+      Prompt Light/Medium -> Prompt (300/500) ฟอนต์เดียวกับของจริง มีบน Google Fonts ตรงตัว
+    เมื่อขึ้นเว็บจริงให้สลับกลับไปใช้ไฟล์ฟอนต์ลิขสิทธิ์จาก wixstatic ตามปกติ
+  */
+  :root{
+    --vgl-black:#000000;
+    --vgl-white:#ffffff;
+    --vgl-off-white:#F7F0E2;
+    --vgl-card:#FBF6EA;
+    --vgl-sky:#A9D5E4; --vgl-sage:#BACD9A; --vgl-coral:#FABDA2; --vgl-yellow:#FFDE9A;
+    --vgl-special-bg:#CBB393;
+    --vgl-special-card:#E1D0B4;
+    --vgl-grey:#949593; --vgl-hairline:rgba(0,0,0,.14);
+    --font-display:"Fraunces", Georgia, serif;
+    --font-accent:"Archivo","Arial Narrow",sans-serif;
+    --font-ui-light:"Prompt",Arial,sans-serif;
+    --font-ui-medium:"Prompt",Arial,sans-serif;
+    --page-max:1180px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--vgl-off-white);color:var(--vgl-black);font-family:var(--font-ui-light);font-weight:300;line-height:1.6}
+  .container{max-width:var(--page-max);margin:auto;padding:0 24px}
+
+  .nav{padding:24px 0;text-align:center;border-bottom:1px solid var(--vgl-hairline);background:var(--vgl-off-white)}
+  .nav img.logo{height:40px;width:auto}
+  .tagline{margin-top:8px;font-size:13px;font-family:var(--font-ui-light);color:#6b6b68}
+
+  .cat-nav{position:sticky;top:0;z-index:50;background:var(--vgl-off-white);border-bottom:1px solid var(--vgl-hairline);box-shadow:0 1px 0 rgba(0,0,0,.02)}
+  .cat-nav-inner{display:flex;gap:8px;overflow-x:auto;padding:12px 24px;-ms-overflow-style:none;scrollbar-width:none}
+  .cat-nav-inner::-webkit-scrollbar{display:none}
+  .cat-nav a{flex:none;display:inline-flex;align-items:center;gap:6px;font-family:var(--font-accent);font-weight:800;font-size:11.5px;letter-spacing:.04em;text-transform:uppercase;text-decoration:none;color:var(--vgl-black);padding:8px 16px;border:1px solid var(--vgl-hairline);border-radius:999px;white-space:nowrap;background:var(--vgl-card);transition:background .15s,color .15s}
+  .cat-nav a:hover{background:var(--vgl-black);color:var(--vgl-off-white)}
+  .cat-nav a .swatch{width:8px;height:8px;border-radius:50%;flex:none}
+  .cat-nav .divider{flex:none;width:1px;background:var(--vgl-hairline);margin:4px 4px}
+
+  .eyebrow{font-family:var(--font-accent);font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase}
+
+  .item-name{font-family:var(--font-accent);font-weight:800;font-size:16px;margin:0 0 4px;letter-spacing:.005em}
+  .item-cat{font-family:var(--font-ui-medium);font-weight:500;font-size:11px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:10px}
+  .price{font-family:var(--font-accent);font-weight:800;font-size:15px}
+
+  .special{background:var(--vgl-special-bg);color:var(--vgl-off-white);padding:56px 0}
+  .special .eyebrow{color:var(--vgl-black);margin-bottom:6px}
+  .special h2{font-family:var(--font-display);font-size:34px;font-weight:800;margin:0 0 6px;letter-spacing:.01em;color:var(--vgl-black)}
+  .special p.sub{margin:0 0 14px;font-size:14px;font-family:var(--font-ui-light);color:rgba(0,0,0,.62)}
+  .special .card-note{margin:0 0 26px;font-size:12px;font-family:var(--font-ui-light);color:rgba(0,0,0,.5);font-style:italic}
+  .special-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+  .special-card{background:var(--vgl-special-card);border:1px solid rgba(0,0,0,.12);border-radius:16px;padding:20px}
+  .special-card .item-name,.special-card .item-cat{color:var(--vgl-black)}
+  .special-card .item-cat{color:rgba(0,0,0,.6);display:flex;align-items:center}
+  .dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px;vertical-align:1px}
+  .special-card .photo{width:100%;aspect-ratio:1/1;border-radius:10px;background:rgba(0,0,0,.1);display:flex;align-items:center;justify-content:center;font-family:var(--font-ui-medium);font-size:11px;letter-spacing:.1em;color:rgba(0,0,0,.4);margin-bottom:14px}
+
+  .theme{padding:56px 0;background:var(--vgl-off-white)}
+  .theme > .container > .eyebrow{color:#8a8a86;margin-bottom:6px}
+  .theme > .container > h2{font-family:var(--font-display);font-size:30px;font-weight:800;margin:0 0 6px}
+  .theme > .container > p.sub{margin:0 0 32px;font-size:14px;font-family:var(--font-ui-light);color:#6b6b68;max-width:600px}
+
+  .theme-block{margin-bottom:26px;border-radius:18px;padding:24px 22px;overflow:hidden;scroll-margin-top:76px}
+  .theme-block-head{display:flex;align-items:baseline;gap:10px;margin-bottom:18px}
+  .theme-block-head .name{font-family:var(--font-display);font-size:22px;font-weight:800;color:var(--vgl-black)}
+  .theme-block-head .desc{font-family:var(--font-ui-medium);font-size:12px;color:rgba(0,0,0,.55)}
+  .theme-items{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  .theme-card{position:relative;background:rgba(255,255,255,.55);border-radius:14px;padding:18px 14px 16px;min-height:150px;display:flex;flex-direction:column;justify-content:flex-end;align-items:center}
+  .theme-card .stock-dot{position:absolute;top:12px;left:12px;width:7px;height:7px;border-radius:50%;background:#3F8C4A}
+  .theme-card .photo-mark{width:44px;aspect-ratio:1/1;margin:0 auto 12px;background:rgba(0,0,0,.14);border-radius:8px}
+  .theme-card .item-name{font-size:14px;text-align:center;color:var(--vgl-black);margin-bottom:2px}
+  .theme-card .item-cat{display:none}
+  .theme-card .price{color:var(--vgl-black)}
+
+  .menu{padding:60px 0 90px;background:var(--vgl-off-white)}
+  .menu-head{margin-bottom:36px}
+  .menu-head h2{font-family:var(--font-display);font-size:30px;font-weight:800;margin:0 0 6px}
+  .menu-head p{margin:0;font-size:14px;font-family:var(--font-ui-light);color:#6b6b68}
+
+  .cat-block{margin-bottom:44px;scroll-margin-top:76px}
+  .cat-divider{display:flex;align-items:center;gap:14px;margin-bottom:22px}
+  .cat-divider .rule{flex:1;height:1px;background:var(--vgl-hairline)}
+  .cat-divider .label{font-family:var(--font-accent);font-size:13px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--vgl-black);white-space:nowrap}
+  .cat-count{font-size:12px;font-family:var(--font-ui-light);color:var(--vgl-grey);white-space:nowrap}
+
+  .item-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+  .item-card{border:1px solid var(--vgl-hairline);border-radius:14px;padding:14px;background:var(--vgl-card)}
+  .item-card .photo{width:100%;aspect-ratio:1/1;border-radius:8px;background:#EFE7D4;display:flex;align-items:center;justify-content:center;font-family:var(--font-ui-medium);font-size:10px;letter-spacing:.1em;color:#a8a7a1;margin-bottom:12px}
+  .item-card .item-cat{color:var(--vgl-grey)}
+  .item-card .row{display:flex;justify-content:space-between;align-items:center}
+  .tags{display:flex;gap:6px;margin-top:8px}
+  .tag{font-family:var(--font-accent);font-size:9px;font-weight:800;letter-spacing:.06em;padding:3px 7px;background:var(--vgl-yellow);border-radius:20px}
+
+  .legend{display:flex;gap:18px;align-items:center;margin-top:6px;font-family:var(--font-ui-light);font-size:11.5px;color:#6b6b68;flex-wrap:wrap}
+  .legend span{display:flex;align-items:center;gap:6px}
+
+  [data-item]{cursor:pointer;transition:transform .15s ease,box-shadow .15s ease}
+  [data-item]:hover{transform:translateY(-3px)}
+  [data-item]:focus-visible{outline:2px solid var(--vgl-black);outline-offset:2px}
+
+  .modal-backdrop{display:none;position:fixed;inset:0;background:rgba(20,16,10,.55);z-index:200;align-items:center;justify-content:center;padding:24px}
+  .modal-backdrop.open{display:flex}
+  .modal{background:var(--vgl-off-white);border-radius:22px;max-width:520px;width:100%;max-height:88vh;overflow-y:auto;position:relative}
+  .modal-close{position:absolute;top:14px;right:14px;width:32px;height:32px;border-radius:50%;border:1px solid var(--vgl-hairline);background:var(--vgl-card);font-size:18px;line-height:1;cursor:pointer;color:var(--vgl-black);z-index:2}
+  .modal-photo{width:100%;aspect-ratio:1/1;background:#EFE7D4;display:flex;align-items:center;justify-content:center;font-family:var(--font-ui-medium);font-size:12px;letter-spacing:.1em;color:#a8a7a1;border-radius:22px 22px 0 0}
+  .modal-body{padding:22px 24px 28px}
+  .modal-cat{font-family:var(--font-ui-medium);font-weight:500;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--vgl-grey);margin:0 0 4px}
+  .modal-name{font-family:var(--font-display);font-size:26px;font-weight:800;margin:0 0 10px}
+  .modal-price-row{display:flex;align-items:baseline;gap:10px;margin-bottom:16px}
+  .modal-size{font-family:var(--font-ui-light);font-size:12px;color:var(--vgl-grey)}
+  .modal-desc{font-size:14px;font-family:var(--font-ui-light);color:#4a4a47;margin:0 0 20px}
+  .modal-section{margin-bottom:18px}
+  .modal-label{font-family:var(--font-accent);font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;margin:0 0 8px;color:var(--vgl-black)}
+  .modal-ingredients{margin:0;padding:0;list-style:none;display:flex;flex-wrap:wrap;gap:6px}
+  .modal-ingredients li{font-family:var(--font-ui-light);font-size:12px;background:var(--vgl-card);border:1px solid var(--vgl-hairline);padding:4px 10px;border-radius:20px}
+  .modal-origin{font-size:13px;font-family:var(--font-ui-light);color:#4a4a47;margin:0}
+  .modal-video{aspect-ratio:16/9;background:#1c1a16;color:rgba(255,255,255,.75);border-radius:12px;display:flex;align-items:center;justify-content:center;gap:8px;font-size:12px;font-family:var(--font-ui-medium)}
+  .modal-video .play{width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.16);display:flex;align-items:center;justify-content:center;font-size:11px}
+
+  @media (max-width:900px){
+    .special-grid{grid-template-columns:repeat(2,1fr)}
+    .theme-items{grid-template-columns:repeat(2,1fr)}
+    .item-grid{grid-template-columns:repeat(2,1fr)}
+  }
+</style>
+</head>
+<body>
+
+  <header class="nav">
+    <img class="logo" alt="Veggiology" src="https://static.wixstatic.com/media/37cc9b_54bcef155f2e4cda93b56e1da510c3d5~mv2.png/v1/fill/w_800,h_176,al_c,q_90,usm_0.66_1.00_0.01,enc_avif,quality_auto/VGL_Primary%20Logotype_P_CMYK.png">
+    <div class="tagline">Organic fruits &amp; vegetables from local farmers</div>
+  </header>
+
+  <nav class="cat-nav" aria-label="ทางลัดไปหมวดหมู่และธีม">
+    <div class="cat-nav-inner">
+      <a href="#theme-bold"><span class="swatch" style="background:var(--vgl-coral)"></span>Bold Veggie</a>
+      <a href="#theme-mild"><span class="swatch" style="background:var(--vgl-sage)"></span>Mild Veggie</a>
+      <a href="#theme-fresh"><span class="swatch" style="background:var(--vgl-sky)"></span>Fruit Fresh</a>
+      <a href="#theme-milk"><span class="swatch" style="background:var(--vgl-yellow)"></span>Plant Milk</a>
+      <span class="divider"></span>
+      <a href="#cat-juice">Cold-Pressed Juice</a>
+      <a href="#cat-slushies">Slushies</a>
+      <a href="#cat-salads">Salads</a>
+      <a href="#cat-noodles">Noodles</a>
+      <a href="#cat-desserts">Desserts</a>
+    </div>
+  </nav>
+
+  <section class="special">
+    <div class="container">
+      <div class="eyebrow">Special · เลือกโดยร้าน · ตัวอย่างโทน Earth tone</div>
+      <h2>เมนูแนะนำวันนี้</h2>
+      <p class="sub">คัดเลือกโดยแอดมิน ไม่ผูกกับหมวดหมู่ใด — พื้นหลังเปลี่ยนได้ตามธีม (ตัวอย่างนี้ใช้เอิร์ธโทนพาสเทล เช่น สีทราย/ดิน)</p>
+      <p class="card-note">กรอบสี่เหลี่ยมนี้คือ "การ์ดสินค้า" — กรอบเดียวที่รวมรูป/ชื่อ/หมวด/ราคาของเมนู 1 รายการไว้ด้วยกัน แยกแต่ละเมนูออกจากกันด้วยพื้นที่ว่างและกรอบโค้ง แทนที่จะใช้เส้นตีตาราง สีของการ์ดเป็นโทนทรายอ่อนกว่าพื้นหลัง (ไม่ใช่ off-white) เพื่อให้กลืนไปกับธีมแทนที่จะตัดกันแรง กดที่การ์ดเพื่อดูรายละเอียดเมนู</p>
+      <div class="special-grid">
+        <div class="special-card" data-item="gravity-green">
+          <div class="photo">PHOTO</div>
+          <p class="item-name">Gravity Green</p>
+          <p class="item-cat"><span class="dot" style="background:var(--vgl-coral)"></span>Cold-Pressed Juice · Bold Veggie</p>
+          <p class="price">180.-</p>
+        </div>
+        <div class="special-card" data-item="egg-noodles-spicy-korean-chicken">
+          <div class="photo">PHOTO</div>
+          <p class="item-name">Egg Noodles · Spicy Korean Chicken</p>
+          <p class="item-cat">Noodles</p>
+          <p class="price">180.-</p>
+        </div>
+        <div class="special-card" data-item="unbaked-brownies">
+          <div class="photo">PHOTO</div>
+          <p class="item-name">Unbaked Brownies</p>
+          <p class="item-cat">Desserts</p>
+          <p class="price">75.-</p>
+        </div>
+        <div class="special-card" data-item="coco-matcha">
+          <div class="photo">PHOTO</div>
+          <p class="item-name">Coco Matcha</p>
+          <p class="item-cat">Matcha</p>
+          <p class="price">185.-</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="theme">
+    <div class="container">
+      <div class="eyebrow">Theme</div>
+      <h2>เลือกตามธีมความเข้มข้น</h2>
+      <p class="sub">พรีวิวน้ำผัก 2-3 ตัวจากแต่ละธีมความเข้มข้น (สีเดียวกับหน้า Juice Menu จริง) ดูรายการครบทุกตัวได้ที่หมวด Cold-Pressed Juice ด้านล่าง</p>
+
+      <div class="theme-block" id="theme-bold" style="background:var(--vgl-coral)">
+        <div class="theme-block-head"><span class="name">Bold Veggie</span><span class="desc">ส้มอมชมพูพาสเทล · รสจัดจ้าน</span></div>
+        <div class="theme-items">
+          <div class="theme-card" data-item="gravity-green"><span class="stock-dot"></span><div class="photo-mark"></div><p class="item-name">Gravity Green</p><p class="price">180.-</p></div>
+          <div class="theme-card" data-item="mini-oasis"><span class="stock-dot"></span><div class="photo-mark"></div><p class="item-name">Mini Oasis</p><p class="price">180.-</p></div>
+          <div class="theme-card" data-item="skin-dive"><span class="stock-dot"></span><div class="photo-mark"></div><p class="item-name">Skin Dive</p><p class="price">180.-</p></div>
+          <div class="theme-card" data-item="awaken"><span class="stock-dot"></span><div class="photo-mark"></div><p class="item-name">Awaken</p><p class="price">180.-</p></div>
+        </div>
+      </div>
+
+      <div class="theme-block" id="theme-mild" style="background:var(--vgl-sage)">
+        <div class="theme-block-head"><span class="name">Mild Veggie</span><span class="desc">เขียวพาสเทล · รสอ่อนละมุน</span></div>
+        <div class="theme-items">
+          <div class="theme-card" data-item="be-kind"><span class="stock-dot"></span><div class="photo-mark"></div><p class="item-name">Be Kind</p><p class="price">180.-</p></div>
+          <div class="theme-card" data-item="neon-neuron"><span class="stock-dot"></span><div class="photo-mark"></div><p class="item-name">Neon Neuron</p><p class="price">180.-</p></div>
+          <div class="theme-card" data-item="conscious-love"><span class="stock-dot"></span><div class="photo-mark"></div><p class="item-name">Conscious Love</p><p class="price">180.-</p></div>
+          <div class="theme-card" data-item="symphony"><span class="stock-dot"></span><div class="photo-mark"></div><p class="item-name">Symphony</p><p class="price">180.-</p></div>
+        </div>
+      </div>
+
+      <div class="theme-block" id="theme-fresh" style="background:var(--vgl-sky)">
+        <div class="theme-block-head"><span class="name">Fruit Fresh</span><span class="desc">ฟ้าพาสเทล · ผลไม้สด</span></div>
+        <div class="theme-items">
+          <div class="theme-card" data-item="apple-lemon"><span class="stock-dot"></span><div class="photo-mark"></div><p class="item-name">Apple Lemon</p><p class="price">290.-</p></div>
+          <div class="theme-card" data-item="strawberry-field"><span class="stock-dot"></span><div class="photo-mark"></div><p class="item-name">Strawberry Field</p><p class="price">290.-</p></div>
+          <div class="theme-card" data-item="raspberry-rain"><span class="stock-dot"></span><div class="photo-mark"></div><p class="item-name">Raspberry Rain</p><p class="price">290.-</p></div>
+          <div class="theme-card" data-item="jerusalem-artichoke"><span class="stock-dot"></span><div class="photo-mark"></div><p class="item-name">Jerusalem Artichoke</p><p class="price">290.-</p></div>
+        </div>
+      </div>
+
+      <div class="theme-block" id="theme-milk" style="background:var(--vgl-yellow)">
+        <div class="theme-block-head"><span class="name">Smooth Plant Milk</span><span class="desc">เหลืองพาสเทล · นมพืชเนียนนุ่ม</span></div>
+        <div class="theme-items">
+          <div class="theme-card" data-item="the-3-milkyteers"><span class="stock-dot"></span><div class="photo-mark"></div><p class="item-name">The 3 Milkyteers</p><p class="price">180.-</p></div>
+          <div class="theme-card" data-item="unicorn-milk"><span class="stock-dot"></span><div class="photo-mark"></div><p class="item-name">Unicorn Milk</p><p class="price">180.-</p></div>
+          <div class="theme-card" data-item="cloud-s-milk"><span class="stock-dot"></span><div class="photo-mark"></div><p class="item-name">Cloud's Milk</p><p class="price">180.-</p></div>
+          <div class="theme-card" data-item="mermaid"><span class="stock-dot"></span><div class="photo-mark"></div><p class="item-name">Mermaid</p><p class="price">180.-</p></div>
+        </div>
+      </div>
+
+      <div class="legend">
+        <span>สีทั้ง 4 มาจากพาเลตเดิมของหน้า Juice Menu จริง (veggiology.com) ไม่ได้สร้างใหม่</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="menu">
+    <div class="container">
+      <div class="menu-head">
+        <h2>เมนูทั้งหมด</h2>
+        <p>แบ่งตามหมวดหมู่หลัก — ไม่มีสีพื้น ใช้เส้นบางและหัวข้อเล็กเป็นตัวแบ่ง การ์ดเป็นโทน off-white เข้มกว่าพื้นหลังเล็กน้อย (#FBF6EA บนพื้น #F7F0E2) ไม่ใช้ขาวล้วน</p>
+      </div>
+
+      <div class="cat-block" id="cat-juice">
+        <div class="cat-divider"><span class="label">Cold-Pressed Juice</span><span class="rule"></span><span class="cat-count">3 รายการ</span></div>
+        <div class="item-grid">
+          <div class="item-card" data-item="gravity-green"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Gravity Green</p><p class="item-cat" style="font-size:10px">Bold Veggie</p><div class="row"><span class="price">180.-</span></div></div>
+          <div class="item-card" data-item="be-kind"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Be Kind</p><p class="item-cat" style="font-size:10px">Mild Veggie</p><div class="row"><span class="price">180.-</span></div></div>
+          <div class="item-card" data-item="unicorn-milk"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Unicorn Milk</p><p class="item-cat" style="font-size:10px">Plant Milk</p><div class="row"><span class="price">180.-</span></div></div>
+        </div>
+      </div>
+
+      <div class="cat-block" id="cat-slushies">
+        <div class="cat-divider"><span class="label">Slushies</span><span class="rule"></span><span class="cat-count">1 รายการ</span></div>
+        <div class="item-grid">
+          <div class="item-card" data-item="pure-double-orange-slushie"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Pure Double Orange Slushie</p><div class="row"><span class="price">250.-</span></div></div>
+        </div>
+      </div>
+
+      <div class="cat-block" id="cat-salads">
+        <div class="cat-divider"><span class="label">Salads</span><span class="rule"></span><span class="cat-count">1 รายการ</span></div>
+        <div class="item-grid">
+          <div class="item-card" data-item="citrus-teriyaki-chicken-salad"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Citrus Teriyaki Chicken Salad</p><div class="row"><span class="price">360.-</span></div></div>
+        </div>
+      </div>
+
+      <div class="cat-block" id="cat-noodles">
+        <div class="cat-divider"><span class="label">Noodles</span><span class="rule"></span><span class="cat-count">1 รายการ</span></div>
+        <div class="item-grid">
+          <div class="item-card" data-item="egg-noodles-spicy-korean-chicken"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Egg Noodles · Spicy Korean Chicken</p><div class="row"><span class="price">180.-</span></div></div>
+        </div>
+      </div>
+
+      <div class="cat-block" id="cat-desserts">
+        <div class="cat-divider"><span class="label">Desserts</span><span class="rule"></span><span class="cat-count">1 รายการ</span></div>
+        <div class="item-grid">
+          <div class="item-card" data-item="unbaked-brownies"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Unbaked Brownies</p><div class="tags"><span class="tag">VEGAN</span><span class="tag">GF</span></div><div class="row" style="margin-top:8px"><span class="price">75.-</span></div></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="modal-backdrop" id="modalBackdrop">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalName">
+      <button class="modal-close" onclick="closeModal()" aria-label="ปิด">&times;</button>
+      <div class="modal-photo">PHOTO</div>
+      <div class="modal-body">
+        <p class="modal-cat" id="modalCat"></p>
+        <h3 class="modal-name" id="modalName"></h3>
+        <div class="modal-price-row">
+          <span class="price" id="modalPrice"></span>
+          <span class="modal-size" id="modalSize"></span>
+        </div>
+        <p class="modal-desc" id="modalDesc"></p>
+        <div class="modal-section">
+          <p class="modal-label">วัตถุดิบ</p>
+          <ul class="modal-ingredients" id="modalIngredients"></ul>
+        </div>
+        <div class="modal-section">
+          <p class="modal-label">แหล่งที่มา</p>
+          <p class="modal-origin" id="modalOrigin"></p>
+        </div>
+        <div class="modal-section">
+          <p class="modal-label">วิดีโอแนะนำเมนู</p>
+          <div class="modal-video"><span class="play">&#9654;</span> วิดีโอ (placeholder)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const ITEMS = {
+      "gravity-green": {name:"Gravity Green", cat:"Cold-Pressed Juice · Bold Veggie", price:"180.-", size:"260ml.",
+        desc:"น้ำผักเขียวรสจัดจ้าน ดื่มง่าย ให้พลังงานสดชื่นตั้งแต่คำแรก",
+        ingredients:["คื่นฉ่าย*","แตงกวา*","ผักกาดหวาน*","แอปเปิ้ลเขียว*","เลมอน*"],
+        origin:"ผักออร์แกนิกจากฟาร์มเครือข่ายภาคเหนือ คั้นสดทุกเช้า"},
+      "egg-noodles-spicy-korean-chicken": {name:"Egg Noodles · Spicy Korean Chicken", cat:"Noodles", price:"180.-", size:"1 จาน",
+        desc:"เส้นไข่ผัดซอสเกาหลีรสจัดจ้าน ใส่ไก่หมักหอมเครื่องเทศ",
+        ingredients:["เส้นไข่","อกไก่หมักซอสเกาหลี","ผักกาดขาว","ต้นหอม","งาขาว"],
+        origin:"เส้นไข่และไก่จากซัพพลายเออร์พันธมิตรในกรุงเทพฯ"},
+      "unbaked-brownies": {name:"Unbaked Brownies", cat:"Desserts", price:"75.-", size:"1 ชิ้น (40 กรัม)",
+        desc:"บราวนี่ไม่อบ วีแกน ปราศจากกลูเตน หวานจากผลไม้ล้วน",
+        ingredients:["อินทผลัมอบแห้ง","อัลมอนด์","โกโก้ผงไม่ผ่านความร้อน","เกลือหิมาลัย"],
+        origin:"อัลมอนด์และโกโก้ออร์แกนิกนำเข้า คั้น/บดสดในครัวร้าน"},
+      "coco-matcha": {name:"Coco Matcha", cat:"Matcha", price:"185.-", size:"350ml.",
+        desc:"มัทฉะเข้มข้นตัดกับความมันของนมมะพร้าว หวานน้อย",
+        ingredients:["มัทฉะเกียวโต","นมมะพร้าว","น้ำเชื่อมอกาเว่"],
+        origin:"มัทฉะเกรดพิธีการนำเข้าจากเกียวโต"},
+      "mini-oasis": {name:"Mini Oasis", cat:"Cold-Pressed Juice · Bold Veggie", price:"180.-", size:"260ml.",
+        desc:"สดชื่นละมุนคอ เหมาะกับวันอากาศร้อน",
+        ingredients:["แตงโม*","แตงกวา*","สะระแหน่*","เลมอน*"],
+        origin:"ผักผลไม้จากฟาร์มเครือข่ายภาคเหนือ"},
+      "skin-dive": {name:"Skin Dive", cat:"Cold-Pressed Juice · Bold Veggie", price:"180.-", size:"260ml.",
+        desc:"บำรุงผิวจากวิตามินซีและเบต้าแคโรทีนสูง",
+        ingredients:["แครอท*","ส้ม*","ขมิ้นชัน*","เลมอน*"],
+        origin:"ผักผลไม้จากฟาร์มเครือข่ายภาคเหนือ"},
+      "awaken": {name:"Awaken", cat:"Cold-Pressed Juice · Bold Veggie", price:"180.-", size:"260ml.",
+        desc:"ยับยั้งการเกิดมะเร็ง บำรุงหัวใจ ต้านการอักเสบ · รสเปรี้ยวนำ เบา",
+        ingredients:["เซเลอรี่*","แตงกวา*","ผักกาดหวาน*","ส้มนาเวล","เลมอน*"],
+        origin:"ผักออร์แกนิกจากฟาร์มเครือข่ายภาคเหนือ"},
+      "be-kind": {name:"Be Kind", cat:"Cold-Pressed Juice · Mild Veggie", price:"180.-", size:"260ml.",
+        desc:"บำรุงระบบความจำ บำรุงต่อมไทรอยด์ มีแคลเซียมและโฟเลตสูง",
+        ingredients:["กวางตุ้ง*","วอเตอร์เครสไทย*","ผักใบเขียวตามฤดูกาล*"],
+        origin:"ผักใบเขียวออร์แกนิกจากฟาร์มเครือข่ายภาคเหนือ"},
+      "neon-neuron": {name:"Neon Neuron", cat:"Cold-Pressed Juice · Mild Veggie", price:"180.-", size:"260ml.",
+        desc:"บำรุงระบบประสาท บำรุงผิวพรรณ สมดุลกรดด่างในร่างกาย",
+        ingredients:["แตงกวาญี่ปุ่น*","น้ำมะพร้าวอ่อนแท้ๆ"],
+        origin:"มะพร้าวอ่อนจากสวนภาคใต้ แตงกวาญี่ปุ่นออร์แกนิก"},
+      "conscious-love": {name:"Conscious Love", cat:"Cold-Pressed Juice · Mild Veggie", price:"180.-", size:"260ml.",
+        desc:"ลดคอเลสเตอรอล สมดุลกรดด่างในร่างกาย บรรเทาอาการภูมิแพ้",
+        ingredients:["กะหล่ำม่วง*","สตรอว์เบอร์รีนิวซีแลนด์*"],
+        origin:"กะหล่ำม่วงออร์แกนิกในประเทศ สตรอว์เบอร์รีนำเข้านิวซีแลนด์"},
+      "symphony": {name:"Symphony", cat:"Cold-Pressed Juice · Mild Veggie", price:"180.-", size:"260ml.",
+        desc:"เสริมภูมิต้านทานโรค ลดการอักเสบในร่างกาย ขับสารพิษ",
+        ingredients:["แครอท*","บีทรูท*"],
+        origin:"แครอทและบีทรูทออร์แกนิกจากฟาร์มเครือข่ายภาคเหนือ"},
+      "apple-lemon": {name:"Apple Lemon", cat:"Cold-Pressed Juice · Fruit Fresh", price:"290.-", size:"500ml.",
+        desc:"รสชาติสดชื่น เปรี้ยวหวานลงตัวจากแอปเปิ้ลและเลมอน",
+        ingredients:["แอปเปิ้ลเขียว","แอปเปิ้ล","เลมอน*"],
+        origin:"แอปเปิ้ลนำเข้า เลมอนออร์แกนิกในประเทศ"},
+      "strawberry-field": {name:"Strawberry Field", cat:"Cold-Pressed Juice · Fruit Fresh", price:"290.-", size:"500ml.",
+        desc:"หอมหวานสตรอว์เบอร์รี ตัดเปรี้ยวเบาๆ ด้วยเลมอนและน้ำอัลคาไลน์",
+        ingredients:["สตรอว์เบอร์รีนิวซีแลนด์","แอปเปิ้ลเขียว","บีทรูท*","เลมอน*","น้ำอัลคาไลน์"],
+        origin:"สตรอว์เบอร์รีนำเข้านิวซีแลนด์ ผักผลไม้อื่นในประเทศ"},
+      "raspberry-rain": {name:"Raspberry Rain", cat:"Cold-Pressed Juice · Fruit Fresh", price:"290.-", size:"500ml.",
+        desc:"เปรี้ยวหวานสดชื่นจากราสป์เบอร์รีและแอปเปิ้ลแดง",
+        ingredients:["ราสป์เบอร์รี","แอปเปิ้ลแดง","เลมอน*"],
+        origin:"ราสป์เบอร์รีนำเข้า แอปเปิ้ลแดงในประเทศ"},
+      "jerusalem-artichoke": {name:"Jerusalem Artichoke", cat:"Cold-Pressed Juice · Fruit Fresh", price:"290.-", size:"500ml.",
+        desc:"รสละมุน หวานธรรมชาติจากแก่นตะวันและแอปเปิ้ลเขียว",
+        ingredients:["แก่นตะวัน*","กวางตุ้ง","แตงกวา*","แอปเปิ้ลเขียว"],
+        origin:"แก่นตะวันออร์แกนิกจากฟาร์มเครือข่ายภาคเหนือ"},
+      "the-3-milkyteers": {name:"The 3 Milkyteers", cat:"Cold-Pressed Juice · Plant Milk", price:"180.-", size:"260ml.",
+        desc:"นมพืชเนียนนุ่ม หวานธรรมชาติจากอินทผลัม",
+        ingredients:["อัลมอนด์","ข้าวโอ๊ต","อินทผลัม"],
+        origin:"อัลมอนด์และข้าวโอ๊ตออร์แกนิกนำเข้า"},
+      "unicorn-milk": {name:"Unicorn Milk", cat:"Cold-Pressed Juice · Plant Milk", price:"180.-", size:"260ml.",
+        desc:"นมมะพร้าวสีชมพูละมุนจากบีทรูท กลิ่นวานิลลาอ่อนๆ",
+        ingredients:["นมมะพร้าว","บีทรูท","วานิลลา"],
+        origin:"มะพร้าวจากสวนภาคใต้ บีทรูทออร์แกนิกในประเทศ"},
+      "cloud-s-milk": {name:"Cloud's Milk", cat:"Cold-Pressed Juice · Plant Milk", price:"180.-", size:"260ml.",
+        desc:"นมข้าวหอมกล้วยและอบเชย เนื้อเนียนนุ่มดื่มง่าย",
+        ingredients:["นมข้าว","กล้วยหอม","อบเชย"],
+        origin:"ข้าวและกล้วยหอมจากฟาร์มเครือข่ายในประเทศ"},
+      "mermaid": {name:"Mermaid", cat:"Cold-Pressed Juice · Plant Milk", price:"180.-", size:"260ml.",
+        desc:"นมถั่วเหลืองสีฟ้าจากดอกอัญชัน แต้มเปรี้ยวด้วยมะนาว",
+        ingredients:["นมถั่วเหลือง","ดอกอัญชัน","มะนาว"],
+        origin:"ถั่วเหลืองและดอกอัญชันจากฟาร์มเครือข่ายในประเทศ"},
+      "pure-double-orange-slushie": {name:"Pure Double Orange Slushie", cat:"Slushies", price:"250.-", size:"400ml.",
+        desc:"สลัชชี่ส้มสายน้ำผึ้งเนื้อเนียน เย็นฉ่ำ หวานสดชื่น",
+        ingredients:["ส้มสายน้ำผึ้ง","น้ำแข็งเกล็ด","น้ำเชื่อมส้ม"],
+        origin:"ส้มสายน้ำผึ้งจากฝาง เชียงใหม่"},
+      "citrus-teriyaki-chicken-salad": {name:"Citrus Teriyaki Chicken Salad", cat:"Salads", price:"360.-", size:"1 จาน",
+        desc:"สลัดผักรวมสดกรอบ ท็อปด้วยอกไก่ย่างซอสเทอริยากิ",
+        ingredients:["อกไก่ย่างซอสเทอริยากิ","สลัดผักรวม","งาคั่ว","น้ำสลัดส้ม"],
+        origin:"ผักสลัดจากฟาร์มเครือข่ายภาคเหนือ ไก่จากฟาร์มพันธมิตร"}
+    };
+
+    function openModal(slug){
+      const it = ITEMS[slug];
+      if(!it) return;
+      document.getElementById('modalCat').textContent = it.cat;
+      document.getElementById('modalName').textContent = it.name;
+      document.getElementById('modalPrice').textContent = it.price;
+      document.getElementById('modalSize').textContent = it.size;
+      document.getElementById('modalDesc').textContent = it.desc;
+      document.getElementById('modalOrigin').textContent = it.origin;
+      const ul = document.getElementById('modalIngredients');
+      ul.innerHTML = '';
+      it.ingredients.forEach(function(ing){
+        const li = document.createElement('li');
+        li.textContent = ing;
+        ul.appendChild(li);
+      });
+      document.getElementById('modalBackdrop').classList.add('open');
+    }
+    function closeModal(){
+      document.getElementById('modalBackdrop').classList.remove('open');
+    }
+    document.addEventListener('click', function(e){
+      const card = e.target.closest('[data-item]');
+      if(card){ openModal(card.dataset.item); return; }
+      if(e.target.id === 'modalBackdrop'){ closeModal(); }
+    });
+    document.addEventListener('keydown', function(e){
+      if(e.key === 'Escape') closeModal();
+    });
+  </script>
+
+</body>
+</html>
