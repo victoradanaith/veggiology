@@ -1,0 +1,1627 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Veggiology — Cafe Menu Layout Mockup (TH/EN)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Prompt:wght@300;500&family=Bai+Jamjuree:wght@300;400;500;600;700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /*
+    หมายเหตุฟอนต์ (อัปเดตตาม Brand Guideline ฉบับจริง):
+      English headline          -> PP Woodland Bold      (ไฟล์โลคอล fonts/PPWoodland-Bold.otf)
+      English sub-headline/accent -> TT Drugs Bold        (ไฟล์โลคอล fonts/TT_Drugs_Trial_Bold.ttf)
+      English body               -> Work Sans             (Google Fonts)
+      Thai headline              -> Kulachat Serif Medium (ไฟล์โลคอล fonts/KulachatSerif-Medium.otf,
+                                     เป็นรุ่น Demo — สำรอง Fraunces ไว้เผื่อกรณีตัวอักษรไทยตกหล่น)
+      Thai sub-headline/accent   -> Prompt                (Google Fonts, จำกัดเฉพาะ element ระดับ sub-headline)
+      Thai body                  -> Bai Jamjuree          (Google Fonts)
+
+    ระบบสองภาษา: ข้อความที่ต้องแปลใช้ attribute data-th / data-en แล้วสลับด้วย applyLang().
+    applyLang() ตั้งค่า document.documentElement.lang = lang ด้วย จึงใช้ selector html[lang="th"] / html[lang="en"]
+    เพื่อสลับ font-family ตามภาษาโดยอัตโนมัติ (ไม่ใช่แค่สลับข้อความ)
+    ชื่อสินค้า (item-name), ชื่อหมวดหมู่ (Cold-Pressed Juice, Bold Veggie ฯลฯ), แท็ก (VEGAN/GF) และราคา
+    คงเป็นภาษาอังกฤษ/ตัวเลขเดิมทั้งสองภาษา ตามธรรมเนียมของแบรนด์จริงที่ใช้ชื่อเมนูเป็นอังกฤษเสมอ
+  */
+  @font-face { font-family: "Veggiology PP Woodland"; src: url("fonts/PPWoodland-Bold.otf") format("opentype"); font-weight: 700; font-style: normal; font-display: swap; }
+  @font-face { font-family: "Veggiology TT Drugs"; src: url("fonts/TT_Drugs_Trial_Bold.ttf") format("truetype"); font-weight: 700; font-style: normal; font-display: swap; }
+  @font-face { font-family: "Veggiology Kulachat Serif"; src: url("fonts/KulachatSerif-Medium.otf") format("opentype"); font-weight: 500; font-style: normal; font-display: swap; }
+  :root{
+    --vgl-black:#000000;
+    --vgl-white:#ffffff;
+    --vgl-off-white:#F7F0E2;
+    --vgl-card:#FBF6EA;
+    --vgl-sky:#A9D5E4; --vgl-sage:#BACD9A; --vgl-coral:#FABDA2; --vgl-yellow:#FFDE9A;
+    --vgl-special-bg:#CBB393;
+    --vgl-special-card:#E1D0B4;
+    --vgl-grey:#949593; --vgl-hairline:rgba(0,0,0,.14);
+    --vgl-forest:#0E2517; /* real CI core color "Veggie Green", used for the footer */
+    --font-display-en:"Veggiology PP Woodland", Georgia, serif;
+    --font-display-th:"Veggiology Kulachat Serif", "Fraunces", serif;
+    --font-accent-en:"Veggiology TT Drugs","Arial Narrow",sans-serif;
+    --font-accent-th:"Prompt",sans-serif;
+    --font-body-en:"Work Sans",Arial,sans-serif;
+    --font-body-th:"Bai Jamjuree",Arial,sans-serif;
+    /* default (no JS yet / lang not resolved) = Thai set, since default lang is Thai — avoids flash of wrong font */
+    --font-display:var(--font-display-th);
+    --font-accent:var(--font-accent-th);
+    --font-body:var(--font-body-th);
+    --page-max:1180px;
+  }
+  html[lang="th"]{ --font-display:var(--font-display-th); --font-accent:var(--font-accent-th); --font-body:var(--font-body-th); }
+  html[lang="en"]{ --font-display:var(--font-display-en); --font-accent:var(--font-accent-en); --font-body:var(--font-body-en); }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--vgl-off-white);color:var(--vgl-black);font-family:var(--font-body);font-weight:300;line-height:1.6}
+  .container{max-width:var(--page-max);margin:auto;padding:0 24px}
+
+  .nav{position:relative;padding:24px 0;text-align:center;border-bottom:1px solid var(--vgl-hairline);background:var(--vgl-off-white)}
+  .nav img.logo{height:40px;width:auto}
+  .tagline{margin-top:8px;font-size:13px;font-family:var(--font-body);color:#6b6b68}
+
+  .lang-switch{position:fixed;bottom:24px;right:24px;z-index:300;display:flex;gap:6px;background:var(--vgl-off-white);padding:6px;border-radius:0;border:1px solid var(--vgl-hairline);box-shadow:0 4px 14px rgba(0,0,0,.12)}
+  .lang-btn{font-family:var(--font-accent);font-weight:800;font-size:11px;letter-spacing:.05em;padding:7px 13px;border-radius:0;border:1px solid var(--vgl-hairline);background:var(--vgl-card);color:var(--vgl-black);cursor:pointer;transition:background .15s,color .15s}
+  .lang-btn.active{background:var(--vgl-black);color:var(--vgl-off-white);border-color:var(--vgl-black)}
+
+  .cat-nav{position:sticky;top:0;z-index:50;background:var(--vgl-off-white);border-bottom:1px solid var(--vgl-hairline);box-shadow:0 1px 0 rgba(0,0,0,.02)}
+  .cat-nav::before,.cat-nav::after{content:'';position:absolute;top:0;bottom:0;width:36px;pointer-events:none;z-index:2;transition:opacity .15s}
+  .cat-nav::before{left:0;background:linear-gradient(90deg,var(--vgl-off-white),rgba(247,240,226,0));opacity:0}
+  .cat-nav::after{right:0;background:linear-gradient(270deg,var(--vgl-off-white),rgba(247,240,226,0))}
+  .cat-nav.at-start::before{opacity:0}
+  .cat-nav.at-end::after{opacity:0}
+  .cat-nav-inner{position:relative;display:flex;gap:8px;overflow-x:auto;padding:12px 24px;-ms-overflow-style:none;scrollbar-width:none;scroll-behavior:smooth;cursor:grab}
+  .cat-nav-inner::-webkit-scrollbar{display:none}
+  .cat-nav-inner.dragging{cursor:grabbing;scroll-behavior:auto}
+  .cat-nav a{flex:none;display:inline-flex;align-items:center;gap:6px;font-family:var(--font-accent);font-weight:800;font-size:11.5px;letter-spacing:.04em;text-transform:uppercase;text-decoration:none;color:var(--vgl-black);padding:8px 16px;border:1px solid var(--vgl-hairline);border-radius:0;white-space:nowrap;background:var(--vgl-card);transition:background .15s,color .15s}
+  .cat-nav a:hover{background:var(--vgl-black);color:var(--vgl-off-white)}
+  .cat-nav a.active{background:var(--vgl-black);color:var(--vgl-off-white);border-color:var(--vgl-black)}
+  .cat-nav a .swatch{width:8px;height:8px;border-radius:0;flex:none}
+  .cat-nav .divider{flex:none;width:1px;background:var(--vgl-hairline);margin:4px 4px}
+
+  .eyebrow{font-family:var(--font-accent);font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase}
+
+  .item-name{font-family:var(--font-accent);font-weight:800;font-size:16px;margin:0 0 4px;letter-spacing:.005em}
+  .item-cat{font-family:var(--font-body);font-weight:500;font-size:11px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:10px}
+  .price{font-family:var(--font-accent);font-weight:800;font-size:15px}
+
+  .special{background:var(--vgl-special-bg);color:var(--vgl-off-white);padding:56px 0;scroll-margin-top:76px}
+  .special .eyebrow{color:var(--vgl-black);margin-bottom:6px}
+  .special h2{font-family:var(--font-display);font-size:34px;font-weight:800;margin:0 0 6px;letter-spacing:.01em;color:var(--vgl-black)}
+  .special p.sub{margin:0 0 14px;font-size:14px;font-family:var(--font-body);color:rgba(0,0,0,.62)}
+  .special .card-note{margin:0 0 26px;font-size:12px;font-family:var(--font-body);color:rgba(0,0,0,.5);font-style:italic}
+  .special-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+  .special-card{background:var(--vgl-special-card);border:1px solid rgba(0,0,0,.12);border-radius:0;padding:20px}
+  .special-card .item-name,.special-card .item-cat{color:var(--vgl-black)}
+  .special-card .item-cat{color:rgba(0,0,0,.6);display:flex;align-items:center}
+  .dot{display:inline-block;width:9px;height:9px;border-radius:0;margin-right:6px;vertical-align:1px}
+  .special-card .photo{width:100%;aspect-ratio:1/1;border-radius:0;background:rgba(0,0,0,.1);display:flex;align-items:center;justify-content:center;font-family:var(--font-body);font-size:11px;letter-spacing:.1em;color:rgba(0,0,0,.4);margin-bottom:14px}
+
+  .theme{padding:56px 0;background:var(--vgl-off-white)}
+  .theme > .container > .eyebrow{color:#8a8a86;margin-bottom:6px}
+  .theme > .container > h2{font-family:var(--font-display);font-size:30px;font-weight:800;margin:0 0 6px}
+  .theme > .container > p.sub{margin:0 0 32px;font-size:14px;font-family:var(--font-body);color:#6b6b68;max-width:600px}
+
+  .theme-block{margin-bottom:26px;border-radius:0;padding:24px 22px;overflow:hidden;scroll-margin-top:76px}
+  .theme-block-head{display:flex;align-items:baseline;gap:10px;margin-bottom:18px}
+  .theme-block-head .name{font-family:var(--font-display);font-size:22px;font-weight:800;color:var(--vgl-black)}
+  .theme-block-head .desc{font-family:var(--font-body);font-size:12px;color:rgba(0,0,0,.55)}
+  .theme-items{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  .theme-card{position:relative;background:rgba(255,255,255,.55);border-radius:0;padding:18px 14px 16px;min-height:150px;display:flex;flex-direction:column;justify-content:flex-end;align-items:center}
+  .theme-card .stock-dot{position:absolute;top:12px;left:12px;width:7px;height:7px;border-radius:0;background:#3F8C4A}
+  .theme-card .photo-mark{width:44px;aspect-ratio:1/1;margin:0 auto 12px;background:rgba(0,0,0,.14);border-radius:0}
+  .theme-card .item-name{font-size:14px;text-align:center;color:var(--vgl-black);margin-bottom:2px}
+  .theme-card .item-cat{display:none}
+  .theme-card .price{color:var(--vgl-black)}
+
+  .menu{padding:60px 0 90px;background:var(--vgl-off-white)}
+  .menu-head{margin-bottom:36px}
+  .menu-head h2{font-family:var(--font-display);font-size:30px;font-weight:800;margin:0 0 6px}
+  .menu-head p{margin:0;font-size:14px;font-family:var(--font-body);color:#6b6b68}
+
+  .cat-block{margin-bottom:44px;scroll-margin-top:76px}
+  .cat-divider{display:flex;align-items:center;gap:14px;margin-bottom:22px}
+  .cat-divider .rule{flex:1;height:1px;background:var(--vgl-hairline)}
+  .cat-divider .label{font-family:var(--font-accent);font-size:13px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--vgl-black);white-space:nowrap}
+  .cat-count{font-size:12px;font-family:var(--font-body);color:var(--vgl-grey);white-space:nowrap}
+
+  /* Footer — content pulled from the real veggiology.com footer (tagline, LINE, socials, copyright) */
+  .site-footer{background:var(--vgl-forest);color:var(--vgl-off-white);padding:56px 0 28px}
+  .footer-inner{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-start;gap:32px;margin-bottom:36px}
+  .footer-tagline{font-family:var(--font-display);font-size:26px;font-weight:800;letter-spacing:.01em;margin:0;color:var(--vgl-off-white)}
+  .footer-line{display:flex;flex-direction:column;align-items:flex-start;gap:10px}
+  .footer-line-btn{display:inline-flex;align-items:center;gap:8px;font-family:var(--font-accent);font-weight:800;font-size:12px;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;color:var(--vgl-forest);background:var(--vgl-off-white);padding:11px 20px;border:1px solid var(--vgl-off-white);border-radius:0}
+  .footer-line-id{font-family:var(--font-body);font-size:13px;color:rgba(247,240,226,.75)}
+  .footer-social{display:flex;align-items:center;gap:12px}
+  .footer-social a{display:inline-flex;width:34px;height:34px;align-items:center;justify-content:center;border:1px solid rgba(247,240,226,.4);border-radius:0}
+  .footer-social img{width:18px;height:18px;filter:invert(1) brightness(2)}
+  .footer-bottom{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:14px;padding-top:22px;border-top:1px solid rgba(247,240,226,.18)}
+  .footer-copyright{font-family:var(--font-body);font-size:12px;color:rgba(247,240,226,.65)}
+
+  .item-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+  .item-card{border:1px solid var(--vgl-hairline);border-radius:0;padding:14px;background:var(--vgl-card)}
+  .item-card .photo{width:100%;aspect-ratio:1/1;border-radius:0;background:#EFE7D4;display:flex;align-items:center;justify-content:center;font-family:var(--font-body);font-size:10px;letter-spacing:.1em;color:#a8a7a1;margin-bottom:12px}
+  .item-card .item-cat{color:var(--vgl-grey)}
+  .item-card .row{display:flex;justify-content:space-between;align-items:center}
+  .tags{display:flex;gap:6px;margin-top:8px}
+  .tag{font-family:var(--font-accent);font-size:9px;font-weight:800;letter-spacing:.06em;padding:3px 7px;background:var(--vgl-yellow);border-radius:0}
+
+  .legend{display:flex;gap:18px;align-items:center;margin-top:6px;font-family:var(--font-body);font-size:11.5px;color:#6b6b68;flex-wrap:wrap}
+  .legend span{display:flex;align-items:center;gap:6px}
+
+  [data-item]{cursor:pointer;transition:transform .15s ease,box-shadow .15s ease}
+  [data-item]:hover{transform:translateY(-3px)}
+  [data-item]:focus-visible{outline:2px solid var(--vgl-black);outline-offset:2px}
+
+  .modal-backdrop{display:none;position:fixed;inset:0;background:rgba(20,16,10,.55);z-index:200;align-items:center;justify-content:center;padding:24px}
+  .modal-backdrop.open{display:flex}
+  .modal{background:var(--vgl-off-white);border-radius:0;max-width:520px;width:100%;max-height:88vh;overflow-y:auto;position:relative}
+  .modal-close{position:absolute;top:14px;right:14px;width:32px;height:32px;border-radius:0;border:1px solid var(--vgl-hairline);background:var(--vgl-card);font-size:18px;line-height:1;cursor:pointer;color:var(--vgl-black);z-index:2}
+  .modal-photo{width:100%;aspect-ratio:1/1;background:#EFE7D4;display:flex;align-items:center;justify-content:center;font-family:var(--font-body);font-size:12px;letter-spacing:.1em;color:#a8a7a1;border-radius:0}
+  .modal-body{padding:22px 24px 28px}
+  .modal-cat{font-family:var(--font-body);font-weight:500;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--vgl-grey);margin:0 0 4px}
+  .modal-name{font-family:var(--font-display);font-size:26px;font-weight:800;margin:0 0 10px}
+  .modal-price-row{display:flex;align-items:baseline;gap:10px;margin-bottom:16px}
+  .modal-size{font-family:var(--font-body);font-size:12px;color:var(--vgl-grey)}
+  .modal-desc{font-size:14px;font-family:var(--font-body);color:#4a4a47;margin:0 0 20px}
+  .modal-section{margin-bottom:18px}
+  .modal-label{font-family:var(--font-accent);font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;margin:0 0 8px;color:var(--vgl-black)}
+  .modal-ingredients{margin:0;padding:0;list-style:none;display:flex;flex-wrap:wrap;gap:6px}
+  .modal-ingredients li{font-family:var(--font-body);font-size:12px;background:var(--vgl-card);border:1px solid var(--vgl-hairline);padding:4px 10px;border-radius:0}
+  .modal-origin{font-size:13px;font-family:var(--font-body);color:#4a4a47;margin:0}
+  .modal-video{aspect-ratio:16/9;background:#1c1a16;color:rgba(255,255,255,.75);border-radius:0;display:flex;align-items:center;justify-content:center;gap:8px;font-size:12px;font-family:var(--font-body)}
+  .modal-video .play{width:26px;height:26px;border-radius:0;background:rgba(255,255,255,.16);display:flex;align-items:center;justify-content:center;font-size:11px}
+
+  @media (max-width:900px){
+    .special-grid{grid-template-columns:repeat(2,1fr)}
+    .theme-items{grid-template-columns:repeat(2,1fr)}
+    .item-grid{grid-template-columns:repeat(2,1fr)}
+    .lang-switch{bottom:16px;right:16px}
+  }
+</style>
+</head>
+<body>
+
+  <header class="nav">
+    <div class="lang-switch">
+      <button class="lang-btn active" id="langThBtn" onclick="applyLang('th')">TH</button>
+      <button class="lang-btn" id="langEnBtn" onclick="applyLang('en')">EN</button>
+    </div>
+    <img class="logo" alt="Veggiology" src="https://static.wixstatic.com/media/37cc9b_54bcef155f2e4cda93b56e1da510c3d5~mv2.png/v1/fill/w_800,h_176,al_c,q_90,usm_0.66_1.00_0.01,enc_avif,quality_auto/VGL_Primary%20Logotype_P_CMYK.png">
+    <div class="tagline" data-th="ผักและผลไม้ออร์แกนิกจากเกษตรกรท้องถิ่น" data-en="Organic fruits &amp; vegetables from local farmers">ผักและผลไม้ออร์แกนิกจากเกษตรกรท้องถิ่น</div>
+  </header>
+
+  <nav class="cat-nav" aria-label="ทางลัดไปหมวดหมู่และธีม">
+    <div class="cat-nav-inner">
+      <a href="#special" data-th="พิเศษ" data-en="Special">Special</a>
+      <div class="divider"></div>
+      <a href="#theme-fresh"><span class="swatch" style="background:var(--vgl-sky)"></span>Fresh Fruit</a>
+      <a href="#theme-mild"><span class="swatch" style="background:var(--vgl-sage)"></span>Mild Veggie</a>
+      <a href="#theme-bold"><span class="swatch" style="background:var(--vgl-coral)"></span>Bold Veggie</a>
+      <a href="#theme-milk"><span class="swatch" style="background:var(--vgl-yellow)"></span>Smooth Plant Milk</a>
+      <span class="divider"></span>
+      <a href="#cat-pure-juice">Pure Juice</a>
+      <a href="#cat-celery-series">Celery Series</a>
+      <a href="#cat-special-drinks">Special Drinks</a>
+      <a href="#cat-honey-lemon-lime">Honey Lemon-Lime</a>
+      <a href="#cat-superfood-booster">Superfood Booster</a>
+      <a href="#cat-veggiology-kids">Veggiology Kids</a>
+      <a href="#cat-slushies">Slushies</a>
+      <a href="#cat-thick-smoothies">Thick Smoothies</a>
+      <a href="#cat-smoothie-bowls">Smoothie Bowls</a>
+      <a href="#cat-vgl-drinks">VGL Drinks</a>
+      <a href="#cat-matcha">Matcha</a>
+      <a href="#cat-coffee-water">Coffee &amp; Water</a>
+      <a href="#cat-hot-tea-drinks">Hot Tea &amp; Drinks</a>
+      <a href="#cat-salad">Salad</a>
+      <a href="#cat-main">Main</a>
+      <a href="#cat-open-faced-sandwich">Open Faced Sandwich</a>
+      <a href="#cat-noodle-soup">Noodle / Soup</a>
+      <a href="#cat-dessert">Dessert</a>
+      <a href="#cat-condiment">Condiment</a>
+      <a href="#cat-juice-flight">Juice Flight</a>
+    </div>
+  </nav>
+
+  <section class="special" id="special">
+    <div class="container">
+      <div class="eyebrow" data-th="Special · เลือกโดยร้าน · ตัวอย่างโทน Earth tone" data-en="Special · Curated by us · Earth tone example">Special · เลือกโดยร้าน · ตัวอย่างโทน Earth tone</div>
+      <h2 data-th="เมนูแนะนำวันนี้" data-en="Today's picks">เมนูแนะนำวันนี้</h2>
+      <p class="sub" data-th="คัดเลือกโดยแอดมิน ไม่ผูกกับหมวดหมู่ใด — พื้นหลังเปลี่ยนได้ตามธีม (ตัวอย่างนี้ใช้เอิร์ธโทนพาสเทล เช่น สีทราย/ดิน)" data-en="Hand-picked by the team, independent of any category — the background swaps with the theme (this example uses a pastel earth tone like sand or clay).">คัดเลือกโดยแอดมิน ไม่ผูกกับหมวดหมู่ใด — พื้นหลังเปลี่ยนได้ตามธีม (ตัวอย่างนี้ใช้เอิร์ธโทนพาสเทล เช่น สีทราย/ดิน)</p>
+      <p class="card-note" data-th="กรอบสี่เหลี่ยมนี้คือ &quot;การ์ดสินค้า&quot; — กรอบเดียวที่รวมรูป/ชื่อ/หมวด/ราคาของเมนู 1 รายการไว้ด้วยกัน แยกแต่ละเมนูออกจากกันด้วยพื้นที่ว่างและเส้นขอบเหลี่ยมคม แทนที่จะใช้เส้นตีตาราง สีของการ์ดเป็นโทนทรายอ่อนกว่าพื้นหลัง (ไม่ใช่ off-white) เพื่อให้กลืนไปกับธีมแทนที่จะตัดกันแรง กดที่การ์ดเพื่อดูรายละเอียดเมนู" data-en="This square box is a &quot;product card&quot; — one frame holding a menu item's photo, name, category and price. Cards are separated by whitespace and sharp square edges instead of table lines. The card color is a lighter sand tone than the background (not off-white) so it blends with the theme instead of clashing. Tap a card for full details.">กรอบสี่เหลี่ยมนี้คือ "การ์ดสินค้า" — กรอบเดียวที่รวมรูป/ชื่อ/หมวด/ราคาของเมนู 1 รายการไว้ด้วยกัน แยกแต่ละเมนูออกจากกันด้วยพื้นที่ว่างและเส้นขอบเหลี่ยมคม แทนที่จะใช้เส้นตีตาราง สีของการ์ดเป็นโทนทรายอ่อนกว่าพื้นหลัง (ไม่ใช่ off-white) เพื่อให้กลืนไปกับธีมแทนที่จะตัดกันแรง กดที่การ์ดเพื่อดูรายละเอียดเมนู</p>
+      <div class="special-grid">
+        <div class="special-card" data-item="broccoli">
+          <div class="photo">PHOTO</div>
+          <p class="item-name">Broccoli</p>
+          <p class="item-cat"><span class="dot" style="background:var(--vgl-special-card)"></span>Special &amp; Seasonal</p>
+          <p class="price">290.-</p>
+        </div>
+        <div class="special-card" data-item="gotu-kola">
+          <div class="photo">PHOTO</div>
+          <p class="item-name">Gotu Kola</p>
+          <p class="item-cat"><span class="dot" style="background:var(--vgl-special-card)"></span>Special &amp; Seasonal</p>
+          <p class="price">290.-</p>
+        </div>
+        <div class="special-card" data-item="blue-butterfly">
+          <div class="photo">PHOTO</div>
+          <p class="item-name">Blue Butterfly</p>
+          <p class="item-cat"><span class="dot" style="background:var(--vgl-special-card)"></span>Special &amp; Seasonal</p>
+          <p class="price">290.-</p>
+        </div>
+        <div class="special-card" data-item="purple-power">
+          <div class="photo">PHOTO</div>
+          <p class="item-name">Purple Power</p>
+          <p class="item-cat"><span class="dot" style="background:var(--vgl-special-card)"></span>Special &amp; Seasonal</p>
+          <p class="price">290.-</p>
+        </div>
+        <div class="special-card" data-item="apple-lemon">
+          <div class="photo">PHOTO</div>
+          <p class="item-name">Apple Lemon</p>
+          <p class="item-cat"><span class="dot" style="background:var(--vgl-special-card)"></span>Special &amp; Seasonal</p>
+          <p class="price">290.-</p>
+        </div>
+        <div class="special-card" data-item="jerusalem-artichoke">
+          <div class="photo">PHOTO</div>
+          <p class="item-name">Jerusalem Artichoke</p>
+          <p class="item-cat"><span class="dot" style="background:var(--vgl-special-card)"></span>Special &amp; Seasonal</p>
+          <p class="price">290.-</p>
+        </div>
+        <div class="special-card" data-item="strawberry-field">
+          <div class="photo">PHOTO</div>
+          <p class="item-name">Strawberry Field</p>
+          <p class="item-cat"><span class="dot" style="background:var(--vgl-special-card)"></span>Special &amp; Seasonal</p>
+          <p class="price">290.-</p>
+        </div>
+        <div class="special-card" data-item="raspberry-rain">
+          <div class="photo">PHOTO</div>
+          <p class="item-name">Raspberry Rain</p>
+          <p class="item-cat"><span class="dot" style="background:var(--vgl-special-card)"></span>Special &amp; Seasonal</p>
+          <p class="price">290.-</p>
+        </div>
+        <div class="special-card" data-item="watermelon-no-1">
+          <div class="photo">PHOTO</div>
+          <p class="item-name">Watermelon No.1</p>
+          <p class="item-cat"><span class="dot" style="background:var(--vgl-special-card)"></span>Special &amp; Seasonal</p>
+          <p class="price">290.-</p>
+        </div>
+        <div class="special-card" data-item="watermelon-no-2">
+          <div class="photo">PHOTO</div>
+          <p class="item-name">Watermelon No.2</p>
+          <p class="item-cat"><span class="dot" style="background:var(--vgl-special-card)"></span>Special &amp; Seasonal</p>
+          <p class="price">290.-</p>
+        </div>
+        <div class="special-card" data-item="watermelon-no-3">
+          <div class="photo">PHOTO</div>
+          <p class="item-name">Watermelon No.3 &quot;3 Youthful&quot;</p>
+          <p class="item-cat"><span class="dot" style="background:var(--vgl-special-card)"></span>Special &amp; Seasonal</p>
+          <p class="price">290.-</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="theme">
+    <div class="container">
+      <div class="eyebrow" data-th="ธีม" data-en="Theme">ธีม</div>
+      <h2 data-th="เลือกตามธีมความเข้มข้น" data-en="Choose by intensity theme">เลือกตามธีมความเข้มข้น</h2>
+      <p class="sub" data-th="รายการน้ำผักครบทุกตัวจากแต่ละธีมความเข้มข้น (สีเดียวกับหน้า Juice Menu จริง)" data-en="The full juice line-up from each intensity theme (same colors as the real Juice Menu page).">รายการน้ำผักครบทุกตัวจากแต่ละธีมความเข้มข้น (สีเดียวกับหน้า Juice Menu จริง)</p>
+
+      <div class="theme-block" id="theme-fresh" style="background:var(--vgl-sky)">
+        <div class="theme-block-head"><span class="name">Fresh Fruit</span><span class="desc" data-th="ฟ้าพาสเทล · ผลไม้สด" data-en="Blue pastel · Fresh fruit">ฟ้าพาสเทล · ผลไม้สด</span></div>
+        <div class="theme-items">
+          <div class="theme-card" data-item="level-up"><span class="stock-dot"></span><div class="photo-mark"></div><p class="item-name">Level Up!</p><p class="price">180.-</p></div>
+          <div class="theme-card" data-item="pra-chan"><span class="stock-dot"></span><div class="photo-mark"></div><p class="item-name">Pra-Chan</p><p class="price">180.-</p></div>
+          <div class="theme-card" data-item="happy-cells"><span class="stock-dot"></span><div class="photo-mark"></div><p class="item-name">Happy Cells</p><p class="price">180.-</p></div>
+          <div class="theme-card" data-item="tummy-buddy"><span class="stock-dot"></span><div class="photo-mark"></div><p class="item-name">Tummy Buddy</p><p class="price">180.-</p></div>
+          <div class="theme-card" data-item="c-force"><span class="stock-dot"></span><div class="photo-mark"></div><p class="item-name">C-Force</p><p class="price">180.-</p></div>
+          <div class="theme-card" data-item="coco-snow"><span class="stock-dot"></span><div class="photo-mark"></div><p class="item-name">Coco Snow</p><p class="price">180.-</p></div>
+          <div class="theme-card" data-item="glow"><span class="stock-dot"></span><div class="photo-mark"></div><p class="item-name">Glow</p><p class="price">180.-</p></div>
+          <div class="theme-card" data-item="the-hope"><span class="stock-dot"></span><div class="photo-mark"></div><p class="item-name">The Hope</p><p class="price">180.-</p></div>
+        </div>
+      </div>
+
+      <div class="theme-block" id="theme-mild" style="background:var(--vgl-sage)">
+        <div class="theme-block-head"><span class="name">Mild Veggie</span><span class="desc" data-th="เขียวพาสเทล · รสอ่อนละมุน" data-en="Green pastel · Mild, gentle flavor">เขียวพาสเทล · รสอ่อนละมุน</span></div>
+        <div class="theme-items">
+          <div class="theme-card" data-item="be-kind"><span class="stock-dot"></span><div class="photo-mark"></div><p class="item-name">Be Kind</p><p class="price">180.-</p></div>
+          <div class="theme-card" data-item="neon-neuron"><span class="stock-dot"></span><div class="photo-mark"></div><p class="item-name">Neon Neuron</p><p class="price">180.-</p></div>
+          <div class="theme-card" data-item="conscious-love"><span class="stock-dot"></span><div class="photo-mark"></div><p class="item-name">Conscious Love</p><p class="price">180.-</p></div>
+          <div class="theme-card" data-item="symphony"><span class="stock-dot"></span><div class="photo-mark"></div><p class="item-name">Symphony</p><p class="price">180.-</p></div>
+          <div class="theme-card" data-item="starry-bright"><span class="stock-dot"></span><div class="photo-mark"></div><p class="item-name">Starry Bright</p><p class="price">180.-</p></div>
+          <div class="theme-card" data-item="humble-warrior"><span class="stock-dot"></span><div class="photo-mark"></div><p class="item-name">Humble Warrior</p><p class="price">180.-</p></div>
+        </div>
+      </div>
+
+      <div class="theme-block" id="theme-bold" style="background:var(--vgl-coral)">
+        <div class="theme-block-head"><span class="name">Bold Veggie</span><span class="desc" data-th="ส้มอมชมพูพาสเทล · รสจัดจ้าน" data-en="Peachy-pink pastel · Bold flavor">ส้มอมชมพูพาสเทล · รสจัดจ้าน</span></div>
+        <div class="theme-items">
+          <div class="theme-card" data-item="gravity-green"><span class="stock-dot"></span><div class="photo-mark"></div><p class="item-name">Gravity Green</p><p class="price">180.-</p></div>
+          <div class="theme-card" data-item="the-greenlaxy"><span class="stock-dot"></span><div class="photo-mark"></div><p class="item-name">The Greenlaxy</p><p class="price">180.-</p></div>
+          <div class="theme-card" data-item="mini-oasis"><span class="stock-dot"></span><div class="photo-mark"></div><p class="item-name">Mini Oasis</p><p class="price">180.-</p></div>
+          <div class="theme-card" data-item="skin-dive"><span class="stock-dot"></span><div class="photo-mark"></div><p class="item-name">Skin Dive</p><p class="price">180.-</p></div>
+          <div class="theme-card" data-item="root-matters"><span class="stock-dot"></span><div class="photo-mark"></div><p class="item-name">Root Matters</p><p class="price">180.-</p></div>
+          <div class="theme-card" data-item="antidote"><span class="stock-dot"></span><div class="photo-mark"></div><p class="item-name">Antidote</p><p class="price">180.-</p></div>
+          <div class="theme-card" data-item="balanced"><span class="stock-dot"></span><div class="photo-mark"></div><p class="item-name">Balanced</p><p class="price">180.-</p></div>
+          <div class="theme-card" data-item="adam-and-leaf"><span class="stock-dot"></span><div class="photo-mark"></div><p class="item-name">Adam &amp; Leaf</p><p class="price">180.-</p></div>
+          <div class="theme-card" data-item="awaken"><span class="stock-dot"></span><div class="photo-mark"></div><p class="item-name">Awaken</p><p class="price">180.-</p></div>
+          <div class="theme-card" data-item="lean-green"><span class="stock-dot"></span><div class="photo-mark"></div><p class="item-name">Lean Green</p><p class="price">180.-</p></div>
+        </div>
+      </div>
+
+      <div class="theme-block" id="theme-milk" style="background:var(--vgl-yellow)">
+        <div class="theme-block-head"><span class="name">Smooth Plant Milk</span><span class="desc" data-th="เหลืองพาสเทล · นมพืชเนียนนุ่ม" data-en="Yellow pastel · Smooth plant milk">เหลืองพาสเทล · นมพืชเนียนนุ่ม</span></div>
+        <div class="theme-items">
+          <div class="theme-card" data-item="the-3-milkyteers"><span class="stock-dot"></span><div class="photo-mark"></div><p class="item-name">The 3 Milkyteers</p><p class="price">180.-</p></div>
+          <div class="theme-card" data-item="unicorn-milk"><span class="stock-dot"></span><div class="photo-mark"></div><p class="item-name">Unicorn Milk</p><p class="price">180.-</p></div>
+          <div class="theme-card" data-item="cloud-s-milk"><span class="stock-dot"></span><div class="photo-mark"></div><p class="item-name">Cloud&#x27;s Milk</p><p class="price">180.-</p></div>
+          <div class="theme-card" data-item="mermaid"><span class="stock-dot"></span><div class="photo-mark"></div><p class="item-name">Mermaid</p><p class="price">180.-</p></div>
+        </div>
+      </div>
+
+      <div class="legend">
+        <span data-th="สีทั้ง 4 มาจากพาเลตเดิมของหน้า Juice Menu จริง (veggiology.com) ไม่ได้สร้างใหม่" data-en="All 4 colors come from the existing palette on the real Juice Menu page (veggiology.com) — not newly created.">สีทั้ง 4 มาจากพาเลตเดิมของหน้า Juice Menu จริง (veggiology.com) ไม่ได้สร้างใหม่</span>
+        <span data-th="เครื่องหมาย * ท้ายวัตถุดิบ หมายถึงวัตถุดิบออร์แกนิก" data-en="An asterisk (*) after an ingredient indicates it is organic.">เครื่องหมาย * ท้ายวัตถุดิบ หมายถึงวัตถุดิบออร์แกนิก</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="menu">
+    <div class="container">
+      <div class="menu-head">
+        <h2 data-th="เมนูทั้งหมด" data-en="Full menu">เมนูทั้งหมด</h2>
+        <p data-th="แบ่งตามหมวดหมู่หลัก — ไม่มีสีพื้น ใช้เส้นบางและหัวข้อเล็กเป็นตัวแบ่ง การ์ดเป็นโทน off-white เข้มกว่าพื้นหลังเล็กน้อย (#FBF6EA บนพื้น #F7F0E2) ไม่ใช้ขาวล้วน" data-en="Grouped by main category — no background color, just a thin rule and small caption as dividers. Cards use an off-white slightly deeper than the page background (#FBF6EA on #F7F0E2), never pure white.">แบ่งตามหมวดหมู่หลัก — ไม่มีสีพื้น ใช้เส้นบางและหัวข้อเล็กเป็นตัวแบ่ง การ์ดเป็นโทน off-white เข้มกว่าพื้นหลังเล็กน้อย (#FBF6EA บนพื้น #F7F0E2) ไม่ใช้ขาวล้วน</p>
+      </div>
+
+      <div class="cat-block" id="cat-pure-juice">
+        <div class="cat-divider"><span class="label">Pure Juice</span><span class="rule"></span><span class="cat-count" data-th="8 รายการ" data-en="8 items">8 รายการ</span></div>
+        <div class="item-grid">
+          <div class="item-card" data-item="tangerine"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Tangerine</p><div class="row"><span class="price">125.-</span></div></div>
+          <div class="item-card" data-item="coconut-water"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Coconut Water</p><div class="row"><span class="price">90.-</span></div></div>
+          <div class="item-card" data-item="corn-it"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Corn It</p><div class="row"><span class="price">110.-</span></div></div>
+          <div class="item-card" data-item="celery-juice"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Celery Juice</p><div class="row"><span class="price">380.-</span></div></div>
+          <div class="item-card" data-item="carrot-juice"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Carrot Juice</p><div class="row"><span class="price">180.-</span></div></div>
+          <div class="item-card" data-item="passion-fruit-juice"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Passion Fruit Juice</p><div class="row"><span class="price">260.-</span></div></div>
+          <div class="item-card" data-item="beetroot-juice"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Beetroot Juice</p><div class="row"><span class="price">200.-</span></div></div>
+          <div class="item-card" data-item="pink-guava"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Pink Guava</p><div class="row"><span class="price">290.-</span></div></div>
+        </div>
+      </div>
+
+      <div class="cat-block" id="cat-celery-series">
+        <div class="cat-divider"><span class="label">Celery Series</span><span class="rule"></span><span class="cat-count" data-th="6 รายการ" data-en="6 items">6 รายการ</span></div>
+        <div class="item-grid">
+          <div class="item-card" data-item="celery-and-friends-1"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Celery &amp; Friends 1</p><div class="row"><span class="price">330.-</span></div></div>
+          <div class="item-card" data-item="celery-and-friends-2"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Celery &amp; Friends 2</p><div class="row"><span class="price">330.-</span></div></div>
+          <div class="item-card" data-item="celery-and-friends-3"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Celery &amp; Friends 3</p><div class="row"><span class="price">330.-</span></div></div>
+          <div class="item-card" data-item="celery-and-friends-4"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Celery &amp; Friends 4</p><div class="row"><span class="price">330.-</span></div></div>
+          <div class="item-card" data-item="celery-and-friends-5"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Celery &amp; Friends 5</p><div class="row"><span class="price">330.-</span></div></div>
+          <div class="item-card" data-item="celery-and-friends-6"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Celery &amp; Friends 6</p><div class="row"><span class="price">330.-</span></div></div>
+        </div>
+      </div>
+
+      <div class="cat-block" id="cat-special-drinks">
+        <div class="cat-divider"><span class="label">Special Drinks</span><span class="rule"></span><span class="cat-count" data-th="4 รายการ" data-en="4 items">4 รายการ</span></div>
+        <div class="item-grid">
+          <div class="item-card" data-item="plant-milk-tea-grass-jelly"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Plant Milk Tea with Organic Grass Jelly Pudding</p><div class="row"><span class="price">160.-</span></div></div>
+          <div class="item-card" data-item="teatox"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Teatox</p><div class="row"><span class="price">160.-</span></div></div>
+          <div class="item-card" data-item="cold-brew-rose-tea"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">48+ Hrs Cold Brew Rose Tea</p><div class="row"><span class="price">110.-</span></div></div>
+          <div class="item-card" data-item="apple-a-day"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Apple A Day</p><div class="row"><span class="price">130.-</span></div></div>
+        </div>
+      </div>
+
+      <div class="cat-block" id="cat-honey-lemon-lime">
+        <div class="cat-divider"><span class="label">Honey Lemon-Lime</span><span class="rule"></span><span class="cat-count" data-th="8 รายการ" data-en="8 items">8 รายการ</span></div>
+        <div class="item-grid">
+          <div class="item-card" data-item="lemon-lime"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Lemon Lime</p><div class="row"><span class="price">130.-</span></div></div>
+          <div class="item-card" data-item="hll-ginger"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Ginger</p><div class="row"><span class="price">130.-</span></div></div>
+          <div class="item-card" data-item="hll-passion-fruit"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Passion Fruit</p><div class="row"><span class="price">130.-</span></div></div>
+          <div class="item-card" data-item="finger-root"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Finger Root</p><div class="row"><span class="price">130.-</span></div></div>
+          <div class="item-card" data-item="hll-turmeric"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Turmeric</p><div class="row"><span class="price">130.-</span></div></div>
+          <div class="item-card" data-item="cranberry-hibiscus"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Cranberry Hibiscus</p><div class="row"><span class="price">130.-</span></div></div>
+          <div class="item-card" data-item="torch-ginger"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Torch Ginger</p><div class="row"><span class="price">130.-</span></div></div>
+          <div class="item-card" data-item="mix-it-yourself-condensed"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Mix It Yourself (Condensed)</p><div class="row"><span class="price">350.-</span></div></div>
+        </div>
+      </div>
+
+      <div class="cat-block" id="cat-superfood-booster">
+        <div class="cat-divider"><span class="label">Superfood Booster</span><span class="rule"></span><span class="cat-count" data-th="9 รายการ" data-en="9 items">9 รายการ</span></div>
+        <div class="item-grid">
+          <div class="item-card" data-item="antibiotic-shot-a1"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Antibiotic Shot (A1)</p><div class="row"><span class="price">110.-</span></div></div>
+          <div class="item-card" data-item="antibiotic-shot-a2"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Antibiotic Shot (A2)</p><div class="row"><span class="price">110.-</span></div></div>
+          <div class="item-card" data-item="antibiotic-shot-a3"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Antibiotic Shot (A3)</p><div class="row"><span class="price">110.-</span></div></div>
+          <div class="item-card" data-item="digestive-shot-d1"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Digestive Shot (D1)</p><div class="row"><span class="price">110.-</span></div></div>
+          <div class="item-card" data-item="digestive-shot-d2"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Digestive Shot (D2)</p><div class="row"><span class="price">110.-</span></div></div>
+          <div class="item-card" data-item="digestive-shot-d3"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Digestive Shot (D3)</p><div class="row"><span class="price">110.-</span></div></div>
+          <div class="item-card" data-item="immunity-shot-m1"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Immunity Shot (M1)</p><div class="row"><span class="price">110.-</span></div></div>
+          <div class="item-card" data-item="immunity-shot-m2"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Immunity Shot (M2)</p><div class="row"><span class="price">110.-</span></div></div>
+          <div class="item-card" data-item="immunity-shot-m3"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Immunity Shot (M3)</p><div class="row"><span class="price">110.-</span></div></div>
+        </div>
+      </div>
+
+      <div class="cat-block" id="cat-veggiology-kids">
+        <div class="cat-divider"><span class="label">Veggiology Kids</span><span class="rule"></span><span class="cat-count" data-th="5 รายการ" data-en="5 items">5 รายการ</span></div>
+        <div class="item-grid">
+          <div class="item-card" data-item="green-hero"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Green Hero</p><div class="row"><span class="price">65.-</span></div></div>
+          <div class="item-card" data-item="apple-alpaca"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Apple Alpaca</p><div class="row"><span class="price">65.-</span></div></div>
+          <div class="item-card" data-item="ninja-melon"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Ninja Melon</p><div class="row"><span class="price">65.-</span></div></div>
+          <div class="item-card" data-item="captain-carrot"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Captain Carrot</p><div class="row"><span class="price">65.-</span></div></div>
+          <div class="item-card" data-item="pineapple-papa"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Pineapple Papa</p><div class="row"><span class="price">65.-</span></div></div>
+        </div>
+      </div>
+
+      <div class="cat-block" id="cat-slushies">
+        <div class="cat-divider"><span class="label">Slushies</span><span class="rule"></span><span class="cat-count" data-th="3 รายการ" data-en="3 items">3 รายการ</span></div>
+        <div class="item-grid">
+          <div class="item-card" data-item="organic-cold-pressed-veggie-slushie"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Organic Cold-Pressed Veggie Slushie</p><div class="row"><span class="price">250.-</span></div></div>
+          <div class="item-card" data-item="pure-double-orange-slushie"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Pure Double Orange Slushie</p><div class="row"><span class="price">250.-</span></div></div>
+          <div class="item-card" data-item="veggie-orange-slushie-mix"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Veggie + Orange Slushie Mix</p><div class="row"><span class="price">250.-</span></div></div>
+        </div>
+      </div>
+
+      <div class="cat-block" id="cat-thick-smoothies">
+        <div class="cat-divider"><span class="label">Thick Smoothies</span><span class="rule"></span><span class="cat-count" data-th="5 รายการ" data-en="5 items">5 รายการ</span></div>
+        <div class="item-grid">
+          <div class="item-card" data-item="silent-brave"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Silent Brave</p><div class="tags"><span class="tag">VEGAN</span></div><div class="row" style="margin-top:8px"><span class="price">195.-</span></div></div>
+          <div class="item-card" data-item="at-ease"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">At Ease</p><div class="tags"><span class="tag">VEGAN</span></div><div class="row" style="margin-top:8px"><span class="price">195.-</span></div></div>
+          <div class="item-card" data-item="earth"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Earth</p><div class="tags"><span class="tag">VEGAN</span></div><div class="row" style="margin-top:8px"><span class="price">195.-</span></div></div>
+          <div class="item-card" data-item="rhapsody-red"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Rhapsody Red</p><div class="tags"><span class="tag">VEGAN</span></div><div class="row" style="margin-top:8px"><span class="price">195.-</span></div></div>
+          <div class="item-card" data-item="celery-melody"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Celery Melody</p><div class="tags"><span class="tag">VEGAN</span></div><div class="row" style="margin-top:8px"><span class="price">185.-</span></div></div>
+        </div>
+      </div>
+
+      <div class="cat-block" id="cat-smoothie-bowls">
+        <div class="cat-divider"><span class="label">Smoothie Bowls</span><span class="rule"></span><span class="cat-count" data-th="4 รายการ" data-en="4 items">4 รายการ</span></div>
+        <div class="item-grid">
+          <div class="item-card" data-item="shield"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Shield</p><div class="tags"><span class="tag">VEGAN</span></div><div class="row" style="margin-top:8px"><span class="price">280.-</span></div></div>
+          <div class="item-card" data-item="coco-island"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">CoCo Island</p><div class="tags"><span class="tag">VEGAN</span></div><div class="row" style="margin-top:8px"><span class="price">290.-</span></div></div>
+          <div class="item-card" data-item="blessing-blue"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Blessing Blue</p><div class="tags"><span class="tag">VEGAN</span></div><div class="row" style="margin-top:8px"><span class="price">290.-</span></div></div>
+          <div class="item-card" data-item="chronic-joy"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Chronic Joy</p><div class="tags"><span class="tag">VEGAN</span></div><div class="row" style="margin-top:8px"><span class="price">290.-</span></div></div>
+        </div>
+      </div>
+
+      <div class="cat-block" id="cat-vgl-drinks">
+        <div class="cat-divider"><span class="label">VGL Drinks</span><span class="rule"></span><span class="cat-count" data-th="8 รายการ" data-en="8 items">8 รายการ</span></div>
+        <div class="item-grid">
+          <div class="item-card" data-item="lavender-limade"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Lavender Limade</p><div class="tags"><span class="tag">VEGAN</span></div><div class="row" style="margin-top:8px"><span class="price">150.-</span></div></div>
+          <div class="item-card" data-item="yuzu-honey-soda"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Yuzu Honey Soda</p><div class="tags"><span class="tag">VEGAN</span></div><div class="row" style="margin-top:8px"><span class="price">150.-</span></div></div>
+          <div class="item-card" data-item="apple-apple-pear"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Apple Apple Pear</p><div class="tags"><span class="tag">VEGAN</span></div><div class="row" style="margin-top:8px"><span class="price">150.-</span></div></div>
+          <div class="item-card" data-item="starfruit-virgin-mojito"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Starfruit Virgin Mojito</p><div class="tags"><span class="tag">VEGAN</span></div><div class="row" style="margin-top:8px"><span class="price">150.-</span></div></div>
+          <div class="item-card" data-item="lemon-earl-grey-tea"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Lemon Earl Grey Tea</p><div class="tags"><span class="tag">VEGAN</span></div><div class="row" style="margin-top:8px"><span class="price">130.-</span></div></div>
+          <div class="item-card" data-item="peach-lemon-soda"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Peach Lemon Soda</p><div class="tags"><span class="tag">VEGAN</span></div><div class="row" style="margin-top:8px"><span class="price">150.-</span></div></div>
+          <div class="item-card" data-item="fresh-organic-young-coconut-water"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">100% Fresh Organic Young Coconut Water</p><div class="tags"><span class="tag">VEGAN</span></div><div class="row" style="margin-top:8px"><span class="price">110.-</span></div></div>
+          <div class="item-card" data-item="freshly-squeezed-double-orange-juice"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">100% Freshly Squeezed Double Orange Juice</p><div class="tags"><span class="tag">VEGAN</span></div><div class="row" style="margin-top:8px"><span class="price">195.-</span></div></div>
+        </div>
+      </div>
+
+      <div class="cat-block" id="cat-matcha">
+        <div class="cat-divider"><span class="label">Matcha</span><span class="rule"></span><span class="cat-count" data-th="9 รายการ" data-en="9 items">9 รายการ</span></div>
+        <div class="item-grid">
+          <div class="item-card" data-item="iced-clear-matcha"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Iced Clear Matcha</p><div class="row"><span class="price">120.-</span></div></div>
+          <div class="item-card" data-item="matcha-latte"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Matcha Latte</p><div class="row"><span class="price">160.-</span></div></div>
+          <div class="item-card" data-item="sparkling-yuzu-matcha"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Sparkling Yuzu Matcha</p><div class="row"><span class="price">160.-</span></div></div>
+          <div class="item-card" data-item="ocean-yuzu-matcha"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Ocean Yuzu Matcha</p><div class="row"><span class="price">185.-</span></div></div>
+          <div class="item-card" data-item="matcha-milkyteers"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Matcha Milkyteers</p><div class="row"><span class="price">185.-</span></div></div>
+          <div class="item-card" data-item="double-orange-slushie-matcha"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Double Orange Slushie Matcha</p><div class="row"><span class="price">200.-</span></div></div>
+          <div class="item-card" data-item="coco-matcha"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Coco Matcha</p><div class="row"><span class="price">170.-</span></div></div>
+          <div class="item-card" data-item="matcha-coco-cloud"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Matcha Coco Cloud</p><div class="row"><span class="price">185.-</span></div></div>
+          <div class="item-card" data-item="blueberry-oat-matcha"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Blueberry Oat Matcha</p><div class="row"><span class="price">185.-</span></div></div>
+        </div>
+      </div>
+
+      <div class="cat-block" id="cat-coffee-water">
+        <div class="cat-divider"><span class="label">Coffee &amp; Water</span><span class="rule"></span><span class="cat-count" data-th="12 รายการ" data-en="12 items">12 รายการ</span></div>
+        <div class="item-grid">
+          <div class="item-card" data-item="espresso"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Espresso</p><div class="row"><span class="price">80.-</span></div></div>
+          <div class="item-card" data-item="americano"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Americano</p><div class="row"><span class="price">100.-</span></div></div>
+          <div class="item-card" data-item="caffe-latte"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Caffe Latte</p><div class="row"><span class="price">120.-</span></div></div>
+          <div class="item-card" data-item="vanilla-latte"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Vanilla Latte</p><div class="row"><span class="price">130.-</span></div></div>
+          <div class="item-card" data-item="cappuccino"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Cappuccino</p><div class="row"><span class="price">120.-</span></div></div>
+          <div class="item-card" data-item="sparkling-espresso-yuzu"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Sparkling Espresso Yuzu</p><div class="row"><span class="price">150.-</span></div></div>
+          <div class="item-card" data-item="dark-apple"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Dark Apple</p><div class="row"><span class="price">160.-</span></div></div>
+          <div class="item-card" data-item="caffe-milkyteers"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Caffe Milkyteers</p><div class="row"><span class="price">180.-</span></div></div>
+          <div class="item-card" data-item="coco-cano"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">CoCo-Cano</p><div class="row"><span class="price">160.-</span></div></div>
+          <div class="item-card" data-item="iced-mugwort-latte"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Iced Mugwort Latte</p><div class="row"><span class="price">160.-</span></div></div>
+          <div class="item-card" data-item="alkaline-water"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Alkaline Water</p><div class="row"><span class="price">20.-</span></div></div>
+          <div class="item-card" data-item="alkaline-water-refill"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Alkaline Water Refill</p><div class="row"><span class="price">60.-</span></div></div>
+        </div>
+      </div>
+
+      <div class="cat-block" id="cat-hot-tea-drinks">
+        <div class="cat-divider"><span class="label">Hot Tea &amp; Drinks</span><span class="rule"></span><span class="cat-count" data-th="9 รายการ" data-en="9 items">9 รายการ</span></div>
+        <div class="item-grid">
+          <div class="item-card" data-item="organic-green-tea"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Organic Green Tea</p><div class="row"><span class="price">120.-</span></div></div>
+          <div class="item-card" data-item="organic-osmanthus-oolong"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Organic Osmanthus &amp; Oolong</p><div class="row"><span class="price">150.-</span></div></div>
+          <div class="item-card" data-item="organic-thai-garden-bloom"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Organic Thai Garden Bloom</p><div class="row"><span class="price">150.-</span></div></div>
+          <div class="item-card" data-item="peach-and-bloom"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Peach &amp; Bloom</p><div class="row"><span class="price">130.-</span></div></div>
+          <div class="item-card" data-item="organic-ginger"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Organic Ginger</p><div class="row"><span class="price">150.-</span></div></div>
+          <div class="item-card" data-item="organic-turmeric"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Organic Turmeric</p><div class="row"><span class="price">150.-</span></div></div>
+          <div class="item-card" data-item="organic-turmeric-ginger"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Organic Turmeric &amp; Ginger</p><div class="row"><span class="price">150.-</span></div></div>
+          <div class="item-card" data-item="blue-babycino"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Blue Babycino with Honey Marshmallow</p><div class="row"><span class="price">150.-</span></div></div>
+          <div class="item-card" data-item="pink-babycino"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Pink Babycino with Honey Marshmallow</p><div class="row"><span class="price">150.-</span></div></div>
+        </div>
+      </div>
+
+      <div class="cat-block" id="cat-salad">
+        <div class="cat-divider"><span class="label">Salad</span><span class="rule"></span><span class="cat-count" data-th="6 รายการ" data-en="6 items">6 รายการ</span></div>
+        <div class="item-grid">
+          <div class="item-card" data-item="sauteed-sesame-mushroom-salad"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Sauteed Sesame Mushroom - Multigrains Forest Salad</p><div class="tags"><span class="tag">VEGAN</span></div><div class="row" style="margin-top:8px"><span class="price">290.-</span></div></div>
+          <div class="item-card" data-item="sous-vide-spicy-korean-chicken-salad"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Sous-Vide Spicy Korean Chicken - Multigrains Forest Salad</p><div class="tags"><span class="tag">SPICY</span></div><div class="row" style="margin-top:8px"><span class="price">350.-</span></div></div>
+          <div class="item-card" data-item="homemade-sausage-salad"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Homemade Sausage - Multigrains Forest Salad</p><div class="row"><span class="price">360.-</span></div></div>
+          <div class="item-card" data-item="citrus-teriyaki-chicken-salad"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Citrus Teriyaki Chicken Salad</p><div class="tags"><span class="tag">NEW</span></div><div class="row" style="margin-top:8px"><span class="price">380.-</span></div></div>
+          <div class="item-card" data-item="grilled-vegetable-salad"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Grilled Vegetable Salad</p><div class="row"><span class="price">240.-</span></div></div>
+          <div class="item-card" data-item="waldorf-salad"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Waldorf Salad</p><div class="row"><span class="price">230.-</span></div></div>
+        </div>
+      </div>
+
+      <div class="cat-block" id="cat-main">
+        <div class="cat-divider"><span class="label">Main</span><span class="rule"></span><span class="cat-count" data-th="8 รายการ" data-en="8 items">8 รายการ</span></div>
+        <div class="item-grid">
+          <div class="item-card" data-item="all-day-everyday"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">All Day Everyday</p><div class="row"><span class="price">350.-</span></div></div>
+          <div class="item-card" data-item="sriracha-shakshuka-baked-eggs"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Sriracha Shakshuka Baked Eggs with Homemade Sausage</p><div class="row"><span class="price">380.-</span></div></div>
+          <div class="item-card" data-item="baked-chicken-parmigiana"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Baked Chicken Parmigiana</p><div class="row"><span class="price">360.-</span></div></div>
+          <div class="item-card" data-item="apple-waldorf-onsen-egg-mushrooms"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Apple Waldorf with Onsen Egg &amp; Sesame Mushrooms</p><div class="tags"><span class="tag">NEW</span></div><div class="row" style="margin-top:8px"><span class="price">270.-</span></div></div>
+          <div class="item-card" data-item="sous-vide-miso-mackerel-quinoa"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Sous-Vide Japanese Miso Mackerel with Quinoa and Grilled Vegetable Salad</p><div class="row"><span class="price">450.-</span></div></div>
+          <div class="item-card" data-item="wild-saba-teriyaki-rainbow-quinoa"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Wild Saba Teriyaki with Rainbow Quinoa</p><div class="tags"><span class="tag">NEW</span></div><div class="row" style="margin-top:8px"><span class="price">450.-</span></div></div>
+          <div class="item-card" data-item="polenta-teriyaki-chicken"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Polenta &amp; Teriyaki Chicken</p><div class="row"><span class="price">350.-</span></div></div>
+          <div class="item-card" data-item="baked-chicken-parmigiana-sandwich"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Baked Chicken Parmigiana Sandwich</p><div class="row"><span class="price">350.-</span></div></div>
+        </div>
+      </div>
+
+      <div class="cat-block" id="cat-open-faced-sandwich">
+        <div class="cat-divider"><span class="label">Open Faced Sandwich</span><span class="rule"></span><span class="cat-count" data-th="2 รายการ" data-en="2 items">2 รายการ</span></div>
+        <div class="item-grid">
+          <div class="item-card" data-item="grilled-vegetable-sourdough"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Grilled Vegetable with Homemade Toasted Sourdough</p><div class="row"><span class="price">230.-</span></div></div>
+          <div class="item-card" data-item="mashed-pumpkin-roasted-coconut-sourdough"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Mashed Pumpkin with Roasted Coconut on Homemade Sourdough Bread</p><div class="tags"><span class="tag">VEGAN</span></div><div class="row" style="margin-top:8px"><span class="price">170.-</span></div></div>
+        </div>
+      </div>
+
+      <div class="cat-block" id="cat-noodle-soup">
+        <div class="cat-divider"><span class="label">Noodle / Soup</span><span class="rule"></span><span class="cat-count" data-th="4 รายการ" data-en="4 items">4 รายการ</span></div>
+        <div class="item-grid">
+          <div class="item-card" data-item="egg-noodles-shredded-chicken-onsen-egg"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Egg Noodles with Shredded Chicken &amp; Onsen Egg</p><div class="row"><span class="price">160.-</span></div></div>
+          <div class="item-card" data-item="egg-noodles-spicy-korean-chicken"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Egg Noodles with Spicy Korean Chicken, Onsen Egg &amp; Organic Veggies</p><div class="tags"><span class="tag">NEW</span><span class="tag">SPICY</span></div><div class="row" style="margin-top:8px"><span class="price">180.-</span></div></div>
+          <div class="item-card" data-item="egg-noodles-teriyaki-chicken"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Egg Noodles with Teriyaki Chicken, Onsen Egg &amp; Organic Veggies</p><div class="tags"><span class="tag">NEW</span></div><div class="row" style="margin-top:8px"><span class="price">180.-</span></div></div>
+          <div class="item-card" data-item="organic-pure-corn-soup"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Organic Pure Corn Soup</p><div class="tags"><span class="tag">VEGAN</span></div><div class="row" style="margin-top:8px"><span class="price">220.-</span></div></div>
+        </div>
+      </div>
+
+      <div class="cat-block" id="cat-dessert">
+        <div class="cat-divider"><span class="label">Dessert</span><span class="rule"></span><span class="cat-count" data-th="8 รายการ" data-en="8 items">8 รายการ</span></div>
+        <div class="item-grid">
+          <div class="item-card" data-item="unbaked-brownies"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Unbaked Brownies with Chocolate Ganache</p><div class="tags"><span class="tag">VEGAN</span><span class="tag">GF</span></div><div class="row" style="margin-top:8px"><span class="price">75.-</span></div></div>
+          <div class="item-card" data-item="flourless-orange-almond-cake"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Flourless Whole Orange Almond Cake</p><div class="tags"><span class="tag">GF</span></div><div class="row" style="margin-top:8px"><span class="price">120.-</span></div></div>
+          <div class="item-card" data-item="chocolate-cake-strawberry-chia-jam"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Chocolate Cake with Strawberry Chia Jam</p><div class="tags"><span class="tag">VEGAN</span><span class="tag">GF</span></div><div class="row" style="margin-top:8px"><span class="price">120.-</span></div></div>
+          <div class="item-card" data-item="organic-grass-jelly-pudding"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Organic Grass Jelly Pudding</p><div class="row"><span class="price">45.-</span></div></div>
+          <div class="item-card" data-item="vegan-caramel-custard-vanilla"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Vegan Caramel Custard Vanilla - Almond Milk</p><div class="tags"><span class="tag">VEGAN</span><span class="tag">GF</span></div><div class="row" style="margin-top:8px"><span class="price">70.-</span></div></div>
+          <div class="item-card" data-item="vegan-caramel-custard-earl-grey"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Vegan Caramel Custard Earl Grey - Almond Milk</p><div class="tags"><span class="tag">VEGAN</span><span class="tag">GF</span></div><div class="row" style="margin-top:8px"><span class="price">70.-</span></div></div>
+          <div class="item-card" data-item="housemade-granola-classic"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Housemade Granola &quot;Classic&quot;</p><div class="tags"><span class="tag">VEGAN</span></div><div class="row" style="margin-top:8px"><span class="price">150.-</span></div></div>
+          <div class="item-card" data-item="housemade-granola-chocolate"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Housemade Granola &quot;Chocolate&quot;</p><div class="tags"><span class="tag">VEGAN</span></div><div class="row" style="margin-top:8px"><span class="price">160.-</span></div></div>
+        </div>
+      </div>
+
+      <div class="cat-block" id="cat-condiment">
+        <div class="cat-divider"><span class="label">Condiment</span><span class="rule"></span><span class="cat-count" data-th="4 รายการ" data-en="4 items">4 รายการ</span></div>
+        <div class="item-grid">
+          <div class="item-card" data-item="strawberry-chia-jam"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Strawberry Chia Jam</p><div class="tags"><span class="tag">VEGAN</span></div><div class="row" style="margin-top:8px"><span class="price">130.-</span></div></div>
+          <div class="item-card" data-item="raspberry-carrot-jam"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Raspberry &amp; Carrot Jam</p><div class="tags"><span class="tag">VEGAN</span></div><div class="row" style="margin-top:8px"><span class="price">130.-</span></div></div>
+          <div class="item-card" data-item="sprouted-almond-butter-smooth"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Sprouted Almond Butter &quot;Smooth&quot;</p><div class="tags"><span class="tag">VEGAN</span></div><div class="row" style="margin-top:8px"><span class="price">155.-</span></div></div>
+          <div class="item-card" data-item="sprouted-almond-butter-crunchy"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Sprouted Almond Butter &quot;Crunchy&quot;</p><div class="tags"><span class="tag">VEGAN</span></div><div class="row" style="margin-top:8px"><span class="price">155.-</span></div></div>
+        </div>
+      </div>
+
+      <div class="cat-block" id="cat-juice-flight">
+        <div class="cat-divider"><span class="label">Juice Flight</span><span class="rule"></span><span class="cat-count" data-th="1 รายการ" data-en="1 item">1 รายการ</span></div>
+        <div class="item-grid">
+          <div class="item-card" data-item="juice-flight"><div class="photo">PHOTO</div><p class="item-name" style="font-size:14px">Juice Flight</p><div class="row"><span class="price">350.-</span></div></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Footer — content pulled from the real veggiology.com site footer (tagline, LINE, social, copyright) -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-inner">
+        <p class="footer-tagline">#YourBetterMore</p>
+        <div class="footer-line">
+          <a class="footer-line-btn" href="https://lin.ee/tior4Nw" target="_blank" rel="noopener" data-th="เพิ่มเพื่อน LINE" data-en="ADD LINE">เพิ่มเพื่อน LINE</a>
+          <span class="footer-line-id">Line ID : @veggiology</span>
+        </div>
+        <div class="footer-social">
+          <a href="https://instagram.com/veggiology" target="_blank" rel="noopener" aria-label="Instagram"><img src="https://static.wixstatic.com/media/9f9c321c774844b793180620472aa4f1.png" alt="Instagram"></a>
+          <a href="https://www.facebook.com/veggiology.bkk" target="_blank" rel="noopener" aria-label="Facebook"><img src="https://static.wixstatic.com/media/e316f544f9094143b9eac01f1f19e697.png" alt="Facebook"></a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span class="footer-copyright">© 2015 by Veggiology Bangkok</span>
+      </div>
+    </div>
+  </footer>
+
+  <div class="modal-backdrop" id="modalBackdrop">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalName">
+      <button class="modal-close" onclick="closeModal()" id="modalCloseBtn" data-th="ปิด" data-en="Close" aria-label="ปิด">&times;</button>
+      <div class="modal-photo">PHOTO</div>
+      <div class="modal-body">
+        <p class="modal-cat" id="modalCat"></p>
+        <h3 class="modal-name" id="modalName"></h3>
+        <div class="modal-price-row">
+          <span class="price" id="modalPrice"></span>
+          <span class="modal-size" id="modalSize"></span>
+        </div>
+        <p class="modal-desc" id="modalDesc"></p>
+        <div class="modal-section">
+          <p class="modal-label" data-th="วัตถุดิบ" data-en="Ingredients">วัตถุดิบ</p>
+          <ul class="modal-ingredients" id="modalIngredients"></ul>
+        </div>
+        <div class="modal-section">
+          <p class="modal-label" data-th="แหล่งที่มา" data-en="Source">แหล่งที่มา</p>
+          <p class="modal-origin" id="modalOrigin"></p>
+        </div>
+        <div class="modal-section">
+          <p class="modal-label" data-th="วิดีโอแนะนำเมนู" data-en="Menu video">วิดีโอแนะนำเมนู</p>
+          <div class="modal-video"><span class="play">&#9654;</span> <span data-th="วิดีโอ (placeholder)" data-en="Video (placeholder)">วิดีโอ (placeholder)</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let currentLang = localStorage.getItem('vgl_lang') || 'th';
+
+    const ITEMS = {
+      "level-up": {name:"Level Up!", cat:"Cold-Pressed Juice · Fresh Fruit", price:"180.- / 290.-",
+        size:{th:"260ml. / 500ml.", en:"260ml. / 500ml."},
+        desc:{th:"บำรุงต่อมไทรอยด์ · ช่วยระบบย่อยอาหาร · บรรเทาอาการไอและหวัด", en:"Thyroid Health · Digestive Helper · Relieve Cough & Colds"},
+        ingredients:{th:["สับปะรด*","ฝรั่ง*","สะระแหน่*","มะนาว*"], en:["Pineapple*","Guava*","Mint*","Lime*"]},
+        origin:{th:"คั้นสดใหม่ทุกวัน จากผักผลไม้ออร์แกนิกคัดสรร", en:"Cold-pressed fresh daily from selected organic produce"}},
+      "pra-chan": {name:"Pra-Chan", cat:"Cold-Pressed Juice · Fresh Fruit", price:"180.- / 290.-",
+        size:{th:"260ml. / 500ml.", en:"260ml. / 500ml."},
+        desc:{th:"วิตามินบีคอมเพล็กซ์ · ช่วยให้นอนหลับสบาย · เพิ่มน้ำนมแม่", en:"Vitamin B Complex · Healthy Sleep · Increase Breast Milk"},
+        ingredients:{th:["มะเฟือง*","แอปเปิ้ลเขียว*","ตะไคร้*","มะนาว*"], en:["Star Fruit*","Granny Smith Apple*","Lemongrass*","Lime*"]},
+        origin:{th:"คั้นสดใหม่ทุกวัน จากผักผลไม้ออร์แกนิกคัดสรร", en:"Cold-pressed fresh daily from selected organic produce"}},
+      "happy-cells": {name:"Happy Cells", cat:"Cold-Pressed Juice · Fresh Fruit", price:"180.- / 290.-",
+        size:{th:"260ml. / 500ml.", en:"260ml. / 500ml."},
+        desc:{th:"ผิวเปล่งปลั่ง · บำรุงสายตา · ล้างลำไส้", en:"Glow Skin · Good Eyesight · Colon Cleanser"},
+        ingredients:{th:["แครอท*","สาลี่น้ำผึ้ง","แอปเปิ้ลเขียว","เสาวรส*","เมล็ดเจีย*"], en:["Carrot*","Honey Pear","Granny Smith Apple","Passion Fruit*","Chia Seeds*"]},
+        origin:{th:"คั้นสดใหม่ทุกวัน จากผักผลไม้ออร์แกนิกคัดสรร", en:"Cold-pressed fresh daily from selected organic produce"}},
+      "tummy-buddy": {name:"Tummy Buddy", cat:"Cold-Pressed Juice · Fresh Fruit", price:"180.- / 290.-",
+        size:{th:"260ml. / 500ml.", en:"260ml. / 500ml."},
+        desc:{th:"ช่วยระบบย่อยอาหาร · บรรเทาอาการท้องผูก · ล้างพิษ", en:"Digestive Aid · Constipation Relief · Detoxifying"},
+        ingredients:{th:["แอปเปิ้ลแดง","สับปะรด*","น้ำเชื่อมเมเปิลแท้","พริกคาเยนน์*","มะนาว*","น้ำอัลคาไลน์","เมล็ดเจีย*"], en:["Red Apple","Pineapple*","Real Maple Syrup","Cayenne Pepper*","Lime*","Alkaline Water","Chia Seeds*"]},
+        origin:{th:"คั้นสดใหม่ทุกวัน จากผักผลไม้ออร์แกนิกคัดสรร", en:"Cold-pressed fresh daily from selected organic produce"}},
+      "c-force": {name:"C-Force", cat:"Cold-Pressed Juice · Fresh Fruit", price:"180.- / 290.-",
+        size:{th:"260ml. / 500ml.", en:"260ml. / 500ml."},
+        desc:{th:"ต้านหวัด · ผิวเปล่งปลั่ง · ชะลอวัย", en:"Cold-Fighting · Glow Skin · Slow Aging"},
+        ingredients:{th:["ฝรั่ง*","คื่นฉ่าย*","สับปะรด*","แอปเปิ้ลแดง","ตะไคร้*","ขิง*"], en:["Guava*","Celery*","Pineapple*","Red Apple","Lemongrass*","Ginger*"]},
+        origin:{th:"คั้นสดใหม่ทุกวัน จากผักผลไม้ออร์แกนิกคัดสรร", en:"Cold-pressed fresh daily from selected organic produce"}},
+      "coco-snow": {name:"Coco Snow", cat:"Cold-Pressed Juice · Fresh Fruit", price:"180.- / 290.-",
+        size:{th:"260ml. / 500ml.", en:"260ml. / 500ml."},
+        desc:{th:"ลดความดันโลหิต · ลดคอเลสเตอรอลชนิดไม่ดี · ลดความเครียดและอาการกล้ามเนื้อตึงเครียด", en:"Lower Blood Pressure · Lower Bad Cholesterol · Reduce Stress & Muscle Tension"},
+        ingredients:{th:["น้ำมะพร้าว*","อบเชย","เมล็ดเจีย*"], en:["Coconut Water*","Cinnamon","Chia Seeds*"]},
+        origin:{th:"คั้นสดใหม่ทุกวัน จากผักผลไม้ออร์แกนิกคัดสรร", en:"Cold-pressed fresh daily from selected organic produce"}},
+      "glow": {name:"Glow", cat:"Cold-Pressed Juice · Fresh Fruit", price:"180.- / 290.-",
+        size:{th:"260ml. / 500ml.", en:"260ml. / 500ml."},
+        desc:{th:"ผิวเปล่งปลั่ง · บำรุงเส้นผม · ลดความดันโลหิต", en:"Skin Glowing · Healthy Hair · Decrease Blood Pressure"},
+        ingredients:{th:["แคนตาลูป","สับปะรด*","เลมอน*","น้ำมันเมล็ดเจีย*"], en:["Cantaloup","Pineapple*","Lemon*","Chia Seeds Oil*"]},
+        origin:{th:"คั้นสดใหม่ทุกวัน จากผักผลไม้ออร์แกนิกคัดสรร", en:"Cold-pressed fresh daily from selected organic produce"}},
+      "the-hope": {name:"The Hope", cat:"Cold-Pressed Juice · Fresh Fruit", price:"180.- / 290.-",
+        size:{th:"260ml. / 500ml.", en:"260ml. / 500ml."},
+        desc:{th:"บำรุงหัวใจ · ช่วยระบบย่อยอาหาร · ป้องกันมะเร็ง", en:"Healthy Heart · Digestive Helper · Cancer Prevention"},
+        ingredients:{th:["แครอท*","ฝรั่ง*","สาลี่น้ำผึ้ง","เสาวรส*"], en:["Carrot*","Guava*","Honey Pear","Passion Fruit*"]},
+        origin:{th:"คั้นสดใหม่ทุกวัน จากผักผลไม้ออร์แกนิกคัดสรร", en:"Cold-pressed fresh daily from selected organic produce"}},
+      "be-kind": {name:"Be Kind", cat:"Cold-Pressed Juice · Mild Veggie", price:"180.- / 290.-",
+        size:{th:"260ml. / 500ml.", en:"260ml. / 500ml."},
+        desc:{th:"เสริมความจำ · บำรุงต่อมไทรอยด์ · แคลเซียมและโฟเลตสูง", en:"Improve Memory · Thyroid Health · High Calcium & Folate"},
+        ingredients:{th:["กรีนคอส*","ผักบุ้งไทย*","สับปะรด*","แอปเปิ้ลเขียว","แอปเปิ้ลแดง"], en:["Green Cos*","Thai Watercress*","Pineapple*","Granny Smith Apple","Red Apple"]},
+        origin:{th:"คั้นสดใหม่ทุกวัน จากผักผลไม้ออร์แกนิกคัดสรร", en:"Cold-pressed fresh daily from selected organic produce"}},
+      "neon-neuron": {name:"Neon Neuron", cat:"Cold-Pressed Juice · Mild Veggie", price:"180.- / 290.-",
+        size:{th:"260ml. / 500ml.", en:"260ml. / 500ml."},
+        desc:{th:"บำรุงระบบประสาท · ผิวเปล่งปลั่ง · ปรับสมดุลกรด-ด่างในร่างกาย", en:"Nervous System Health · Glow Skin · Balance pH Level"},
+        ingredients:{th:["แตงกวาญี่ปุ่น*","น้ำมะพร้าว*","สับปะรด*","เมล็ดเจีย*","มะนาว*"], en:["Japanese Cucumber*","Coconut Water*","Pineapple*","Chia Seeds*","Lime*"]},
+        origin:{th:"คั้นสดใหม่ทุกวัน จากผักผลไม้ออร์แกนิกคัดสรร", en:"Cold-pressed fresh daily from selected organic produce"}},
+      "conscious-love": {name:"Conscious Love", cat:"Cold-Pressed Juice · Mild Veggie", price:"180.- / 290.-",
+        size:{th:"260ml. / 500ml.", en:"260ml. / 500ml."},
+        desc:{th:"ลดคอเลสเตอรอลชนิดไม่ดี · ปรับสมดุลกรด-ด่างในร่างกาย · ช่วยบรรเทาภูมิแพ้", en:"Lower Bad Cholesterol · Balance pH Level · Allergies Helper"},
+        ingredients:{th:["กะหล่ำม่วง*","สตรอว์เบอร์รีนิวซีแลนด์บด","แอปเปิ้ลเขียว","มะนาว*"], en:["Red Cabbage*","NZ Strawberry Puree","Granny Smith Apple","Lime*"]},
+        origin:{th:"คั้นสดใหม่ทุกวัน จากผักผลไม้ออร์แกนิกคัดสรร", en:"Cold-pressed fresh daily from selected organic produce"}},
+      "symphony": {name:"Symphony", cat:"Cold-Pressed Juice · Mild Veggie", price:"180.- / 290.-",
+        size:{th:"260ml. / 500ml.", en:"260ml. / 500ml."},
+        desc:{th:"เสริมภูมิคุ้มกัน · ลดการอักเสบ · ล้างพิษ", en:"Immune Booster · Reduce Inflammation · Detoxifying"},
+        ingredients:{th:["แครอท*","บีทรูท*","ส้มนาเวล","สาลี่น้ำผึ้ง","มะนาว*"], en:["Carrot*","Beetroot*","Navel Orange","Honey Pear","Lime*"]},
+        origin:{th:"คั้นสดใหม่ทุกวัน จากผักผลไม้ออร์แกนิกคัดสรร", en:"Cold-pressed fresh daily from selected organic produce"}},
+      "starry-bright": {name:"Starry Bright", cat:"Cold-Pressed Juice · Mild Veggie", price:"180.- / 290.-",
+        size:{th:"260ml. / 500ml.", en:"260ml. / 500ml."},
+        desc:{th:"ผิวเปล่งปลั่ง · บำรุงหัวใจ · ป้องกันมะเร็ง", en:"Glow Skin · Healthy Heart · Cancer Prevention"},
+        ingredients:{th:["บีทรูท*","มะเขือเทศ*","ทับทิม","แอปเปิ้ลเขียว","เสาวรส*","น้ำมันเมล็ดแฟลกซ์*"], en:["Beetroot*","Tomato*","Pomegranate","Granny Smith Apple","Passion Fruit*","Flaxseed Oil*"]},
+        origin:{th:"คั้นสดใหม่ทุกวัน จากผักผลไม้ออร์แกนิกคัดสรร", en:"Cold-pressed fresh daily from selected organic produce"}},
+      "humble-warrior": {name:"Humble Warrior", cat:"Cold-Pressed Juice · Mild Veggie", price:"180.- / 290.-",
+        size:{th:"260ml. / 500ml.", en:"260ml. / 500ml."},
+        desc:{th:"สารต้านอนุมูลอิสระ · บำรุงหัวใจ · ช่วยระบบย่อยอาหารให้ดีขึ้น", en:"Antioxidant · Healthy Heart · Improves Digestion"},
+        ingredients:{th:["สาหร่ายสไปรูลิน่า*","เคล*","แตงกวา*","สับปะรด*","แอปเปิ้ลเขียว","มะนาว*"], en:["Spirulina*","Kale*","Cucumber*","Pineapple*","Granny Smith Apple","Lime*"]},
+        origin:{th:"คั้นสดใหม่ทุกวัน จากผักผลไม้ออร์แกนิกคัดสรร", en:"Cold-pressed fresh daily from selected organic produce"}},
+      "gravity-green": {name:"Gravity Green", cat:"Cold-Pressed Juice · Bold Veggie", price:"180.- / 290.-",
+        size:{th:"260ml. / 500ml.", en:"260ml. / 500ml."},
+        desc:{th:"ล้างพิษ · สารต้านอนุมูลอิสระ · ต้านมะเร็ง", en:"Detoxifying · Antioxidant · Anticancer"},
+        ingredients:{th:["ผักบุ้งไทย*","กรีนคอส*","พาร์สลีย์","คื่นฉ่าย*","แตงกวา*","แอปเปิ้ลเขียว","เสาวรส*"], en:["Thai Watercress*","Green Cos*","Parsley","Celery*","Cucumber*","Granny Smith Apple","Passion Fruit*"]},
+        origin:{th:"คั้นสดใหม่ทุกวัน จากผักผลไม้ออร์แกนิกคัดสรร", en:"Cold-pressed fresh daily from selected organic produce"}},
+      "the-greenlaxy": {name:"The Greenlaxy", cat:"Cold-Pressed Juice · Bold Veggie", price:"180.- / 290.-",
+        size:{th:"260ml. / 500ml.", en:"260ml. / 500ml."},
+        desc:{th:"บำรุงตับ · ล้างสารโลหะหนัก · ลดคอเลสเตอรอลในเลือด", en:"Healthy Liver · Heavy Metal Detoxifying · Lower Blood Cholesterol"},
+        ingredients:{th:["เคล*","กรีนคอส*","ผักบุ้งไทย*","ผักชี*","แตงกวา*","สับปะรด*","ขิง*","มะนาว*"], en:["Kale*","Green Cos*","Thai Watercress*","Cilantro*","Cucumber*","Pineapple*","Ginger*","Lime*"]},
+        origin:{th:"คั้นสดใหม่ทุกวัน จากผักผลไม้ออร์แกนิกคัดสรร", en:"Cold-pressed fresh daily from selected organic produce"}},
+      "mini-oasis": {name:"Mini Oasis", cat:"Cold-Pressed Juice · Bold Veggie", price:"180.- / 290.-",
+        size:{th:"260ml. / 500ml.", en:"260ml. / 500ml."},
+        desc:{th:"ช่วยระบบย่อยอาหาร · บำรุงหัวใจ · ลดความดันโลหิต", en:"Digestive Helper · Healthy Heart · Lower Blood Pressure"},
+        ingredients:{th:["กรีนคอส*","แครอท*","สับปะรด*","แอปเปิ้ลเขียว","มะนาว*"], en:["Green Cos*","Carrot*","Pineapple*","Granny Smith Apple","Lime*"]},
+        origin:{th:"คั้นสดใหม่ทุกวัน จากผักผลไม้ออร์แกนิกคัดสรร", en:"Cold-pressed fresh daily from selected organic produce"}},
+      "skin-dive": {name:"Skin Dive", cat:"Cold-Pressed Juice · Bold Veggie", price:"180.- / 290.-",
+        size:{th:"260ml. / 500ml.", en:"260ml. / 500ml."},
+        desc:{th:"ผิวเปล่งปลั่ง · บำรุงเส้นผม · เพิ่มการเผาผลาญไขมัน", en:"Glow Skin · Healthy Hair · Increase Fat Burning"},
+        ingredients:{th:["มะเขือเทศ*","แอปเปิ้ลเขียว","เลมอน*","น้ำมันเมล็ดแฟลกซ์*"], en:["Tomato*","Granny Smith Apple","Lemon*","Flaxseed Oil*"]},
+        origin:{th:"คั้นสดใหม่ทุกวัน จากผักผลไม้ออร์แกนิกคัดสรร", en:"Cold-pressed fresh daily from selected organic produce"}},
+      "root-matters": {name:"Root Matters", cat:"Cold-Pressed Juice · Bold Veggie", price:"180.- / 290.-",
+        size:{th:"260ml. / 500ml.", en:"260ml. / 500ml."},
+        desc:{th:"ฟอกเลือด · เสริมระบบเผาผลาญ · เสริมประสิทธิภาพการออกกำลังกาย", en:"Blood Cleansing · Metabolism Booster · Better Exercise Performance"},
+        ingredients:{th:["บีทรูท*","แครอท*","แอปเปิ้ลเขียว","ขิง*","มะนาว*"], en:["Beetroot*","Carrot*","Granny Smith Apple","Ginger*","Lime*"]},
+        origin:{th:"คั้นสดใหม่ทุกวัน จากผักผลไม้ออร์แกนิกคัดสรร", en:"Cold-pressed fresh daily from selected organic produce"}},
+      "antidote": {name:"Antidote", cat:"Cold-Pressed Juice · Bold Veggie", price:"180.- / 290.-",
+        size:{th:"260ml. / 500ml.", en:"260ml. / 500ml."},
+        desc:{th:"ฟอกเลือด · บำรุงกระดูก · บำรุงสมอง", en:"Blood Cleansing · Healthy Bone · Healthy Brain"},
+        ingredients:{th:["ผักบุ้งไทย*","แอปเปิ้ลเขียว","สาลี่น้ำผึ้ง","สะระแหน่*","มะนาว*"], en:["Thai Watercress*","Granny Smith Apple","Honey Pear","Mint*","Lime*"]},
+        origin:{th:"คั้นสดใหม่ทุกวัน จากผักผลไม้ออร์แกนิกคัดสรร", en:"Cold-pressed fresh daily from selected organic produce"}},
+      "balanced": {name:"Balanced", cat:"Cold-Pressed Juice · Bold Veggie", price:"180.- / 290.-",
+        size:{th:"260ml. / 500ml.", en:"260ml. / 500ml."},
+        desc:{th:"ลดความดันโลหิต · ลดคอเลสเตอรอลชนิดไม่ดี · ต้านการอักเสบ", en:"Lower Blood Pressure · Lower Bad Cholesterol · Anti-Inflammatory"},
+        ingredients:{th:["แครอท*","กรีนคอส*","ส้มนาเวล","ขมิ้นชัน*","เลมอน*","น้ำมันซาชาอินชิ*"], en:["Carrot*","Green Cos*","Navel Orange","Turmeric*","Lemon*","Sasha Ichi Oil*"]},
+        origin:{th:"คั้นสดใหม่ทุกวัน จากผักผลไม้ออร์แกนิกคัดสรร", en:"Cold-pressed fresh daily from selected organic produce"}},
+      "adam-and-leaf": {name:"Adam & Leaf", cat:"Cold-Pressed Juice · Bold Veggie", price:"180.- / 290.-",
+        size:{th:"260ml. / 500ml.", en:"260ml. / 500ml."},
+        desc:{th:"โฟเลตสูง · สารต้านอนุมูลอิสระ · ลดคอเลสเตอรอลชนิดไม่ดี", en:"High in Folate · Antioxidant · Lower Bad Cholesterol"},
+        ingredients:{th:["ผักบุ้งไทย*","กรีนคอส*","บีทรูท*","พาร์สลีย์","ฝรั่ง*","แตงกวาญี่ปุ่น*","แอปเปิ้ลเขียว","ใบมะกรูด*","มะนาว*"], en:["Thai Watercress*","Green Cos*","Beetroot*","Parsley","Guava*","Japanese Cucumber*","Granny Smith Apple","Kaffir Leaf*","Lime*"]},
+        origin:{th:"คั้นสดใหม่ทุกวัน จากผักผลไม้ออร์แกนิกคัดสรร", en:"Cold-pressed fresh daily from selected organic produce"}},
+      "awaken": {name:"Awaken", cat:"Cold-Pressed Juice · Bold Veggie", price:"180.- / 290.-",
+        size:{th:"260ml. / 500ml.", en:"260ml. / 500ml."},
+        desc:{th:"ลดความเสี่ยงมะเร็ง · บำรุงหัวใจ · ต้านการอักเสบ", en:"Lower Risk of Cancer · Healthy Heart · Anti-Inflammatory"},
+        ingredients:{th:["คื่นฉ่าย*","แตงกวา*","กรีนคอส*","ส้มนาเวล","เลมอน*"], en:["Celery*","Cucumber*","Green Cos*","Navel Orange","Lemon*"]},
+        origin:{th:"คั้นสดใหม่ทุกวัน จากผักผลไม้ออร์แกนิกคัดสรร", en:"Cold-pressed fresh daily from selected organic produce"}},
+      "lean-green": {name:"Lean Green", cat:"Cold-Pressed Juice · Bold Veggie", price:"180.- / 290.-",
+        size:{th:"260ml. / 500ml.", en:"260ml. / 500ml."},
+        desc:{th:"ฟอกเลือด · ป้องกันมะเร็ง · ลดคอเลสเตอรอลชนิดไม่ดี", en:"Blood Cleansing · Cancer Prevention · Lower Bad Cholesterol"},
+        ingredients:{th:["คื่นฉ่าย*","กรีนคอส*","ผักบุ้งไทย*","แตงกวา*","เลมอน*","มะนาว*"], en:["Celery*","Green Cos*","Thai Watercress*","Cucumber*","Lemon*","Lime*"]},
+        origin:{th:"คั้นสดใหม่ทุกวัน จากผักผลไม้ออร์แกนิกคัดสรร", en:"Cold-pressed fresh daily from selected organic produce"}},
+      "the-3-milkyteers": {name:"The 3 Milkyteers", cat:"Cold-Pressed Juice · Smooth Plant Milk", price:"180.- / 290.-",
+        size:{th:"260ml. / 500ml.", en:"260ml. / 500ml."},
+        desc:{th:"ชำระล้างผิว · สารต้านอนุมูลอิสระ · บำรุงหัวใจ", en:"Skin Purifying · Antioxidant · Heart Health"},
+        ingredients:{th:["อัลมอนด์เพาะงอก","เม็ดมะม่วงหิมพานต์*","บราซิลนัท","วานิลลา","น้ำมะพร้าว*","เกลือหิมาลัยสีชมพู"], en:["Sprouted Almond","Cashew*","Brazil Nut","Vanilla","Coconut Water*","Himalayan Pink Salt"]},
+        origin:{th:"คั้นสดใหม่ทุกวัน จากผักผลไม้ออร์แกนิกคัดสรร", en:"Cold-pressed fresh daily from selected organic produce"}},
+      "unicorn-milk": {name:"Unicorn Milk", cat:"Cold-Pressed Juice · Smooth Plant Milk", price:"180.- / 290.-",
+        size:{th:"260ml. / 500ml.", en:"260ml. / 500ml."},
+        desc:{th:"ผิวเปล่งปลั่ง · เพิ่มเม็ดเลือดแดง · บำรุงหัวใจและกระดูก", en:"Skin Glowing · Increase Red Blood Cell · Healthy Heart & Bone"},
+        ingredients:{th:["เม็ดมะม่วงหิมพานต์*","อัลมอนด์เพาะงอก","บีทรูท*","น้ำมะพร้าว*","น้ำหวานดอกมะพร้าว*","น้ำอัลคาไลน์"], en:["Cashew*","Sprouted Almond","Beetroot*","Coconut Water*","Coconut Flower Nectar*","Alkaline Water"]},
+        origin:{th:"คั้นสดใหม่ทุกวัน จากผักผลไม้ออร์แกนิกคัดสรร", en:"Cold-pressed fresh daily from selected organic produce"}},
+      "cloud-s-milk": {name:"Cloud's Milk", cat:"Cold-Pressed Juice · Smooth Plant Milk", price:"180.- / 290.-",
+        size:{th:"260ml. / 500ml.", en:"260ml. / 500ml."},
+        desc:{th:"สารต้านอนุมูลอิสระ · บำรุงหัวใจ · ใยอาหารสูง", en:"Antioxidant · Healthy Heart · High in Fiber"},
+        ingredients:{th:["เม็ดมะม่วงหิมพานต์*","อินทผลัม","น้ำอัลคาไลน์","เกลือหิมาลัยสีชมพู"], en:["Cashew*","Dates","Alkaline Water","Himalayan Pink Salt"]},
+        origin:{th:"คั้นสดใหม่ทุกวัน จากผักผลไม้ออร์แกนิกคัดสรร", en:"Cold-pressed fresh daily from selected organic produce"}},
+      "mermaid": {name:"Mermaid", cat:"Cold-Pressed Juice · Smooth Plant Milk", price:"180.- / 290.-",
+        size:{th:"260ml. / 500ml.", en:"260ml. / 500ml."},
+        desc:{th:"โปรตีนจากพืช · อุดมไขมันดี · เพิ่มพลังงาน", en:"Plant-Based Protein · Healthy Fat Rich · Boost Energy"},
+        ingredients:{th:["สาหร่ายสไปรูลิน่าสีฟ้า*","เมล็ดฟักทอง*","เมล็ดทานตะวัน*","นมพืชธัญพืช 5 ชนิด","น้ำหวานดอกมะพร้าว*","วานิลลา"], en:["Blue Spirulina*","Pumpkin Seeds*","Sunflower Seeds*","5 Mix Grain Plant Milk","Coconut Flower Nectar*","Vanilla"]},
+        origin:{th:"คั้นสดใหม่ทุกวัน จากผักผลไม้ออร์แกนิกคัดสรร", en:"Cold-pressed fresh daily from selected organic produce"}},
+      "broccoli": {name:"Broccoli", cat:"Special & Seasonal", price:"290.-",
+        size:{th:"500ml.", en:"500ml."},
+        desc:{th:"สารต้านอนุมูลอิสระ · ต้านมะเร็ง · ต้าน PM 2.5", en:"Antioxidant · Anticancer · PM 2.5 Fighter"},
+        ingredients:{th:["บรอกโคลี*","แอปเปิ้ลเขียว","วอเตอร์เครส*","มะนาว*"], en:["Broccoli*","Granny Smith Apple","Watercress*","Lime*"]},
+        origin:{th:"คั้นสดใหม่ทุกวัน จากผักผลไม้ออร์แกนิกคัดสรร", en:"Cold-pressed fresh daily from selected organic produce"}},
+      "gotu-kola": {name:"Gotu Kola", cat:"Special & Seasonal", price:"290.-",
+        size:{th:"500ml.", en:"500ml."},
+        desc:{th:"ผสมจาก ใบบัวบก* · น้ำมะพร้าว* · สับปะรด*", en:"Made from Gotu Kola*, Coconut Water*, Pineapple*."},
+        ingredients:{th:["ใบบัวบก*","น้ำมะพร้าว*","สับปะรด*"], en:["Gotu Kola*","Coconut Water*","Pineapple*"]},
+        origin:{th:"คั้นสดใหม่ทุกวัน จากผักผลไม้ออร์แกนิกคัดสรร", en:"Cold-pressed fresh daily from selected organic produce"}},
+      "blue-butterfly": {name:"Blue Butterfly", cat:"Special & Seasonal", price:"290.-",
+        size:{th:"500ml.", en:"500ml."},
+        desc:{th:"ผสมจาก น้ำมะพร้าวออร์แกนิก* · ดอกอัญชันออร์แกนิก*", en:"Made from Organic Coconut Water*, Organic Butterfly Pea*."},
+        ingredients:{th:["น้ำมะพร้าวออร์แกนิก*","ดอกอัญชันออร์แกนิก*"], en:["Organic Coconut Water*","Organic Butterfly Pea*"]},
+        origin:{th:"คั้นสดใหม่ทุกวัน จากผักผลไม้ออร์แกนิกคัดสรร", en:"Cold-pressed fresh daily from selected organic produce"}},
+      "purple-power": {name:"Purple Power", cat:"Special & Seasonal", price:"290.-",
+        size:{th:"500ml.", en:"500ml."},
+        desc:{th:"ผสมจาก กะหล่ำม่วง* · แอปเปิ้ลเขียว · มะนาว* · สาลี่น้ำผึ้ง", en:"Made from Red Cabbage*, Granny Smith Apple, Lime*, Honey Pear."},
+        ingredients:{th:["กะหล่ำม่วง*","แอปเปิ้ลเขียว","มะนาว*","สาลี่น้ำผึ้ง"], en:["Red Cabbage*","Granny Smith Apple","Lime*","Honey Pear"]},
+        origin:{th:"คั้นสดใหม่ทุกวัน จากผักผลไม้ออร์แกนิกคัดสรร", en:"Cold-pressed fresh daily from selected organic produce"}},
+      "apple-lemon": {name:"Apple Lemon", cat:"Special & Seasonal", price:"290.-",
+        size:{th:"500ml.", en:"500ml."},
+        desc:{th:"ผสมจาก แอปเปิ้ลเขียว · แอปเปิ้ลแดง · เลมอน*", en:"Made from Granny Smith Apple, Red Apple, Lemon*."},
+        ingredients:{th:["แอปเปิ้ลเขียว","แอปเปิ้ลแดง","เลมอน*"], en:["Granny Smith Apple","Red Apple","Lemon*"]},
+        origin:{th:"คั้นสดใหม่ทุกวัน จากผักผลไม้ออร์แกนิกคัดสรร", en:"Cold-pressed fresh daily from selected organic produce"}},
+      "jerusalem-artichoke": {name:"Jerusalem Artichoke", cat:"Special & Seasonal", price:"290.-",
+        size:{th:"500ml.", en:"500ml."},
+        desc:{th:"ผสมจาก แก่นตะวัน* · ผักกวางตุ้ง* · แตงกวา* · มะนาว*", en:"Made from Jerusalem Artichoke*, Bok Choy*, Cucumber*, Lime*."},
+        ingredients:{th:["แก่นตะวัน*","ผักกวางตุ้ง*","แตงกวา*","มะนาว*","แอปเปิ้ลเขียว"], en:["Jerusalem Artichoke*","Bok Choy*","Cucumber*","Lime*","Granny Smith Apple"]},
+        origin:{th:"คั้นสดใหม่ทุกวัน จากผักผลไม้ออร์แกนิกคัดสรร", en:"Cold-pressed fresh daily from selected organic produce"}},
+      "strawberry-field": {name:"Strawberry Field", cat:"Special & Seasonal", price:"290.-",
+        size:{th:"500ml.", en:"500ml."},
+        desc:{th:"ผสมจาก สตรอว์เบอร์รีนิวซีแลนด์ · สาลี่น้ำผึ้ง · แอปเปิ้ลเขียว · บีทรูท*", en:"Made from New Zealand Strawberry, Honey Pear, Granny Smith Apple, Beetroot*."},
+        ingredients:{th:["สตรอว์เบอร์รีนิวซีแลนด์","สาลี่น้ำผึ้ง","แอปเปิ้ลเขียว","บีทรูท*","น้ำอัลคาไลน์","เลมอน*"], en:["New Zealand Strawberry","Honey Pear","Granny Smith Apple","Beetroot*","Alkaline H2O","Lemon*"]},
+        origin:{th:"คั้นสดใหม่ทุกวัน จากผักผลไม้ออร์แกนิกคัดสรร", en:"Cold-pressed fresh daily from selected organic produce"}},
+      "raspberry-rain": {name:"Raspberry Rain", cat:"Special & Seasonal", price:"290.-",
+        size:{th:"500ml.", en:"500ml."},
+        desc:{th:"ผสมจาก ราสป์เบอร์รีนิวซีแลนด์ · สับปะรด* · สาลี่น้ำผึ้ง · ส้มนาเวล", en:"Made from New Zealand Raspberry, Pineapple*, Honey Pear, Navel Orange."},
+        ingredients:{th:["ราสป์เบอร์รีนิวซีแลนด์","สับปะรด*","สาลี่น้ำผึ้ง","ส้มนาเวล","น้ำอัลคาไลน์"], en:["New Zealand Raspberry","Pineapple*","Honey Pear","Navel Orange","Alkaline H2O"]},
+        origin:{th:"คั้นสดใหม่ทุกวัน จากผักผลไม้ออร์แกนิกคัดสรร", en:"Cold-pressed fresh daily from selected organic produce"}},
+      "watermelon-no-1": {name:"Watermelon No.1", cat:"Special & Seasonal", price:"290.-",
+        size:{th:"500ml.", en:"500ml."},
+        desc:{th:"ป้องกันมะเร็ง · บำรุงหัวใจ · ลดความดันโลหิต", en:"Cancer Prevention · Healthy Heart · Lower Blood Pressure"},
+        ingredients:{th:["แตงโม*","สับปะรด*","แอปเปิ้ล","มะนาว*","เมล็ดเจีย*"], en:["Watermelon*","Pineapple*","Apple","Lime*","Chia Seeds*"]},
+        origin:{th:"คั้นสดใหม่ทุกวัน จากผักผลไม้ออร์แกนิกคัดสรร", en:"Cold-pressed fresh daily from selected organic produce"}},
+      "watermelon-no-2": {name:"Watermelon No.2", cat:"Special & Seasonal", price:"290.-",
+        size:{th:"500ml.", en:"500ml."},
+        desc:{th:"ป้องกันมะเร็ง · บำรุงหัวใจ · ลดความดันโลหิต", en:"Cancer Prevention · Healthy Heart · Lower Blood Pressure"},
+        ingredients:{th:["แตงโม*","มะเขือเทศ*","แอปเปิ้ลเขียว","มะนาว*","บีทรูท*"], en:["Watermelon*","Tomato*","Granny Smith Apple","Lime*","Beetroot*"]},
+        origin:{th:"คั้นสดใหม่ทุกวัน จากผักผลไม้ออร์แกนิกคัดสรร", en:"Cold-pressed fresh daily from selected organic produce"}},
+      "watermelon-no-3": {name:"Watermelon No.3 \"3 Youthful\"", cat:"Special & Seasonal", price:"290.-",
+        size:{th:"500ml.", en:"500ml."},
+        desc:{th:"ผสมจาก แตงโม* · สตรอว์เบอร์รี · ราสป์เบอร์รี · โหระพา*", en:"Made from Watermelon*, Strawberry, Raspberry, Basil*."},
+        ingredients:{th:["แตงโม*","สตรอว์เบอร์รี","ราสป์เบอร์รี","โหระพา*","แอปเปิ้ลเขียว","เลมอน*"], en:["Watermelon*","Strawberry","Raspberry","Basil*","Granny Smith Apple","Lemon*"]},
+        origin:{th:"คั้นสดใหม่ทุกวัน จากผักผลไม้ออร์แกนิกคัดสรร", en:"Cold-pressed fresh daily from selected organic produce"}},
+      "tangerine": {name:"Tangerine", cat:"Pure Juice", price:"125.- / 310.- / 600.-",
+        size:{th:"200ml. / 500ml. / 1L.", en:"200ml. / 500ml. / 1L."},
+        desc:{th:"คอลลาเจนสูง · วิตามินซีคอมเพล็กซ์ · ลดคอเลสเตอรอลชนิดไม่ดี · ชะลอวัย", en:"High Collagen · Vitamin C Complex · Lower Bad Cholesterol · Slow Aging"},
+        ingredients:{th:["ส้มสายน้ำผึ้งออร์แกนิก*"], en:["Organic Tangerine*"]},
+        origin:{th:"คั้นสดใหม่ทุกวัน จากผักผลไม้ออร์แกนิกคัดสรร", en:"Cold-pressed fresh daily from selected organic produce"}},
+      "coconut-water": {name:"Coconut Water", cat:"Pure Juice", price:"90.- / 180.- / 330.-",
+        size:{th:"200ml. / 500ml. / 1L.", en:"200ml. / 500ml. / 1L."},
+        desc:{th:"สารต้านอนุมูลอิสระ · บำรุงหัวใจ · ลดความดันโลหิต", en:"Antioxidant · Heart Health · Reduce Blood Pressure"},
+        ingredients:{th:["น้ำมะพร้าวออร์แกนิกแท้*"], en:["Pure Organic Coconut Water*"]},
+        origin:{th:"คั้นสดใหม่ทุกวัน จากผักผลไม้ออร์แกนิกคัดสรร", en:"Cold-pressed fresh daily from selected organic produce"}},
+      "corn-it": {name:"Corn It", cat:"Pure Juice", price:"110.-",
+        size:{th:"250ml.", en:"250ml."},
+        desc:{th:"บำรุงสายตา · ผิวเปล่งปลั่ง · ชะลอวัย", en:"Good Eyesight · Glow Skin · Slow Aging"},
+        ingredients:{th:["ข้าวโพดหวาน*","น้ำหวานดอกมะพร้าว*","เกลือหิมาลัยสีชมพู*"], en:["Sweet Corn*","Coconut Flower Nectar*","Himalayan Pink Salt*"]},
+        origin:{th:"คั้นสดใหม่ทุกวัน จากผักผลไม้ออร์แกนิกคัดสรร", en:"Cold-pressed fresh daily from selected organic produce"}},
+      "celery-juice": {name:"Celery Juice", cat:"Pure Juice", price:"380.-",
+        size:{th:"500ml.", en:"500ml."},
+        desc:{th:"ผสมจาก น้ำคื่นฉ่าย 100%*", en:"Made from 100% Celery Juice*."},
+        ingredients:{th:["น้ำคื่นฉ่าย 100%*"], en:["100% Celery Juice*"]},
+        origin:{th:"คั้นสดใหม่ทุกวัน จากผักผลไม้ออร์แกนิกคัดสรร", en:"Cold-pressed fresh daily from selected organic produce"}},
+      "carrot-juice": {name:"Carrot Juice", cat:"Pure Juice", price:"180.- / 290.-",
+        size:{th:"260ml. / 500ml.", en:"260ml. / 500ml."},
+        desc:{th:"ผสมจาก น้ำแครอท 100%*", en:"Made from 100% Carrot Juice*."},
+        ingredients:{th:["น้ำแครอท 100%*"], en:["100% Carrot Juice*"]},
+        origin:{th:"คั้นสดใหม่ทุกวัน จากผักผลไม้ออร์แกนิกคัดสรร", en:"Cold-pressed fresh daily from selected organic produce"}},
+      "passion-fruit-juice": {name:"Passion Fruit Juice", cat:"Pure Juice", price:"260.- / 450.-",
+        size:{th:"260ml. / 500ml.", en:"260ml. / 500ml."},
+        desc:{th:"ผสมจาก น้ำเสาวรส 100%*", en:"Made from 100% Passion Fruit Juice*."},
+        ingredients:{th:["น้ำเสาวรส 100%*"], en:["100% Passion Fruit Juice*"]},
+        origin:{th:"คั้นสดใหม่ทุกวัน จากผักผลไม้ออร์แกนิกคัดสรร", en:"Cold-pressed fresh daily from selected organic produce"}},
+      "beetroot-juice": {name:"Beetroot Juice", cat:"Pure Juice", price:"200.- / 330.-",
+        size:{th:"260ml. / 500ml.", en:"260ml. / 500ml."},
+        desc:{th:"ผสมจาก น้ำบีทรูท 100%*", en:"Made from 100% Beetroot Juice*."},
+        ingredients:{th:["น้ำบีทรูท 100%*"], en:["100% Beetroot Juice*"]},
+        origin:{th:"คั้นสดใหม่ทุกวัน จากผักผลไม้ออร์แกนิกคัดสรร", en:"Cold-pressed fresh daily from selected organic produce"}},
+      "pink-guava": {name:"Pink Guava", cat:"Pure Juice", price:"290.-",
+        size:{th:"500ml.", en:"500ml."},
+        desc:{th:"ผสมจาก ฝรั่งชมพูออร์แกนิกแท้* · เลมอน*", en:"Made from Pure Organic Pink Guava*, Lemon*."},
+        ingredients:{th:["ฝรั่งชมพูออร์แกนิกแท้*","เลมอน*"], en:["Pure Organic Pink Guava*","Lemon*"]},
+        origin:{th:"คั้นสดใหม่ทุกวัน จากผักผลไม้ออร์แกนิกคัดสรร", en:"Cold-pressed fresh daily from selected organic produce"}},
+      "celery-and-friends-1": {name:"Celery & Friends 1", cat:"Celery Series", price:"330.-",
+        size:{th:"500ml.", en:"500ml."},
+        desc:{th:"ผสมจาก คื่นฉ่าย* · วอเตอร์เครส* · แอปเปิ้ลเขียว", en:"Made from Celery*, Watercress*, Granny Smith Apple."},
+        ingredients:{th:["คื่นฉ่าย*","วอเตอร์เครส*","แอปเปิ้ลเขียว"], en:["Celery*","Watercress*","Granny Smith Apple"]},
+        origin:{th:"คั้นสดใหม่ทุกวัน จากผักผลไม้ออร์แกนิกคัดสรร", en:"Cold-pressed fresh daily from selected organic produce"}},
+      "celery-and-friends-2": {name:"Celery & Friends 2", cat:"Celery Series", price:"330.-",
+        size:{th:"500ml.", en:"500ml."},
+        desc:{th:"ผสมจาก คื่นฉ่าย* · สับปะรด*", en:"Made from Celery*, Pineapple*."},
+        ingredients:{th:["คื่นฉ่าย*","สับปะรด*"], en:["Celery*","Pineapple*"]},
+        origin:{th:"คั้นสดใหม่ทุกวัน จากผักผลไม้ออร์แกนิกคัดสรร", en:"Cold-pressed fresh daily from selected organic produce"}},
+      "celery-and-friends-3": {name:"Celery & Friends 3", cat:"Celery Series", price:"330.-",
+        size:{th:"500ml.", en:"500ml."},
+        desc:{th:"ผสมจาก คื่นฉ่าย* · แอปเปิ้ลเขียว", en:"Made from Celery*, Granny Smith Apple."},
+        ingredients:{th:["คื่นฉ่าย*","แอปเปิ้ลเขียว"], en:["Celery*","Granny Smith Apple"]},
+        origin:{th:"คั้นสดใหม่ทุกวัน จากผักผลไม้ออร์แกนิกคัดสรร", en:"Cold-pressed fresh daily from selected organic produce"}},
+      "celery-and-friends-4": {name:"Celery & Friends 4", cat:"Celery Series", price:"330.-",
+        size:{th:"500ml.", en:"500ml."},
+        desc:{th:"ผสมจาก คื่นฉ่าย* · แตงกวา* · แอปเปิ้ล · มะนาว*", en:"Made from Celery*, Cucumber*, Apple, Lime*."},
+        ingredients:{th:["คื่นฉ่าย*","แตงกวา*","แอปเปิ้ล","มะนาว*"], en:["Celery*","Cucumber*","Apple","Lime*"]},
+        origin:{th:"คั้นสดใหม่ทุกวัน จากผักผลไม้ออร์แกนิกคัดสรร", en:"Cold-pressed fresh daily from selected organic produce"}},
+      "celery-and-friends-5": {name:"Celery & Friends 5", cat:"Celery Series", price:"330.-",
+        size:{th:"500ml.", en:"500ml."},
+        desc:{th:"ผสมจาก คื่นฉ่าย* · แครอท* · แอปเปิ้ลเขียว", en:"Made from Celery*, Carrot*, Granny Smith Apple."},
+        ingredients:{th:["คื่นฉ่าย*","แครอท*","แอปเปิ้ลเขียว"], en:["Celery*","Carrot*","Granny Smith Apple"]},
+        origin:{th:"คั้นสดใหม่ทุกวัน จากผักผลไม้ออร์แกนิกคัดสรร", en:"Cold-pressed fresh daily from selected organic produce"}},
+      "celery-and-friends-6": {name:"Celery & Friends 6", cat:"Celery Series", price:"330.-",
+        size:{th:"500ml.", en:"500ml."},
+        desc:{th:"ผสมจาก คื่นฉ่าย* · บีทรูท* · สับปะรด*", en:"Made from Celery*, Beetroot*, Pineapple*."},
+        ingredients:{th:["คื่นฉ่าย*","บีทรูท*","สับปะรด*"], en:["Celery*","Beetroot*","Pineapple*"]},
+        origin:{th:"คั้นสดใหม่ทุกวัน จากผักผลไม้ออร์แกนิกคัดสรร", en:"Cold-pressed fresh daily from selected organic produce"}},
+      "plant-milk-tea-grass-jelly": {name:"Plant Milk Tea with Organic Grass Jelly Pudding", cat:"Special Drinks", price:"160.- / 290.- / 550.-",
+        size:{th:"250ml. / 500ml. / 1L.", en:"250ml. / 500ml. / 1L."},
+        desc:{th:"ผสมจาก นมพืชธัญพืช 5 ชนิด · ชาเอิร์ลเกรย์ · บัวลอยเฉาก๊วยออร์แกนิก* · น้ำตาลมะพร้าว*", en:"Made from 5 Mix Grains Plant Milk, Earl Grey Tea, Organic Grass Jelly Pudding*, Coconut Sugar*."},
+        ingredients:{th:["นมพืชธัญพืช 5 ชนิด","ชาเอิร์ลเกรย์","บัวลอยเฉาก๊วยออร์แกนิก*","น้ำตาลมะพร้าว*"], en:["5 Mix Grains Plant Milk","Earl Grey Tea","Organic Grass Jelly Pudding*","Coconut Sugar*"]},
+        origin:{th:"ปรุงสดทุกแก้วจากวัตถุดิบคัดสรร ไม่ใช้เครื่องปรุงสำเร็จรูป", en:"Freshly prepared each glass from selected ingredients, no pre-made mixes"}},
+      "teatox": {name:"Teatox", cat:"Special Drinks", price:"160.-",
+        size:{th:"500ml.", en:"500ml."},
+        desc:{th:"ผสมจาก น้ำแอปเปิ้ลสกัดเย็น · เมล็ดเจีย* · ชุมเห็ดเทศอินเดีย* · พุทราจีน*", en:"Made from Cold-Pressed Apple Juice, Chia Seeds*, Indian Senna*, Jujube*."},
+        ingredients:{th:["น้ำแอปเปิ้ลสกัดเย็น","เมล็ดเจีย*","ชุมเห็ดเทศอินเดีย*","พุทราจีน*","เก๋ากี้*","กระเจี๊ยบแดง*","เก๊กฮวย*","ดอกคำฝอย*","หญ้าหวาน","น้ำ"], en:["Cold-Pressed Apple Juice","Chia Seeds*","Indian Senna*","Jujube*","Goji Berry*","Roselle*","Chrysanthemum*","Safflower*","Stevia","H2O"]},
+        origin:{th:"ปรุงสดทุกแก้วจากวัตถุดิบคัดสรร ไม่ใช้เครื่องปรุงสำเร็จรูป", en:"Freshly prepared each glass from selected ingredients, no pre-made mixes"}},
+      "cold-brew-rose-tea": {name:"48+ Hrs Cold Brew Rose Tea", cat:"Special Drinks", price:"110.-",
+        size:{th:"500ml.", en:"500ml."},
+        desc:{th:"ผสมจาก กุหลาบออร์แกนิก* · น้ำอัลคาไลน์", en:"Made from Organic Rose*, Alkaline Water."},
+        ingredients:{th:["กุหลาบออร์แกนิก*","น้ำอัลคาไลน์"], en:["Organic Rose*","Alkaline Water"]},
+        origin:{th:"ชงสดใหม่จากใบชาและสมุนไพรคัดสรร", en:"Freshly brewed from selected tea leaves and herbs"}},
+      "apple-a-day": {name:"Apple A Day", cat:"Special Drinks", price:"130.-",
+        size:{th:"200ml.", en:"200ml."},
+        desc:{th:"ปรับสมดุลกรด-ด่างในร่างกาย · ลดคอเลสเตอรอลชนิดไม่ดี · ปรับสมดุลระบบร่างกายโดยรวม", en:"Balance pH Level · Lower Bad Cholesterol · Balance Entire Body System"},
+        ingredients:{th:["น้ำส้มสายชูแอปเปิ้ลไซเดอร์*","แอปเปิ้ลเขียว","น้ำผึ้งดิบ*","ขิง*","เสาวรส*","เมล็ดเจีย*","เกลือหิมาลัยสีชมพู*"], en:["Apple Cider*","Granny Smith Apple","Raw Honey*","Ginger*","Passion Fruit*","Chia Seeds*","Himalayan Pink Salt*"]},
+        origin:{th:"ปรุงสดทุกแก้วจากวัตถุดิบคัดสรร ไม่ใช้เครื่องปรุงสำเร็จรูป", en:"Freshly prepared each glass from selected ingredients, no pre-made mixes"}},
+      "lemon-lime": {name:"Lemon Lime", cat:"Honey Lemon-Lime", price:"130.-",
+        size:{th:"250ml.", en:"250ml."},
+        desc:{th:"ผสมจาก น้ำผึ้ง* · เลมอน* · มะนาว* · น้ำอัลคาไลน์", en:"Made from Honey*, Lemon*, Lime*, Alkaline Water."},
+        ingredients:{th:["น้ำผึ้ง*","เลมอน*","มะนาว*","น้ำอัลคาไลน์"], en:["Honey*","Lemon*","Lime*","Alkaline Water"]},
+        origin:{th:"ปรุงสดทุกแก้วจากวัตถุดิบคัดสรร ไม่ใช้เครื่องปรุงสำเร็จรูป", en:"Freshly prepared each glass from selected ingredients, no pre-made mixes"}},
+      "hll-ginger": {name:"Ginger", cat:"Honey Lemon-Lime", price:"130.-",
+        size:{th:"250ml.", en:"250ml."},
+        desc:{th:"ผสมจาก ขิง* · น้ำผึ้ง* · เลมอน* · น้ำอัลคาไลน์", en:"Made from Ginger*, Honey*, Lemon*, Alkaline Water."},
+        ingredients:{th:["ขิง*","น้ำผึ้ง*","เลมอน*","น้ำอัลคาไลน์"], en:["Ginger*","Honey*","Lemon*","Alkaline Water"]},
+        origin:{th:"ปรุงสดทุกแก้วจากวัตถุดิบคัดสรร ไม่ใช้เครื่องปรุงสำเร็จรูป", en:"Freshly prepared each glass from selected ingredients, no pre-made mixes"}},
+      "hll-passion-fruit": {name:"Passion Fruit", cat:"Honey Lemon-Lime", price:"130.-",
+        size:{th:"250ml.", en:"250ml."},
+        desc:{th:"ผสมจาก เสาวรส* · น้ำผึ้ง* · เลมอน* · น้ำอัลคาไลน์", en:"Made from Passion Fruit*, Honey*, Lemon*, Alkaline Water."},
+        ingredients:{th:["เสาวรส*","น้ำผึ้ง*","เลมอน*","น้ำอัลคาไลน์"], en:["Passion Fruit*","Honey*","Lemon*","Alkaline Water"]},
+        origin:{th:"ปรุงสดทุกแก้วจากวัตถุดิบคัดสรร ไม่ใช้เครื่องปรุงสำเร็จรูป", en:"Freshly prepared each glass from selected ingredients, no pre-made mixes"}},
+      "finger-root": {name:"Finger Root", cat:"Honey Lemon-Lime", price:"130.-",
+        size:{th:"250ml.", en:"250ml."},
+        desc:{th:"ผสมจาก กระชาย* · น้ำผึ้ง* · เลมอน* · น้ำอัลคาไลน์", en:"Made from Fingerroot*, Honey*, Lemon*, Alkaline Water."},
+        ingredients:{th:["กระชาย*","น้ำผึ้ง*","เลมอน*","น้ำอัลคาไลน์"], en:["Fingerroot*","Honey*","Lemon*","Alkaline Water"]},
+        origin:{th:"ปรุงสดทุกแก้วจากวัตถุดิบคัดสรร ไม่ใช้เครื่องปรุงสำเร็จรูป", en:"Freshly prepared each glass from selected ingredients, no pre-made mixes"}},
+      "hll-turmeric": {name:"Turmeric", cat:"Honey Lemon-Lime", price:"130.-",
+        size:{th:"250ml.", en:"250ml."},
+        desc:{th:"ผสมจาก ขมิ้นชัน* · น้ำผึ้ง* · เลมอน* · มะนาว*", en:"Made from Turmeric*, Honey*, Lemon*, Lime*."},
+        ingredients:{th:["ขมิ้นชัน*","น้ำผึ้ง*","เลมอน*","มะนาว*","น้ำอัลคาไลน์"], en:["Turmeric*","Honey*","Lemon*","Lime*","Alkaline Water"]},
+        origin:{th:"ปรุงสดทุกแก้วจากวัตถุดิบคัดสรร ไม่ใช้เครื่องปรุงสำเร็จรูป", en:"Freshly prepared each glass from selected ingredients, no pre-made mixes"}},
+      "cranberry-hibiscus": {name:"Cranberry Hibiscus", cat:"Honey Lemon-Lime", price:"130.-",
+        size:{th:"250ml.", en:"250ml."},
+        desc:{th:"ผสมจาก แครนเบอร์รี่กระเจี๊ยบ* · น้ำผึ้ง* · เลมอน* · น้ำอัลคาไลน์", en:"Made from Cranberry Hibiscus*, Honey*, Lemon*, Alkaline Water."},
+        ingredients:{th:["แครนเบอร์รี่กระเจี๊ยบ*","น้ำผึ้ง*","เลมอน*","น้ำอัลคาไลน์"], en:["Cranberry Hibiscus*","Honey*","Lemon*","Alkaline Water"]},
+        origin:{th:"ปรุงสดทุกแก้วจากวัตถุดิบคัดสรร ไม่ใช้เครื่องปรุงสำเร็จรูป", en:"Freshly prepared each glass from selected ingredients, no pre-made mixes"}},
+      "torch-ginger": {name:"Torch Ginger", cat:"Honey Lemon-Lime", price:"130.-",
+        size:{th:"250ml.", en:"250ml."},
+        desc:{th:"ผสมจาก ดอกดาหลา* · เลมอน* · มะนาว* · น้ำผึ้ง", en:"Made from Torch Ginger*, Lemon*, Lime*, Honey."},
+        ingredients:{th:["ดอกดาหลา*","เลมอน*","มะนาว*","น้ำผึ้ง","น้ำอัลคาไลน์"], en:["Torch Ginger*","Lemon*","Lime*","Honey","Alkaline Water"]},
+        origin:{th:"ปรุงสดทุกแก้วจากวัตถุดิบคัดสรร ไม่ใช้เครื่องปรุงสำเร็จรูป", en:"Freshly prepared each glass from selected ingredients, no pre-made mixes"}},
+      "mix-it-yourself-condensed": {name:"Mix It Yourself (Condensed)", cat:"Honey Lemon-Lime", price:"350.-",
+        size:{th:"250ml. concentrate", en:"250ml. concentrate"},
+        desc:{th:"ผสมจาก น้ำผึ้ง* · เลมอน* · มะนาว* (ไซรัปเข้มข้น ผสมน้ำ/โซดาเองตามชอบ)", en:"Made from Honey*, Lemon*, Lime*. (Concentrated syrup — mix with water or soda to taste)"},
+        ingredients:{th:["น้ำผึ้ง*","เลมอน*","มะนาว*"], en:["Honey*","Lemon*","Lime*"]},
+        origin:{th:"ปรุงสดทุกแก้วจากวัตถุดิบคัดสรร ไม่ใช้เครื่องปรุงสำเร็จรูป", en:"Freshly prepared each glass from selected ingredients, no pre-made mixes"}},
+      "antibiotic-shot-a1": {name:"Antibiotic Shot (A1)", cat:"Superfood Booster", price:"110.-",
+        size:{th:"70ml.", en:"70ml."},
+        desc:{th:"ผสมจาก เพสต์ขมิ้นทอง*", en:"Made from Turmeric Golden Paste*."},
+        ingredients:{th:["เพสต์ขมิ้นทอง*"], en:["Turmeric Golden Paste*"]},
+        origin:{th:"ปรุงสดทุกแก้วจากวัตถุดิบคัดสรร ไม่ใช้เครื่องปรุงสำเร็จรูป", en:"Freshly prepared each glass from selected ingredients, no pre-made mixes"}},
+      "antibiotic-shot-a2": {name:"Antibiotic Shot (A2)", cat:"Superfood Booster", price:"110.-",
+        size:{th:"70ml.", en:"70ml."},
+        desc:{th:"ผสมจาก ขมิ้นชัน* · มะนาว*", en:"Made from Turmeric*, Lime*."},
+        ingredients:{th:["ขมิ้นชัน*","มะนาว*"], en:["Turmeric*","Lime*"]},
+        origin:{th:"ปรุงสดทุกแก้วจากวัตถุดิบคัดสรร ไม่ใช้เครื่องปรุงสำเร็จรูป", en:"Freshly prepared each glass from selected ingredients, no pre-made mixes"}},
+      "antibiotic-shot-a3": {name:"Antibiotic Shot (A3)", cat:"Superfood Booster", price:"110.-",
+        size:{th:"70ml.", en:"70ml."},
+        desc:{th:"ผสมจาก ขมิ้นชัน* · เสาวรส*", en:"Made from Turmeric*, Passionfruit*."},
+        ingredients:{th:["ขมิ้นชัน*","เสาวรส*"], en:["Turmeric*","Passionfruit*"]},
+        origin:{th:"ปรุงสดทุกแก้วจากวัตถุดิบคัดสรร ไม่ใช้เครื่องปรุงสำเร็จรูป", en:"Freshly prepared each glass from selected ingredients, no pre-made mixes"}},
+      "digestive-shot-d1": {name:"Digestive Shot (D1)", cat:"Superfood Booster", price:"110.-",
+        size:{th:"70ml.", en:"70ml."},
+        desc:{th:"ผสมจาก ขิง*", en:"Made from Ginger*."},
+        ingredients:{th:["ขิง*"], en:["Ginger*"]},
+        origin:{th:"ปรุงสดทุกแก้วจากวัตถุดิบคัดสรร ไม่ใช้เครื่องปรุงสำเร็จรูป", en:"Freshly prepared each glass from selected ingredients, no pre-made mixes"}},
+      "digestive-shot-d2": {name:"Digestive Shot (D2)", cat:"Superfood Booster", price:"110.-",
+        size:{th:"70ml.", en:"70ml."},
+        desc:{th:"ผสมจาก ขิง* · มะนาว*", en:"Made from Ginger*, Lime*."},
+        ingredients:{th:["ขิง*","มะนาว*"], en:["Ginger*","Lime*"]},
+        origin:{th:"ปรุงสดทุกแก้วจากวัตถุดิบคัดสรร ไม่ใช้เครื่องปรุงสำเร็จรูป", en:"Freshly prepared each glass from selected ingredients, no pre-made mixes"}},
+      "digestive-shot-d3": {name:"Digestive Shot (D3)", cat:"Superfood Booster", price:"110.-",
+        size:{th:"70ml.", en:"70ml."},
+        desc:{th:"ผสมจาก ขิง* · เสาวรส*", en:"Made from Ginger*, Passionfruit*."},
+        ingredients:{th:["ขิง*","เสาวรส*"], en:["Ginger*","Passionfruit*"]},
+        origin:{th:"ปรุงสดทุกแก้วจากวัตถุดิบคัดสรร ไม่ใช้เครื่องปรุงสำเร็จรูป", en:"Freshly prepared each glass from selected ingredients, no pre-made mixes"}},
+      "immunity-shot-m1": {name:"Immunity Shot (M1)", cat:"Superfood Booster", price:"110.-",
+        size:{th:"70ml.", en:"70ml."},
+        desc:{th:"ผสมจาก เคล*", en:"Made from Kale*."},
+        ingredients:{th:["เคล*"], en:["Kale*"]},
+        origin:{th:"ปรุงสดทุกแก้วจากวัตถุดิบคัดสรร ไม่ใช้เครื่องปรุงสำเร็จรูป", en:"Freshly prepared each glass from selected ingredients, no pre-made mixes"}},
+      "immunity-shot-m2": {name:"Immunity Shot (M2)", cat:"Superfood Booster", price:"110.-",
+        size:{th:"70ml.", en:"70ml."},
+        desc:{th:"ผสมจาก เคล* · มะนาว*", en:"Made from Kale*, Lime*."},
+        ingredients:{th:["เคล*","มะนาว*"], en:["Kale*","Lime*"]},
+        origin:{th:"ปรุงสดทุกแก้วจากวัตถุดิบคัดสรร ไม่ใช้เครื่องปรุงสำเร็จรูป", en:"Freshly prepared each glass from selected ingredients, no pre-made mixes"}},
+      "immunity-shot-m3": {name:"Immunity Shot (M3)", cat:"Superfood Booster", price:"110.-",
+        size:{th:"70ml.", en:"70ml."},
+        desc:{th:"ผสมจาก เคล* · เสาวรส*", en:"Made from Kale*, Passionfruit*."},
+        ingredients:{th:["เคล*","เสาวรส*"], en:["Kale*","Passionfruit*"]},
+        origin:{th:"ปรุงสดทุกแก้วจากวัตถุดิบคัดสรร ไม่ใช้เครื่องปรุงสำเร็จรูป", en:"Freshly prepared each glass from selected ingredients, no pre-made mixes"}},
+      "green-hero": {name:"Green Hero", cat:"Veggiology Kids", price:"65.-",
+        size:{th:"130ml.", en:"130ml."},
+        desc:{th:"ผสมจาก ผักโขม* · แอปเปิ้ล · สับปะรด*", en:"Made from Spinach*, Apple, Pineapple*."},
+        ingredients:{th:["ผักโขม*","แอปเปิ้ล","สับปะรด*"], en:["Spinach*","Apple","Pineapple*"]},
+        origin:{th:"คั้นสดใหม่ทุกวัน จากผักผลไม้ออร์แกนิกคัดสรร", en:"Cold-pressed fresh daily from selected organic produce"}},
+      "apple-alpaca": {name:"Apple Alpaca", cat:"Veggiology Kids", price:"65.-",
+        size:{th:"130ml.", en:"130ml."},
+        desc:{th:"ผสมจาก แอปเปิ้ล · แอปเปิ้ลเขียว · สาลี่น้ำผึ้ง", en:"Made from Apple, Granny Smith Apple, Honey Pear."},
+        ingredients:{th:["แอปเปิ้ล","แอปเปิ้ลเขียว","สาลี่น้ำผึ้ง"], en:["Apple","Granny Smith Apple","Honey Pear"]},
+        origin:{th:"คั้นสดใหม่ทุกวัน จากผักผลไม้ออร์แกนิกคัดสรร", en:"Cold-pressed fresh daily from selected organic produce"}},
+      "ninja-melon": {name:"Ninja Melon", cat:"Veggiology Kids", price:"65.-",
+        size:{th:"130ml.", en:"130ml."},
+        desc:{th:"ผสมจาก แตงโม* · แอปเปิ้ล · สับปะรด*", en:"Made from Watermelon*, Apple, Pineapple*."},
+        ingredients:{th:["แตงโม*","แอปเปิ้ล","สับปะรด*"], en:["Watermelon*","Apple","Pineapple*"]},
+        origin:{th:"คั้นสดใหม่ทุกวัน จากผักผลไม้ออร์แกนิกคัดสรร", en:"Cold-pressed fresh daily from selected organic produce"}},
+      "captain-carrot": {name:"Captain Carrot", cat:"Veggiology Kids", price:"65.-",
+        size:{th:"130ml.", en:"130ml."},
+        desc:{th:"ผสมจาก แครอท* · แอปเปิ้ล · เสาวรส* · สาลี่น้ำผึ้ง", en:"Made from Carrot*, Apple, Passion Fruit*, Honey Pear."},
+        ingredients:{th:["แครอท*","แอปเปิ้ล","เสาวรส*","สาลี่น้ำผึ้ง"], en:["Carrot*","Apple","Passion Fruit*","Honey Pear"]},
+        origin:{th:"คั้นสดใหม่ทุกวัน จากผักผลไม้ออร์แกนิกคัดสรร", en:"Cold-pressed fresh daily from selected organic produce"}},
+      "pineapple-papa": {name:"Pineapple Papa", cat:"Veggiology Kids", price:"65.-",
+        size:{th:"130ml.", en:"130ml."},
+        desc:{th:"ผสมจาก สับปะรด* · สาลี่น้ำผึ้ง", en:"Made from Pineapple*, Honey Pear."},
+        ingredients:{th:["สับปะรด*","สาลี่น้ำผึ้ง"], en:["Pineapple*","Honey Pear"]},
+        origin:{th:"คั้นสดใหม่ทุกวัน จากผักผลไม้ออร์แกนิกคัดสรร", en:"Cold-pressed fresh daily from selected organic produce"}},
+      "organic-cold-pressed-veggie-slushie": {name:"Organic Cold-Pressed Veggie Slushie", cat:"Slushies", price:"250.-",
+        size:{th:"250ml.", en:"250ml."},
+        desc:{th:"ไม่เติมน้ำตาล · ไม่ผสมน้ำ · ไม่ใส่สารเพิ่มความข้น", en:"No Added Sugar · No Water · No Thickeners"},
+        ingredients:{th:["น้ำผักโขมออร์แกนิก","น้ำวอเตอร์เครสออร์แกนิก","น้ำผักกาดโรเมนออร์แกนิก","น้ำสับปะรดออร์แกนิก","น้ำแอปเปิ้ลแดงและแอปเปิ้ลเขียว","ผักกาดโรเมนสด (ท็อปปิ้ง)","กล้วยออร์แกนิก (ท็อปปิ้ง)","แครอทออร์แกนิก (ท็อปปิ้ง)","สตรอว์เบอร์รี (ท็อปปิ้ง)","บลูเบอร์รี (ท็อปปิ้ง)","น้ำผึ้ง (ท็อปปิ้ง)","เจลลี่เมล็ดเจีย (ท็อปปิ้ง)"], en:["Organic Spinach Juice","Organic Watercress Juice","Organic Romaine Lettuce Juice","Organic Pineapple Juice","Red & Granny Smith Apple Juice","Fresh Romaine Lettuce (topping)","Organic Banana (topping)","Organic Carrot (topping)","Strawberry (topping)","Blueberry (topping)","Honey (topping)","Chia Seeds Jelly (topping)"]},
+        origin:{th:"ปั่นสดใหม่ทุกแก้วจากผักผลไม้และวัตถุดิบออร์แกนิกคัดสรร", en:"Freshly blended each glass from organic fruit, vegetables and selected ingredients"}},
+      "pure-double-orange-slushie": {name:"Pure Double Orange Slushie", cat:"Slushies", price:"250.-",
+        size:{th:"250ml.", en:"250ml."},
+        desc:{th:"ไม่เติมน้ำตาล · ไม่ผสมน้ำ · ไม่ใส่สารเพิ่มความข้น", en:"No Added Sugar · No Water · No Thickeners"},
+        ingredients:{th:["น้ำส้มเมอร์คอตคั้นสด 100%","น้ำส้มนาเวล","น้ำแอปเปิ้ลสกัดเย็น","ส้มเชื่อมโฮมเมด (ท็อปปิ้ง)","น้ำผึ้ง (ท็อปปิ้ง)","ใบไทม์ (ท็อปปิ้ง)","น้ำผึ้งป่าและเจลลี่เมล็ดเจียออร์แกนิก (ท็อปปิ้ง)"], en:["100% Freshly Squeezed Honey Murcott Orange Juice","Navel Orange Juice","Cold-Pressed Apple Juice","House-Made Candied Orange (topping)","Honey (topping)","Thyme Leaf (topping)","Organic Wild Honey & Chia Seeds Jelly (topping)"]},
+        origin:{th:"ปั่นสดใหม่ทุกแก้วจากผักผลไม้และวัตถุดิบออร์แกนิกคัดสรร", en:"Freshly blended each glass from organic fruit, vegetables and selected ingredients"}},
+      "veggie-orange-slushie-mix": {name:"Veggie + Orange Slushie Mix", cat:"Slushies", price:"250.-",
+        size:{th:"250ml.", en:"250ml."},
+        desc:{th:"ไม่เติมน้ำตาล · ไม่ผสมน้ำ · ไม่ใส่สารเพิ่มความข้น (ผสมสูตร Veggie Slushie และ Double Orange Slushie ในแก้วเดียว)", en:"No Added Sugar · No Water · No Thickeners (A combination of the Veggie Slushie and Double Orange Slushie in one glass)"},
+        ingredients:{th:["น้ำผักโขมออร์แกนิก","น้ำวอเตอร์เครสออร์แกนิก","น้ำผักกาดโรเมนออร์แกนิก","น้ำสับปะรดออร์แกนิก","น้ำส้มเมอร์คอตคั้นสด 100%","น้ำส้มนาเวล","น้ำแอปเปิ้ลสกัดเย็น"], en:["Organic Spinach Juice","Organic Watercress Juice","Organic Romaine Lettuce Juice","Organic Pineapple Juice","100% Freshly Squeezed Honey Murcott Orange Juice","Navel Orange Juice","Cold-Pressed Apple Juice"]},
+        origin:{th:"ปั่นสดใหม่ทุกแก้วจากผักผลไม้และวัตถุดิบออร์แกนิกคัดสรร", en:"Freshly blended each glass from organic fruit, vegetables and selected ingredients"}},
+      "silent-brave": {name:"Silent Brave", cat:"Thick Smoothies", price:"195.-",
+        size:{th:"1 glass", en:"1 glass"},
+        desc:{th:"ผสมจาก ผักโขมออร์แกนิก · ผักกาดโรเมนออร์แกนิก · คื่นฉ่ายออร์แกนิก · แอปเปิ้ลเขียว", en:"Made from Organic Spinach, Organic Romaine Lettuce, Organic Celery, Granny Smith Apple."},
+        ingredients:{th:["ผักโขมออร์แกนิก","ผักกาดโรเมนออร์แกนิก","คื่นฉ่ายออร์แกนิก","แอปเปิ้ลเขียว","สาลี่น้ำผึ้ง","กล้วยออร์แกนิก","มะนาวออร์แกนิก","สาหร่ายสไปรูลิน่าออร์แกนิก","น้ำมันเมล็ดเจียออร์แกนิก","พุดดิ้งเมล็ดเจียกับนมอัลมอนด์เพาะงอกโฮมเมด"], en:["Organic Spinach","Organic Romaine Lettuce","Organic Celery","Granny Smith Apple","Honey Pear","Organic Banana","Organic Lime","Organic Spirulina","Organic Chia Seed Oil","Organic Chia Seed Pudding with Housemade Sprouted Almond Milk"]},
+        origin:{th:"ปั่นสดใหม่ทุกแก้วจากผักผลไม้และวัตถุดิบออร์แกนิกคัดสรร", en:"Freshly blended each glass from organic fruit, vegetables and selected ingredients"}},
+      "at-ease": {name:"At Ease", cat:"Thick Smoothies", price:"195.-",
+        size:{th:"1 glass", en:"1 glass"},
+        desc:{th:"ผสมจาก ส้มนาเวล · สับปะรดออร์แกนิก · น้ำมะพร้าวออร์แกนิก · เสาวรสออร์แกนิก", en:"Made from Navel Orange, Organic Pineapple, Organic Coconut Water, Organic Passion Fruit."},
+        ingredients:{th:["ส้มนาเวล","สับปะรดออร์แกนิก","น้ำมะพร้าวออร์แกนิก","เสาวรสออร์แกนิก","กล้วยออร์แกนิก","ผงขมิ้นชัน","บีทรูทออร์แกนิก"], en:["Navel Orange","Organic Pineapple","Organic Coconut Water","Organic Passion Fruit","Organic Banana","Turmeric Powder","Organic Beetroot"]},
+        origin:{th:"ปั่นสดใหม่ทุกแก้วจากผักผลไม้และวัตถุดิบออร์แกนิกคัดสรร", en:"Freshly blended each glass from organic fruit, vegetables and selected ingredients"}},
+      "earth": {name:"Earth", cat:"Thick Smoothies", price:"195.-",
+        size:{th:"1 glass", en:"1 glass"},
+        desc:{th:"ผสมจาก โกโก้ออร์แกนิก · วอเตอร์เครสออร์แกนิก · บลูเบอร์รี · อินทผลัม", en:"Made from Organic Cacao, Organic Watercress, Blueberry, Dates."},
+        ingredients:{th:["โกโก้ออร์แกนิก","วอเตอร์เครสออร์แกนิก","บลูเบอร์รี","อินทผลัม","กล้วยออร์แกนิก","เมล็ดแฟลกซ์สีทองออร์แกนิก","นมอัลมอนด์เพาะงอกโฮมเมด"], en:["Organic Cacao","Organic Watercress","Blueberry","Dates","Organic Banana","Organic Golden Flaxseed","Housemade Sprouted Almond Milk"]},
+        origin:{th:"ปั่นสดใหม่ทุกแก้วจากผักผลไม้และวัตถุดิบออร์แกนิกคัดสรร", en:"Freshly blended each glass from organic fruit, vegetables and selected ingredients"}},
+      "rhapsody-red": {name:"Rhapsody Red", cat:"Thick Smoothies", price:"195.-",
+        size:{th:"1 glass", en:"1 glass"},
+        desc:{th:"ผสมจาก สตรอว์เบอร์รี · บีทรูทออร์แกนิก · สับปะรดออร์แกนิก · วอเตอร์เครสออร์แกนิก", en:"Made from Strawberry, Organic Beetroot, Organic Pineapple, Organic Watercress."},
+        ingredients:{th:["สตรอว์เบอร์รี","บีทรูทออร์แกนิก","สับปะรดออร์แกนิก","วอเตอร์เครสออร์แกนิก","มะนาวออร์แกนิก","โยเกิร์ตออร์แกนิก","นมอัลมอนด์เพาะงอกโฮมเมด"], en:["Strawberry","Organic Beetroot","Organic Pineapple","Organic Watercress","Organic Lime","Organic Yogurt","Housemade Sprouted Almond Milk"]},
+        origin:{th:"ปั่นสดใหม่ทุกแก้วจากผักผลไม้และวัตถุดิบออร์แกนิกคัดสรร", en:"Freshly blended each glass from organic fruit, vegetables and selected ingredients"}},
+      "celery-melody": {name:"Celery Melody", cat:"Thick Smoothies", price:"185.-",
+        size:{th:"1 glass", en:"1 glass"},
+        desc:{th:"ผสมจาก คื่นฉ่ายออร์แกนิก · แอปเปิ้ลแดง · แอปเปิ้ลเขียว · เลมอนออร์แกนิก", en:"Made from Organic Celery, Red Apple, Granny Smith Apple, Organic Lemon."},
+        ingredients:{th:["คื่นฉ่ายออร์แกนิก","แอปเปิ้ลแดง","แอปเปิ้ลเขียว","เลมอนออร์แกนิก"], en:["Organic Celery","Red Apple","Granny Smith Apple","Organic Lemon"]},
+        origin:{th:"ปั่นสดใหม่ทุกแก้วจากผักผลไม้และวัตถุดิบออร์แกนิกคัดสรร", en:"Freshly blended each glass from organic fruit, vegetables and selected ingredients"}},
+      "shield": {name:"Shield", cat:"Smoothie Bowls", price:"280.-",
+        size:{th:"1 bowl", en:"1 bowl"},
+        desc:{th:"ผสมจาก อะโวคาโด · กีวีทอง · แอปเปิ้ลแดง · เมล็ดแฟลกซ์สีทองออร์แกนิก", en:"Made from Avocado, Golden Kiwi, Red Apple, Organic Golden Flaxseed."},
+        ingredients:{th:["อะโวคาโด","กีวีทอง","แอปเปิ้ลแดง","เมล็ดแฟลกซ์สีทองออร์แกนิก","ผักกาดโรเมนออร์แกนิก","กล้วยออร์แกนิก","น้ำส้มสายชูข้าวออร์แกนิก","ผักกาดโรเมนสด (ท็อปปิ้ง)","กล้วยออร์แกนิก (ท็อปปิ้ง)","เมล็ดเจียขาวออร์แกนิก (ท็อปปิ้ง)","แครนเบอร์รีอบแห้ง (ท็อปปิ้ง)","กราโนล่าโฮมเมด (ท็อปปิ้ง)"], en:["Avocado","Golden Kiwi","Red Apple","Organic Golden Flaxseed","Organic Romaine Lettuce","Organic Banana","Organic Rice Vinegar","Fresh Romaine Lettuce (topping)","Organic Banana (topping)","Organic White Chia Seed (topping)","Dried Cranberries (topping)","Housemade Granola Shot (topping)"]},
+        origin:{th:"ปั่นสดใหม่ทุกแก้วจากผักผลไม้และวัตถุดิบออร์แกนิกคัดสรร", en:"Freshly blended each glass from organic fruit, vegetables and selected ingredients"}},
+      "coco-island": {name:"CoCo Island", cat:"Smoothie Bowls", price:"290.-",
+        size:{th:"1 bowl", en:"1 bowl"},
+        desc:{th:"ผสมจาก เม็ดมะม่วงหิมพานต์ออร์แกนิก · น้ำมะพร้าวออร์แกนิก · เนื้อมะพร้าวออร์แกนิก · กล้วยออร์แกนิก", en:"Made from Organic Cashew, Organic Coconut Water, Organic Coconut Meat, Organic Banana."},
+        ingredients:{th:["เม็ดมะม่วงหิมพานต์ออร์แกนิก","น้ำมะพร้าวออร์แกนิก","เนื้อมะพร้าวออร์แกนิก","กล้วยออร์แกนิก","เนยอัลมอนด์โฮมเมด","นมอัลมอนด์โฮมเมด","เกลือหิมาลัยสีชมพู","วานิลลา","มะเดื่ออบแห้ง (ท็อปปิ้ง)","ข้าวพอง (ท็อปปิ้ง)","เมล็ดงาขี้ม้อน (ท็อปปิ้ง)","กราโนล่าโฮมเมด (ท็อปปิ้ง)"], en:["Organic Cashew","Organic Coconut Water","Organic Coconut Meat","Organic Banana","Housemade Almond Butter","Housemade Almond Milk","Himalayan Pink Salt","Vanilla","Dried Figs (topping)","Puffed Rice (topping)","Perilla Seeds (topping)","Housemade Granola Shot (topping)"]},
+        origin:{th:"ปั่นสดใหม่ทุกแก้วจากผักผลไม้และวัตถุดิบออร์แกนิกคัดสรร", en:"Freshly blended each glass from organic fruit, vegetables and selected ingredients"}},
+      "blessing-blue": {name:"Blessing Blue", cat:"Smoothie Bowls", price:"290.-",
+        size:{th:"1 bowl", en:"1 bowl"},
+        desc:{th:"ผสมจาก สาหร่ายสไปรูลิน่าสีฟ้า · กล้วยออร์แกนิก · แอปเปิ้ลแดง · น้ำมันเมล็ดแฟลกซ์ออร์แกนิกโฮมเมด", en:"Made from Blue Spirulina, Organic Banana, Red Apple, Housemade Organic Flaxseed Oil."},
+        ingredients:{th:["สาหร่ายสไปรูลิน่าสีฟ้า","กล้วยออร์แกนิก","แอปเปิ้ลแดง","น้ำมันเมล็ดแฟลกซ์ออร์แกนิกโฮมเมด","น้ำมะพร้าวออร์แกนิก","เมล็ดเจียออร์แกนิก","เนื้อมะพร้าวออร์แกนิก (ท็อปปิ้ง)","นมอัลมอนด์ (ท็อปปิ้ง)","ข้าวพอง (ท็อปปิ้ง)","เมล็ดเจียขาวออร์แกนิก (ท็อปปิ้ง)","มะพร้าวแผ่นกรอบ (ท็อปปิ้ง)","ซีเรียลข้าวและถั่ว (ท็อปปิ้ง)","บลูเบอร์รีแช่แข็ง (ท็อปปิ้ง)","กราโนล่าโฮมเมด (ท็อปปิ้ง)"], en:["Blue Spirulina","Organic Banana","Red Apple","Housemade Organic Flaxseed Oil","Organic Coconut Water","Organic Chia Seed","Organic Coconut Meat (topping)","Almond Milk (topping)","Puffed Rice (topping)","Organic White Chia Seeds (topping)","Coconut Chips (topping)","Rice & Bean Cereal (topping)","Frozen Blueberries (topping)","Housemade Granola Shot (topping)"]},
+        origin:{th:"ปั่นสดใหม่ทุกแก้วจากผักผลไม้และวัตถุดิบออร์แกนิกคัดสรร", en:"Freshly blended each glass from organic fruit, vegetables and selected ingredients"}},
+      "chronic-joy": {name:"Chronic Joy", cat:"Smoothie Bowls", price:"290.-",
+        size:{th:"1 bowl", en:"1 bowl"},
+        desc:{th:"ผสมจาก มะม่วง · ส้มนาเวล · บีทรูทออร์แกนิก · เสาวรสออร์แกนิก", en:"Made from Mango, Navel Orange, Organic Beetroot, Organic Passion Fruit."},
+        ingredients:{th:["มะม่วง","ส้มนาเวล","บีทรูทออร์แกนิก","เสาวรสออร์แกนิก","กล้วยออร์แกนิก","เมล็ดเจียออร์แกนิก","เนื้อมะพร้าวออร์แกนิก","นมอัลมอนด์เพาะงอกโฮมเมด","มะม่วง (ท็อปปิ้ง)","กล้วยออร์แกนิก (ท็อปปิ้ง)","สตรอว์เบอร์รี (ท็อปปิ้ง)","เมล็ดฟักทองออร์แกนิกคั่ว (ท็อปปิ้ง)","เมล็ดทานตะวันออร์แกนิกคั่ว (ท็อปปิ้ง)","ดอกไม้กินได้ออร์แกนิก (ท็อปปิ้ง)","กราโนล่าโฮมเมด (ท็อปปิ้ง)"], en:["Mango","Navel Orange","Organic Beetroot","Organic Passion Fruit","Organic Banana","Organic Chia Seed","Organic Coconut Meat","Housemade Sprouted Almond Milk","Mango (topping)","Organic Banana (topping)","Strawberries (topping)","Toasted Organic Pumpkin Seeds (topping)","Toasted Organic Sunflower Seeds (topping)","Organic Edible Flowers (topping)","Housemade Granola Shot (topping)"]},
+        origin:{th:"ปั่นสดใหม่ทุกแก้วจากผักผลไม้และวัตถุดิบออร์แกนิกคัดสรร", en:"Freshly blended each glass from organic fruit, vegetables and selected ingredients"}},
+      "lavender-limade": {name:"Lavender Limade", cat:"VGL Drinks", price:"150.-",
+        size:{th:"1 glass", en:"1 glass"},
+        desc:{th:"ผสมจาก น้ำเชื่อมลาเวนเดอร์-น้ำผึ้งออร์แกนิกโฮมเมด · น้ำผึ้งออร์แกนิก · ดอกอัญชันออร์แกนิก · โซดา", en:"Made from Housemade Organic Lavender-Honey Syrup, Organic Honey, Organic Butterfly Pea, Soda."},
+        ingredients:{th:["น้ำเชื่อมลาเวนเดอร์-น้ำผึ้งออร์แกนิกโฮมเมด","น้ำผึ้งออร์แกนิก","ดอกอัญชันออร์แกนิก","โซดา","มะนาวออร์แกนิก"], en:["Housemade Organic Lavender-Honey Syrup","Organic Honey","Organic Butterfly Pea","Soda","Organic Lime"]},
+        origin:{th:"ปรุงสดทุกแก้วจากวัตถุดิบคัดสรร ไม่ใช้เครื่องปรุงสำเร็จรูป", en:"Freshly prepared each glass from selected ingredients, no pre-made mixes"}},
+      "yuzu-honey-soda": {name:"Yuzu Honey Soda", cat:"VGL Drinks", price:"150.-",
+        size:{th:"1 glass", en:"1 glass"},
+        desc:{th:"ผสมจาก น้ำยูซุ 100% · น้ำเชื่อมยูซุพรีเมียม · โซดา · น้ำผึ้งออร์แกนิก", en:"Made from 100% Yuzu Juice, Premium Yuzu Syrup, Soda, Organic Honey."},
+        ingredients:{th:["น้ำยูซุ 100%","น้ำเชื่อมยูซุพรีเมียม","โซดา","น้ำผึ้งออร์แกนิก"], en:["100% Yuzu Juice","Premium Yuzu Syrup","Soda","Organic Honey"]},
+        origin:{th:"ปรุงสดทุกแก้วจากวัตถุดิบคัดสรร ไม่ใช้เครื่องปรุงสำเร็จรูป", en:"Freshly prepared each glass from selected ingredients, no pre-made mixes"}},
+      "apple-apple-pear": {name:"Apple Apple Pear", cat:"VGL Drinks", price:"150.-",
+        size:{th:"1 glass", en:"1 glass"},
+        desc:{th:"ผสมจาก น้ำแอปเปิ้ลแดงสกัดเย็น · น้ำแอปเปิ้ลเขียวสกัดเย็น · น้ำสาลี่น้ำผึ้งสกัดเย็น", en:"Made from Cold-Pressed Red Apple, Cold-Pressed Granny Smith Apple, Cold-Pressed Honey Pear."},
+        ingredients:{th:["น้ำแอปเปิ้ลแดงสกัดเย็น","น้ำแอปเปิ้ลเขียวสกัดเย็น","น้ำสาลี่น้ำผึ้งสกัดเย็น"], en:["Cold-Pressed Red Apple","Cold-Pressed Granny Smith Apple","Cold-Pressed Honey Pear"]},
+        origin:{th:"ปรุงสดทุกแก้วจากวัตถุดิบคัดสรร ไม่ใช้เครื่องปรุงสำเร็จรูป", en:"Freshly prepared each glass from selected ingredients, no pre-made mixes"}},
+      "starfruit-virgin-mojito": {name:"Starfruit Virgin Mojito", cat:"VGL Drinks", price:"150.-",
+        size:{th:"1 glass", en:"1 glass"},
+        desc:{th:"ผสมจาก น้ำมะเฟืองสกัดเย็น · มะนาวออร์แกนิก · โซดา · น้ำตาลมะพร้าวออร์แกนิก", en:"Made from Cold-Pressed Star Fruit, Organic Lime, Soda, Organic Coconut Sugar."},
+        ingredients:{th:["น้ำมะเฟืองสกัดเย็น","มะนาวออร์แกนิก","โซดา","น้ำตาลมะพร้าวออร์แกนิก","สะระแหน่ออร์แกนิก"], en:["Cold-Pressed Star Fruit","Organic Lime","Soda","Organic Coconut Sugar","Organic Mint"]},
+        origin:{th:"ปรุงสดทุกแก้วจากวัตถุดิบคัดสรร ไม่ใช้เครื่องปรุงสำเร็จรูป", en:"Freshly prepared each glass from selected ingredients, no pre-made mixes"}},
+      "lemon-earl-grey-tea": {name:"Lemon Earl Grey Tea", cat:"VGL Drinks", price:"130.-",
+        size:{th:"1 glass", en:"1 glass"},
+        desc:{th:"ผสมจาก ชาเอิร์ลเกรย์ · เลมอนออร์แกนิก · น้ำผึ้ง · น้ำตาลดอกมะพร้าว", en:"Made from Earl Grey Tea, Organic Lemon, Honey, Coconut Blossom Sugar."},
+        ingredients:{th:["ชาเอิร์ลเกรย์","เลมอนออร์แกนิก","น้ำผึ้ง","น้ำตาลดอกมะพร้าว"], en:["Earl Grey Tea","Organic Lemon","Honey","Coconut Blossom Sugar"]},
+        origin:{th:"ปรุงสดทุกแก้วจากวัตถุดิบคัดสรร ไม่ใช้เครื่องปรุงสำเร็จรูป", en:"Freshly prepared each glass from selected ingredients, no pre-made mixes"}},
+      "peach-lemon-soda": {name:"Peach Lemon Soda", cat:"VGL Drinks", price:"150.-",
+        size:{th:"1 glass", en:"1 glass"},
+        desc:{th:"ผสมจาก น้ำพีชแท้ · เลมอนออร์แกนิก · โซดา · น้ำตาลดอกมะพร้าว", en:"Made from Real Peach Juice, Organic Lemon, Soda, Coconut Blossom Sugar."},
+        ingredients:{th:["น้ำพีชแท้","เลมอนออร์แกนิก","โซดา","น้ำตาลดอกมะพร้าว","พีชกระป๋องหั่นชิ้น"], en:["Real Peach Juice","Organic Lemon","Soda","Coconut Blossom Sugar","Canned Peach Sliced"]},
+        origin:{th:"ปรุงสดทุกแก้วจากวัตถุดิบคัดสรร ไม่ใช้เครื่องปรุงสำเร็จรูป", en:"Freshly prepared each glass from selected ingredients, no pre-made mixes"}},
+      "fresh-organic-young-coconut-water": {name:"100% Fresh Organic Young Coconut Water", cat:"VGL Drinks", price:"110.-",
+        size:{th:"1 glass", en:"1 glass"},
+        desc:{th:"ผสมจาก น้ำมะพร้าวอ่อนออร์แกนิกสด 100% · เนื้อมะพร้าวออร์แกนิก · สะระแหน่ออร์แกนิก", en:"Made from 100% Fresh Organic Young Coconut Water, Organic Coconut Meat, Organic Mint."},
+        ingredients:{th:["น้ำมะพร้าวอ่อนออร์แกนิกสด 100%","เนื้อมะพร้าวออร์แกนิก","สะระแหน่ออร์แกนิก"], en:["100% Fresh Organic Young Coconut Water","Organic Coconut Meat","Organic Mint"]},
+        origin:{th:"ปรุงสดทุกแก้วจากวัตถุดิบคัดสรร ไม่ใช้เครื่องปรุงสำเร็จรูป", en:"Freshly prepared each glass from selected ingredients, no pre-made mixes"}},
+      "freshly-squeezed-double-orange-juice": {name:"100% Freshly Squeezed Double Orange Juice", cat:"VGL Drinks", price:"195.-",
+        size:{th:"1 glass", en:"1 glass"},
+        desc:{th:"ผสมจาก น้ำส้มเมอร์คอตและส้มนาเวลคั้นสด 100% · ส้มนาเวลหั่นชิ้น · ใบไทม์", en:"Made from 100% Freshly Squeezed Honey Murcott & Navel Orange Juice, Navel Orange Sliced, Thyme Leaf."},
+        ingredients:{th:["น้ำส้มเมอร์คอตและส้มนาเวลคั้นสด 100%","ส้มนาเวลหั่นชิ้น","ใบไทม์"], en:["100% Freshly Squeezed Honey Murcott & Navel Orange Juice","Navel Orange Sliced","Thyme Leaf"]},
+        origin:{th:"ปรุงสดทุกแก้วจากวัตถุดิบคัดสรร ไม่ใช้เครื่องปรุงสำเร็จรูป", en:"Freshly prepared each glass from selected ingredients, no pre-made mixes"}},
+      "iced-clear-matcha": {name:"Iced Clear Matcha", cat:"Matcha", price:"120.-",
+        size:{th:"1 glass", en:"1 glass"},
+        desc:{th:"ผสมจาก มัทฉะ", en:"Made from Matcha."},
+        ingredients:{th:["มัทฉะ"], en:["Matcha"]},
+        origin:{th:"ปรุงสดทุกแก้วจากวัตถุดิบคัดสรร ไม่ใช้เครื่องปรุงสำเร็จรูป", en:"Freshly prepared each glass from selected ingredients, no pre-made mixes"}},
+      "matcha-latte": {name:"Matcha Latte", cat:"Matcha", price:"160.-",
+        size:{th:"1 glass", en:"1 glass"},
+        desc:{th:"ผสมจาก มัทฉะ · นมวัวออร์แกนิกหรือนมโอ๊ต (เลือกได้)", en:"Made from Matcha, Organic Cow Milk or Oat Milk (choice)."},
+        ingredients:{th:["มัทฉะ","นมวัวออร์แกนิกหรือนมโอ๊ต (เลือกได้)"], en:["Matcha","Organic Cow Milk or Oat Milk (choice)"]},
+        origin:{th:"ปรุงสดทุกแก้วจากวัตถุดิบคัดสรร ไม่ใช้เครื่องปรุงสำเร็จรูป", en:"Freshly prepared each glass from selected ingredients, no pre-made mixes"}},
+      "sparkling-yuzu-matcha": {name:"Sparkling Yuzu Matcha", cat:"Matcha", price:"160.-",
+        size:{th:"1 glass", en:"1 glass"},
+        desc:{th:"ผสมจาก มัทฉะ · ยูซุ · น้ำโซดา", en:"Made from Matcha, Yuzu, Sparkling Water."},
+        ingredients:{th:["มัทฉะ","ยูซุ","น้ำโซดา"], en:["Matcha","Yuzu","Sparkling Water"]},
+        origin:{th:"ปรุงสดทุกแก้วจากวัตถุดิบคัดสรร ไม่ใช้เครื่องปรุงสำเร็จรูป", en:"Freshly prepared each glass from selected ingredients, no pre-made mixes"}},
+      "ocean-yuzu-matcha": {name:"Ocean Yuzu Matcha", cat:"Matcha", price:"185.-",
+        size:{th:"1 glass", en:"1 glass"},
+        desc:{th:"มัทฉะตีฟองราดลงบนน้ำยูซุ ผสมสไปรูลิน่าสีฟ้าเล็กน้อย รสเปรี้ยวซ่อนดินและสดชื่นแบบเงียบๆ", en:"Whisked matcha poured over yuzu juice with a touch of blue spirulina. Citrusy, earthy, and quietly refreshing."},
+        ingredients:{th:["มัทฉะ","น้ำยูซุ","สาหร่ายสไปรูลิน่าสีฟ้า"], en:["Matcha","Yuzu Juice","Blue Spirulina"]},
+        origin:{th:"ปรุงสดทุกแก้วจากวัตถุดิบคัดสรร ไม่ใช้เครื่องปรุงสำเร็จรูป", en:"Freshly prepared each glass from selected ingredients, no pre-made mixes"}},
+      "matcha-milkyteers": {name:"Matcha Milkyteers", cat:"Matcha", price:"185.-",
+        size:{th:"1 glass", en:"1 glass"},
+        desc:{th:"มัทฉะผสานกับนมถั่วโฮมเมด: อัลมอนด์เพาะงอก บราซิลนัท เม็ดมะม่วงหิมพานต์ออร์แกนิก น้ำมะพร้าวออร์แกนิก รสมันกลมกล่อม อุดมสารต้านอนุมูลอิสระ", en:"Matcha meets house-made nut milk: sprouted almond, brazil nut, organic cashew, organic coconut water. Nutty, comforting, antioxidant-rich."},
+        ingredients:{th:["มัทฉะ","อัลมอนด์เพาะงอก","บราซิลนัท","เม็ดมะม่วงหิมพานต์ออร์แกนิก","น้ำมะพร้าวออร์แกนิก"], en:["Matcha","Sprouted Almond","Brazil Nut","Organic Cashew","Organic Coconut Water"]},
+        origin:{th:"ปรุงสดทุกแก้วจากวัตถุดิบคัดสรร ไม่ใช้เครื่องปรุงสำเร็จรูป", en:"Freshly prepared each glass from selected ingredients, no pre-made mixes"}},
+      "double-orange-slushie-matcha": {name:"Double Orange Slushie Matcha", cat:"Matcha", price:"200.-",
+        size:{th:"1 glass", en:"1 glass"},
+        desc:{th:"ส้มสองสายพันธุ์และแอปเปิ้ลสกัดเย็น ปั่นเป็นสลัชชี่เกล็ดน้ำแข็ง ราดหน้าด้วยมัทฉะ", en:"Two orange varieties and cold-pressed apple, blended into an icy slushie, topped with matcha."},
+        ingredients:{th:["มัทฉะ","ส้ม","น้ำแอปเปิ้ลสกัดเย็น"], en:["Matcha","Orange","Cold-Pressed Apple Juice"]},
+        origin:{th:"ปรุงสดทุกแก้วจากวัตถุดิบคัดสรร ไม่ใช้เครื่องปรุงสำเร็จรูป", en:"Freshly prepared each glass from selected ingredients, no pre-made mixes"}},
+      "coco-matcha": {name:"Coco Matcha", cat:"Matcha", price:"170.-",
+        size:{th:"1 glass", en:"1 glass"},
+        desc:{th:"มัทฉะซิกเนเจอร์ราดลงบนน้ำมะพร้าวออร์แกนิกเย็นๆ หวานธรรมชาติและชุ่มชื่น", en:"Signature matcha blend over cold organic coconut water. Naturally sweet and hydrating."},
+        ingredients:{th:["มัทฉะ","น้ำมะพร้าวออร์แกนิก"], en:["Matcha","Organic Coconut Water"]},
+        origin:{th:"ปรุงสดทุกแก้วจากวัตถุดิบคัดสรร ไม่ใช้เครื่องปรุงสำเร็จรูป", en:"Freshly prepared each glass from selected ingredients, no pre-made mixes"}},
+      "matcha-coco-cloud": {name:"Matcha Coco Cloud", cat:"Matcha", price:"185.-",
+        size:{th:"1 glass", en:"1 glass"},
+        desc:{th:"ชั้นมัทฉะครีมนุ่มลอยอยู่เหนือน้ำมะพร้าวออร์แกนิก เนื้อสัมผัสนุ่มลื่นและอิ่มเอม", en:"A soft layer of creamy matcha floats over organic coconut water. Silky and satisfying."},
+        ingredients:{th:["มัทฉะ","น้ำมะพร้าวออร์แกนิก"], en:["Matcha","Organic Coconut Water"]},
+        origin:{th:"ปรุงสดทุกแก้วจากวัตถุดิบคัดสรร ไม่ใช้เครื่องปรุงสำเร็จรูป", en:"Freshly prepared each glass from selected ingredients, no pre-made mixes"}},
+      "blueberry-oat-matcha": {name:"Blueberry Oat Matcha", cat:"Matcha", price:"185.-",
+        size:{th:"1 glass", en:"1 glass"},
+        desc:{th:"บลูเบอร์รีพบกับมัทฉะรสเข้ม ชงกับนมข้าวโอ๊ตและไซรัปบลูเบอร์รีตุ๋นช้าไม่ใส่น้ำตาลทราย", en:"Blueberry meets earthy matcha; made with oat milk and slow-cooked, refined sugar-free blueberry syrup."},
+        ingredients:{th:["มัทฉะ","บลูเบอร์รี","นมโอ๊ต","ไซรัปบลูเบอร์รี (ไม่ใส่น้ำตาลทราย)"], en:["Matcha","Blueberry","Oat Milk","Blueberry Syrup (refined-sugar-free)"]},
+        origin:{th:"ปรุงสดทุกแก้วจากวัตถุดิบคัดสรร ไม่ใช้เครื่องปรุงสำเร็จรูป", en:"Freshly prepared each glass from selected ingredients, no pre-made mixes"}},
+      "espresso": {name:"Espresso", cat:"Coffee & Water", price:"80.-",
+        size:{th:"1 shot", en:"1 shot"},
+        desc:{th:"ผสมจาก เมล็ดกาแฟอาราบิก้าออร์แกนิก จากเชียงดาว เชียงใหม่", en:"Made from Organic Arabica Whole Bean Coffee (Chiang Dao, Chiang Mai)."},
+        ingredients:{th:["เมล็ดกาแฟอาราบิก้าออร์แกนิก จากเชียงดาว เชียงใหม่"], en:["Organic Arabica Whole Bean Coffee (Chiang Dao, Chiang Mai)"]},
+        origin:{th:"ปรุงสดทุกแก้วจากวัตถุดิบคัดสรร ไม่ใช้เครื่องปรุงสำเร็จรูป", en:"Freshly prepared each glass from selected ingredients, no pre-made mixes"}},
+      "americano": {name:"Americano", cat:"Coffee & Water", price:"100.- / 110.-",
+        size:{th:"Hot / Iced", en:"Hot / Iced"},
+        desc:{th:"ผสมจาก เมล็ดกาแฟอาราบิก้าออร์แกนิก จากเชียงดาว เชียงใหม่", en:"Made from Organic Arabica Whole Bean Coffee (Chiang Dao, Chiang Mai)."},
+        ingredients:{th:["เมล็ดกาแฟอาราบิก้าออร์แกนิก จากเชียงดาว เชียงใหม่"], en:["Organic Arabica Whole Bean Coffee (Chiang Dao, Chiang Mai)"]},
+        origin:{th:"ปรุงสดทุกแก้วจากวัตถุดิบคัดสรร ไม่ใช้เครื่องปรุงสำเร็จรูป", en:"Freshly prepared each glass from selected ingredients, no pre-made mixes"}},
+      "caffe-latte": {name:"Caffe Latte", cat:"Coffee & Water", price:"120.- / 130.-",
+        size:{th:"Hot / Iced", en:"Hot / Iced"},
+        desc:{th:"ผสมจาก กาแฟอาราบิก้าออร์แกนิก · นมออร์แกนิก (มีตัวเลือกนมพืช: +นมอัลมอนด์ 30 บาท / +นมโอ๊ต 20 บาท)", en:"Made from Organic Arabica Coffee, Organic Milk. (Vegan milk option: +Almond Milk 30 / +Oat Milk 20)"},
+        ingredients:{th:["กาแฟอาราบิก้าออร์แกนิก","นมออร์แกนิก"], en:["Organic Arabica Coffee","Organic Milk"]},
+        origin:{th:"ปรุงสดทุกแก้วจากวัตถุดิบคัดสรร ไม่ใช้เครื่องปรุงสำเร็จรูป", en:"Freshly prepared each glass from selected ingredients, no pre-made mixes"}},
+      "vanilla-latte": {name:"Vanilla Latte", cat:"Coffee & Water", price:"130.- / 140.-",
+        size:{th:"Hot / Iced", en:"Hot / Iced"},
+        desc:{th:"ผสมจาก กาแฟอาราบิก้าออร์แกนิก · นมออร์แกนิก · ไซรัปมะพร้าววานิลลาโฮมเมด (มีตัวเลือกนมพืช: +นมอัลมอนด์ 30 บาท / +นมโอ๊ต 20 บาท)", en:"Made from Organic Arabica Coffee, Organic Milk, Housemade Coconut Vanilla Syrup. (Vegan milk option: +Almond Milk 30 / +Oat Milk 20)"},
+        ingredients:{th:["กาแฟอาราบิก้าออร์แกนิก","นมออร์แกนิก","ไซรัปมะพร้าววานิลลาโฮมเมด"], en:["Organic Arabica Coffee","Organic Milk","Housemade Coconut Vanilla Syrup"]},
+        origin:{th:"ปรุงสดทุกแก้วจากวัตถุดิบคัดสรร ไม่ใช้เครื่องปรุงสำเร็จรูป", en:"Freshly prepared each glass from selected ingredients, no pre-made mixes"}},
+      "cappuccino": {name:"Cappuccino", cat:"Coffee & Water", price:"120.- / 130.-",
+        size:{th:"Hot / Iced", en:"Hot / Iced"},
+        desc:{th:"ผสมจาก กาแฟอาราบิก้าออร์แกนิก · นมออร์แกนิก (มีตัวเลือกนมพืช: +นมอัลมอนด์ 30 บาท / +นมโอ๊ต 20 บาท)", en:"Made from Organic Arabica Coffee, Organic Milk. (Vegan milk option: +Almond Milk 30 / +Oat Milk 20)"},
+        ingredients:{th:["กาแฟอาราบิก้าออร์แกนิก","นมออร์แกนิก"], en:["Organic Arabica Coffee","Organic Milk"]},
+        origin:{th:"ปรุงสดทุกแก้วจากวัตถุดิบคัดสรร ไม่ใช้เครื่องปรุงสำเร็จรูป", en:"Freshly prepared each glass from selected ingredients, no pre-made mixes"}},
+      "sparkling-espresso-yuzu": {name:"Sparkling Espresso Yuzu", cat:"Coffee & Water", price:"150.-",
+        size:{th:"1 glass", en:"1 glass"},
+        desc:{th:"ผสมจาก กาแฟอาราบิก้าออร์แกนิก · ยูซุ · น้ำโซดา", en:"Made from Organic Arabica Coffee, Yuzu, Sparkling Water."},
+        ingredients:{th:["กาแฟอาราบิก้าออร์แกนิก","ยูซุ","น้ำโซดา"], en:["Organic Arabica Coffee","Yuzu","Sparkling Water"]},
+        origin:{th:"ปรุงสดทุกแก้วจากวัตถุดิบคัดสรร ไม่ใช้เครื่องปรุงสำเร็จรูป", en:"Freshly prepared each glass from selected ingredients, no pre-made mixes"}},
+      "dark-apple": {name:"Dark Apple", cat:"Coffee & Water", price:"160.-",
+        size:{th:"1 glass", en:"1 glass"},
+        desc:{th:"ผสมจาก เอสเพรสโซ่ · น้ำแอปเปิ้ลสกัดเย็นสด", en:"Made from Espresso, Fresh Cold-Pressed Apple Juice."},
+        ingredients:{th:["เอสเพรสโซ่","น้ำแอปเปิ้ลสกัดเย็นสด"], en:["Espresso","Fresh Cold-Pressed Apple Juice"]},
+        origin:{th:"ปรุงสดทุกแก้วจากวัตถุดิบคัดสรร ไม่ใช้เครื่องปรุงสำเร็จรูป", en:"Freshly prepared each glass from selected ingredients, no pre-made mixes"}},
+      "caffe-milkyteers": {name:"Caffe Milkyteers", cat:"Coffee & Water", price:"180.-",
+        size:{th:"1 glass", en:"1 glass"},
+        desc:{th:"ผสมจาก เอสเพรสโซ่ · เดอะ 3 มิลค์ยเทียร์ส", en:"Made from Espresso, The 3 Milkyteers."},
+        ingredients:{th:["เอสเพรสโซ่","เดอะ 3 มิลค์ยเทียร์ส"], en:["Espresso","The 3 Milkyteers"]},
+        origin:{th:"ปรุงสดทุกแก้วจากวัตถุดิบคัดสรร ไม่ใช้เครื่องปรุงสำเร็จรูป", en:"Freshly prepared each glass from selected ingredients, no pre-made mixes"}},
+      "coco-cano": {name:"CoCo-Cano", cat:"Coffee & Water", price:"160.-",
+        size:{th:"1 glass", en:"1 glass"},
+        desc:{th:"ผสมจาก เอสเพรสโซ่ · น้ำมะพร้าวออร์แกนิกสด", en:"Made from Espresso, Organic Fresh Coconut Water."},
+        ingredients:{th:["เอสเพรสโซ่","น้ำมะพร้าวออร์แกนิกสด"], en:["Espresso","Organic Fresh Coconut Water"]},
+        origin:{th:"ปรุงสดทุกแก้วจากวัตถุดิบคัดสรร ไม่ใช้เครื่องปรุงสำเร็จรูป", en:"Freshly prepared each glass from selected ingredients, no pre-made mixes"}},
+      "iced-mugwort-latte": {name:"Iced Mugwort Latte", cat:"Coffee & Water", price:"160.-",
+        size:{th:"1 glass", en:"1 glass"},
+        desc:{th:"ผสมจาก นมออร์แกนิก · โกฐจุฬาลัมพา (มีตัวเลือกนมพืช: +นมอัลมอนด์ 30 บาท / +นมโอ๊ต 20 บาท)", en:"Made from Organic Milk, Mugwort. (Vegan milk option: +Almond Milk 30 / +Oat Milk 20)"},
+        ingredients:{th:["นมออร์แกนิก","โกฐจุฬาลัมพา"], en:["Organic Milk","Mugwort"]},
+        origin:{th:"ปรุงสดทุกแก้วจากวัตถุดิบคัดสรร ไม่ใช้เครื่องปรุงสำเร็จรูป", en:"Freshly prepared each glass from selected ingredients, no pre-made mixes"}},
+      "alkaline-water": {name:"Alkaline Water", cat:"Coffee & Water", price:"20.-",
+        size:{th:"1 bottle", en:"1 bottle"},
+        desc:{th:"ผสมจาก น้ำอัลคาไลน์", en:"Made from Alkaline Water."},
+        ingredients:{th:["น้ำอัลคาไลน์"], en:["Alkaline Water"]},
+        origin:{th:"ปรุงสดทุกแก้วจากวัตถุดิบคัดสรร ไม่ใช้เครื่องปรุงสำเร็จรูป", en:"Freshly prepared each glass from selected ingredients, no pre-made mixes"}},
+      "alkaline-water-refill": {name:"Alkaline Water Refill", cat:"Coffee & Water", price:"60.-",
+        size:{th:"per person", en:"per person"},
+        desc:{th:"ผสมจาก น้ำอัลคาไลน์", en:"Made from Alkaline Water."},
+        ingredients:{th:["น้ำอัลคาไลน์"], en:["Alkaline Water"]},
+        origin:{th:"ปรุงสดทุกแก้วจากวัตถุดิบคัดสรร ไม่ใช้เครื่องปรุงสำเร็จรูป", en:"Freshly prepared each glass from selected ingredients, no pre-made mixes"}},
+      "organic-green-tea": {name:"Organic Green Tea", cat:"Hot Tea & Drinks", price:"120.-",
+        size:{th:"1 pot", en:"1 pot"},
+        desc:{th:"ผสมจาก ชาเขียวออร์แกนิก", en:"Made from Organic Green Tea."},
+        ingredients:{th:["ชาเขียวออร์แกนิก"], en:["Organic Green Tea"]},
+        origin:{th:"ชงสดใหม่จากใบชาและสมุนไพรคัดสรร", en:"Freshly brewed from selected tea leaves and herbs"}},
+      "organic-osmanthus-oolong": {name:"Organic Osmanthus & Oolong", cat:"Hot Tea & Drinks", price:"150.-",
+        size:{th:"1 pot", en:"1 pot"},
+        desc:{th:"ผสมจาก ดอกหอมหมื่นลี้ออร์แกนิก · ชาอูหลง", en:"Made from Organic Osmanthus, Oolong Tea."},
+        ingredients:{th:["ดอกหอมหมื่นลี้ออร์แกนิก","ชาอูหลง"], en:["Organic Osmanthus","Oolong Tea"]},
+        origin:{th:"ชงสดใหม่จากใบชาและสมุนไพรคัดสรร", en:"Freshly brewed from selected tea leaves and herbs"}},
+      "organic-thai-garden-bloom": {name:"Organic Thai Garden Bloom", cat:"Hot Tea & Drinks", price:"150.-",
+        size:{th:"1 pot", en:"1 pot"},
+        desc:{th:"ผสมจาก กุหลาบ · เก๊กฮวย · ดอกอัญชัน · ใบเตย", en:"Made from Rose, Chrysanthemum, Butterfly Pea, Pandan Leaves."},
+        ingredients:{th:["กุหลาบ","เก๊กฮวย","ดอกอัญชัน","ใบเตย"], en:["Rose","Chrysanthemum","Butterfly Pea","Pandan Leaves"]},
+        origin:{th:"ชงสดใหม่จากใบชาและสมุนไพรคัดสรร", en:"Freshly brewed from selected tea leaves and herbs"}},
+      "peach-and-bloom": {name:"Peach & Bloom", cat:"Hot Tea & Drinks", price:"130.-",
+        size:{th:"1 pot", en:"1 pot"},
+        desc:{th:"ผสมจาก ชาพีช · กลีบกุหลาบ · แอปเปิ้ลหั่นชิ้นเล็ก · กระเจี๊ยบแดง", en:"Made from Peach Tea, Rose Petals, Sweet Apple Bits, Roselle."},
+        ingredients:{th:["ชาพีช","กลีบกุหลาบ","แอปเปิ้ลหั่นชิ้นเล็ก","กระเจี๊ยบแดง","ดอกไวโอเล็ตเล็ก"], en:["Peach Tea","Rose Petals","Sweet Apple Bits","Roselle","Little Violet Flower"]},
+        origin:{th:"ชงสดใหม่จากใบชาและสมุนไพรคัดสรร", en:"Freshly brewed from selected tea leaves and herbs"}},
+      "organic-ginger": {name:"Organic Ginger", cat:"Hot Tea & Drinks", price:"150.-",
+        size:{th:"1 pot", en:"1 pot"},
+        desc:{th:"ผสมจาก ขิงออร์แกนิก", en:"Made from Organic Ginger."},
+        ingredients:{th:["ขิงออร์แกนิก"], en:["Organic Ginger"]},
+        origin:{th:"ชงสดใหม่จากใบชาและสมุนไพรคัดสรร", en:"Freshly brewed from selected tea leaves and herbs"}},
+      "organic-turmeric": {name:"Organic Turmeric", cat:"Hot Tea & Drinks", price:"150.-",
+        size:{th:"1 pot", en:"1 pot"},
+        desc:{th:"ผสมจาก ขมิ้นชันออร์แกนิก", en:"Made from Organic Turmeric."},
+        ingredients:{th:["ขมิ้นชันออร์แกนิก"], en:["Organic Turmeric"]},
+        origin:{th:"ชงสดใหม่จากใบชาและสมุนไพรคัดสรร", en:"Freshly brewed from selected tea leaves and herbs"}},
+      "organic-turmeric-ginger": {name:"Organic Turmeric & Ginger", cat:"Hot Tea & Drinks", price:"150.-",
+        size:{th:"1 pot", en:"1 pot"},
+        desc:{th:"ผสมจาก ขมิ้นชันออร์แกนิก · ขิงออร์แกนิก", en:"Made from Organic Turmeric, Organic Ginger."},
+        ingredients:{th:["ขมิ้นชันออร์แกนิก","ขิงออร์แกนิก"], en:["Organic Turmeric","Organic Ginger"]},
+        origin:{th:"ชงสดใหม่จากใบชาและสมุนไพรคัดสรร", en:"Freshly brewed from selected tea leaves and herbs"}},
+      "blue-babycino": {name:"Blue Babycino with Honey Marshmallow", cat:"Hot Tea & Drinks", price:"150.-",
+        size:{th:"1 glass", en:"1 glass"},
+        desc:{th:"ผสมจาก นมออร์แกนิก · สาหร่ายสไปรูลิน่าสีฟ้า · น้ำตาลดอกมะพร้าว · น้ำผึ้ง (มีเจลาตินเป็นส่วนผสม ไม่เหมาะสำหรับวีแกน)", en:"Made from Organic Milk, Blue Spirulina, Coconut Blossom Sugar, Honey. (Contains gelatin — not suitable for vegans)"},
+        ingredients:{th:["นมออร์แกนิก","สาหร่ายสไปรูลิน่าสีฟ้า","น้ำตาลดอกมะพร้าว","น้ำผึ้ง","วานิลลา","เจลาติน","น้ำอัลคาไลน์","เกลือหิมาลัยสีชมพู"], en:["Organic Milk","Blue Spirulina","Coconut Blossom Sugar","Honey","Vanilla","Gelatin","Alkalined Water","Himalayan Pink Salt"]},
+        origin:{th:"ชงสดใหม่จากใบชาและสมุนไพรคัดสรร", en:"Freshly brewed from selected tea leaves and herbs"}},
+      "pink-babycino": {name:"Pink Babycino with Honey Marshmallow", cat:"Hot Tea & Drinks", price:"150.-",
+        size:{th:"1 glass", en:"1 glass"},
+        desc:{th:"ผสมจาก นมออร์แกนิก · น้ำบีทรูทออร์แกนิกสด · น้ำตาลดอกมะพร้าว · น้ำผึ้ง (มีเจลาตินเป็นส่วนผสม ไม่เหมาะสำหรับวีแกน)", en:"Made from Organic Milk, Fresh Organic Beetroot Juice, Coconut Blossom Sugar, Honey. (Contains gelatin — not suitable for vegans)"},
+        ingredients:{th:["นมออร์แกนิก","น้ำบีทรูทออร์แกนิกสด","น้ำตาลดอกมะพร้าว","น้ำผึ้ง","วานิลลา","เจลาติน","น้ำอัลคาไลน์","เกลือหิมาลัยสีชมพู"], en:["Organic Milk","Fresh Organic Beetroot Juice","Coconut Blossom Sugar","Honey","Vanilla","Gelatin","Alkalined Water","Himalayan Pink Salt"]},
+        origin:{th:"ชงสดใหม่จากใบชาและสมุนไพรคัดสรร", en:"Freshly brewed from selected tea leaves and herbs"}},
+      "sauteed-sesame-mushroom-salad": {name:"Sauteed Sesame Mushroom - Multigrains Forest Salad", cat:"Salad", price:"290.-",
+        size:{th:"1 plate", en:"1 plate"},
+        desc:{th:"ผสมจาก เห็ดออรินจิออร์แกนิก · งาดำออร์แกนิก · ผักสลัดออร์แกนิกกับมะเขือเทศ · ข้าวบาร์เลย์มุกออร์แกนิก", en:"Made from Organic King Oyster Mushroom, Organic Black Sesame, Organic Salad Greens with Tomatoes, Organic Pearl Barley."},
+        ingredients:{th:["เห็ดออรินจิออร์แกนิก","งาดำออร์แกนิก","ผักสลัดออร์แกนิกกับมะเขือเทศ","ข้าวบาร์เลย์มุกออร์แกนิก","ถั่วแดงคิดนีย์ออร์แกนิก","ควินัว 3 สีออร์แกนิก","เมล็ดฟักทองออร์แกนิก","ดอกไม้กินได้ออร์แกนิก"], en:["Organic King Oyster Mushroom","Organic Black Sesame","Organic Salad Greens with Tomatoes","Organic Pearl Barley","Organic Red Kidney Bean","Organic 3-Color Quinoa","Organic Pumpkin Seeds","Edible Organic Flowers"]},
+        origin:{th:"ปรุงสดใหม่ทุกจานจากวัตถุดิบคุณภาพคัดสรร", en:"Freshly prepared each plate from quality selected ingredients"}},
+      "sous-vide-spicy-korean-chicken-salad": {name:"Sous-Vide Spicy Korean Chicken - Multigrains Forest Salad", cat:"Salad", price:"350.-",
+        size:{th:"1 plate", en:"1 plate"},
+        desc:{th:"ผสมจาก อกไก่สไตล์เกาหลีปลอดสารปฏิชีวนะ/ฮอร์โมน · ซอสสไตล์เกาหลีรสเผ็ดโฮมเมด · ผักสลัดออร์แกนิกกับมะเขือเทศ · ข้าวบาร์เลย์มุกออร์แกนิก", en:"Made from Antibiotic-Free/Hormone-Free Korean-Style Chicken Breast, Housemade Spicy Korean-Style Sauce, Organic Salad Greens with Tomatoes, Organic Pearl Barley."},
+        ingredients:{th:["อกไก่สไตล์เกาหลีปลอดสารปฏิชีวนะ/ฮอร์โมน","ซอสสไตล์เกาหลีรสเผ็ดโฮมเมด","ผักสลัดออร์แกนิกกับมะเขือเทศ","ข้าวบาร์เลย์มุกออร์แกนิก","ถั่วแดงคิดนีย์ออร์แกนิก","ควินัว 3 สีออร์แกนิก","เมล็ดฟักทองออร์แกนิก","ดอกไม้กินได้ออร์แกนิก"], en:["Antibiotic-Free/Hormone-Free Korean-Style Chicken Breast","Housemade Spicy Korean-Style Sauce","Organic Salad Greens with Tomatoes","Organic Pearl Barley","Organic Red Kidney Bean","Organic 3-Color Quinoa","Organic Pumpkin Seeds","Edible Organic Flowers"]},
+        origin:{th:"ปรุงสดใหม่ทุกจานจากวัตถุดิบคุณภาพคัดสรร", en:"Freshly prepared each plate from quality selected ingredients"}},
+      "homemade-sausage-salad": {name:"Homemade Sausage - Multigrains Forest Salad", cat:"Salad", price:"360.-",
+        size:{th:"1 plate", en:"1 plate"},
+        desc:{th:"ผสมจาก ไส้กรอกหมูโฮมเมดเลี้ยงธรรมชาติ (ไม่มีฮอร์โมน/ปฏิชีวนะ/ผงชูรส/สารกันบูด) · ผักสลัดออร์แกนิกกับมะเขือเทศ · ข้าวบาร์เลย์มุกออร์แกนิก · ถั่วแดงคิดนีย์ออร์แกนิก", en:"Made from Natural Raised Homemade Pork Sausage (no hormones/antibiotics/MSG/preservatives), Organic Salad Greens with Tomatoes, Organic Pearl Barley, Organic Red Kidney Bean."},
+        ingredients:{th:["ไส้กรอกหมูโฮมเมดเลี้ยงธรรมชาติ (ไม่มีฮอร์โมน/ปฏิชีวนะ/ผงชูรส/สารกันบูด)","ผักสลัดออร์แกนิกกับมะเขือเทศ","ข้าวบาร์เลย์มุกออร์แกนิก","ถั่วแดงคิดนีย์ออร์แกนิก","ควินัว 3 สีออร์แกนิก","เมล็ดฟักทองออร์แกนิก","ดอกไม้กินได้ออร์แกนิก"], en:["Natural Raised Homemade Pork Sausage (no hormones/antibiotics/MSG/preservatives)","Organic Salad Greens with Tomatoes","Organic Pearl Barley","Organic Red Kidney Bean","Organic 3-Color Quinoa","Organic Pumpkin Seeds","Edible Organic Flowers"]},
+        origin:{th:"ปรุงสดใหม่ทุกจานจากวัตถุดิบคุณภาพคัดสรร", en:"Freshly prepared each plate from quality selected ingredients"}},
+      "citrus-teriyaki-chicken-salad": {name:"Citrus Teriyaki Chicken Salad", cat:"Salad", price:"380.-",
+        size:{th:"1 plate", en:"1 plate"},
+        desc:{th:"ผสมจาก อกไก่เทอริยากิปลอดสารปฏิชีวนะ/ฮอร์โมน · ซอสเทอริยากิโฮมเมด · ส้มนาเวล · ผักสลัดออร์แกนิก", en:"Made from Antibiotic-Free/Hormone-Free Teriyaki Chicken Breast, Housemade Teriyaki Sauce, Navel Orange, Organic Salad Greens."},
+        ingredients:{th:["อกไก่เทอริยากิปลอดสารปฏิชีวนะ/ฮอร์โมน","ซอสเทอริยากิโฮมเมด","ส้มนาเวล","ผักสลัดออร์แกนิก","ผักร็อกเก็ตป่า","ผักโขมอ่อน","ต้นอ่อนทานตะวันออร์แกนิก","มะเขือเทศเชอร์รีออร์แกนิก","สาลี่น้ำผึ้ง","อัลมอนด์เพาะงอกคั่ว","น้ำมันมะกอกสกัดเย็น","เกลือหิมาลัยสีชมพู","พริกไทยดำ"], en:["Antibiotic-Free/Hormone-Free Teriyaki Chicken Breast","Housemade Teriyaki Sauce","Navel Orange","Organic Salad Greens","Wild Rocket","Baby Spinach","Organic Sunflower Sprouted","Organic Cherry Tomatoes","Honey Pear","Toasted Sprouted Almond","Extra Virgin Olive Oil","Himalayan Pink Salt","Black Pepper"]},
+        origin:{th:"ปรุงสดใหม่ทุกจานจากวัตถุดิบคุณภาพคัดสรร", en:"Freshly prepared each plate from quality selected ingredients"}},
+      "grilled-vegetable-salad": {name:"Grilled Vegetable Salad", cat:"Salad", price:"240.-",
+        size:{th:"1 plate", en:"1 plate"},
+        desc:{th:"ผสมจาก ผักร็อกเก็ตป่า · ชีสนมแพะ · พิสตาชิโอ · ฟักทองย่างออร์แกนิก", en:"Made from Wild Rocket, Goat Milk Cheese, Pistachio, Organic Grilled Pumpkin."},
+        ingredients:{th:["ผักร็อกเก็ตป่า","ชีสนมแพะ","พิสตาชิโอ","ฟักทองย่างออร์แกนิก","ซูกินีย่าง","มะเขือม่วงย่าง","สาลี่น้ำผึ้ง","มะกอก","ซอสบัลซามิกข้น","พริกไทยดำ","เกลือหิมาลัยสีชมพู"], en:["Wild Rocket","Goat Milk Cheese","Pistachio","Organic Grilled Pumpkin","Grilled Zucchini","Grilled Purple Eggplant","Honey Pear","Olive","Balsamic Glaze","Black Pepper","Himalayan Pink Salt"]},
+        origin:{th:"ปรุงสดใหม่ทุกจานจากวัตถุดิบคุณภาพคัดสรร", en:"Freshly prepared each plate from quality selected ingredients"}},
+      "waldorf-salad": {name:"Waldorf Salad", cat:"Salad", price:"230.-",
+        size:{th:"1 plate", en:"1 plate"},
+        desc:{th:"ผสมจาก แอปเปิ้ลแดงและแอปเปิ้ลเขียว · องุ่น · คื่นฉ่ายออร์แกนิก · พิสตาชิโอ (มีไข่ออร์แกนิกเป็นส่วนผสม)", en:"Made from Red & Green Apple, Grapes, Organic Celery, Pistachio. (Contains organic eggs)"},
+        ingredients:{th:["แอปเปิ้ลแดงและแอปเปิ้ลเขียว","องุ่น","คื่นฉ่ายออร์แกนิก","พิสตาชิโอ","วอลนัท","แครนเบอร์รีอบแห้ง","ลูกเกด","สะระแหน่ออร์แกนิก","น้ำสลัดวอลดอร์ฟโฮมเมด"], en:["Red & Green Apple","Grapes","Organic Celery","Pistachio","Walnut","Dried Cranberry","Raisin","Organic Mint","Homemade Waldorf Dressing"]},
+        origin:{th:"ปรุงสดใหม่ทุกจานจากวัตถุดิบคุณภาพคัดสรร", en:"Freshly prepared each plate from quality selected ingredients"}},
+      "all-day-everyday": {name:"All Day Everyday", cat:"Main", price:"350.-",
+        size:{th:"1 plate", en:"1 plate"},
+        desc:{th:"ผสมจาก ไส้กรอกหมูโฮมเมดเลี้ยงธรรมชาติ · ไข่ดาวออร์แกนิก 2 ฟอง · มะเขือเทศย่างออร์แกนิก · ฟักทองบดกับมะพร้าวคั่ว", en:"Made from Natural Raised Homemade Pork Sausage, 2 Organic Fried Eggs, Organic Grilled Tomatoes, Mashed Pumpkin with Roasted Coconut."},
+        ingredients:{th:["ไส้กรอกหมูโฮมเมดเลี้ยงธรรมชาติ","ไข่ดาวออร์แกนิก 2 ฟอง","มะเขือเทศย่างออร์แกนิก","ฟักทองบดกับมะพร้าวคั่ว","ขนมปังวีแกนบีทรูทและเมล็ดงาขี้ม้อน","ผักสลัดออร์แกนิก"], en:["Natural Raised Homemade Pork Sausage","2 Organic Fried Eggs","Organic Grilled Tomatoes","Mashed Pumpkin with Roasted Coconut","Beetroot & Perilla Seed Vegan Bread","Organic Salad Greens"]},
+        origin:{th:"ปรุงสดใหม่ทุกจานจากวัตถุดิบคุณภาพคัดสรร", en:"Freshly prepared each plate from quality selected ingredients"}},
+      "sriracha-shakshuka-baked-eggs": {name:"Sriracha Shakshuka Baked Eggs with Homemade Sausage", cat:"Main", price:"380.-",
+        size:{th:"1 plate", en:"1 plate"},
+        desc:{th:"ผสมจาก ไข่ออร์แกนิก 2 ฟอง · ไส้กรอกหมูโฮมเมดเลี้ยงธรรมชาติ · มะเขือม่วงย่าง · ซอสนาโปลีโฮมเมด (ใช้เวลาเตรียม 20 นาที)", en:"Made from 2 Organic Eggs, Natural Raised Homemade Pork Sausage, Grilled Purple Eggplant, Homemade Napoli Sauce. (20 min prep)"},
+        ingredients:{th:["ไข่ออร์แกนิก 2 ฟอง","ไส้กรอกหมูโฮมเมดเลี้ยงธรรมชาติ","มะเขือม่วงย่าง","ซอสนาโปลีโฮมเมด","ทาบาสโก้","ซอสศรีราชา","ชีสพาร์เมซาน","พาร์สลีย์","ถั่วชิกพีออร์แกนิก","ผักสลัดออร์แกนิก","ขนมปังซาวโดวโฮมเมด","อัลมอนด์เพาะงอกคั่ว"], en:["2 Organic Eggs","Natural Raised Homemade Pork Sausage","Grilled Purple Eggplant","Homemade Napoli Sauce","Tabasco","Sriracha Sauce","Parmesan Cheese","Parsley","Organic Chickpea","Organic Salad Greens","Homemade Sourdough Bread","Toasted Sprouted Almond"]},
+        origin:{th:"ปรุงสดใหม่ทุกจานจากวัตถุดิบคุณภาพคัดสรร", en:"Freshly prepared each plate from quality selected ingredients"}},
+      "baked-chicken-parmigiana": {name:"Baked Chicken Parmigiana", cat:"Main", price:"360.-",
+        size:{th:"1 plate", en:"1 plate"},
+        desc:{th:"ผสมจาก สเต๊กอกไก่ปลอดสารปฏิชีวนะ/ฮอร์โมน · ชีสมอสซาเรลลาโฮมเมด · ขนมปังซาวโดวโฮมเมด · ซอสนาโปลี (ใช้เวลาเตรียม 10 นาที)", en:"Made from Antibiotic-Free/Hormone-Free Chicken Breast Steak, Homemade Mozzarella Cheese, Homemade Sourdough Bread, Napoli Sauce. (10 min prep)"},
+        ingredients:{th:["สเต๊กอกไก่ปลอดสารปฏิชีวนะ/ฮอร์โมน","ชีสมอสซาเรลลาโฮมเมด","ขนมปังซาวโดวโฮมเมด","ซอสนาโปลี","แตงกวาญี่ปุ่นดองโฮมเมด","ผักสลัดออร์แกนิก","อัลมอนด์คั่วหั่นชิ้น","น้ำสลัดบัลซามิก","ชีสพาร์เมซาน","พริกไทยดำ","เกลือหิมาลัยสีชมพูออร์แกนิก"], en:["Antibiotic-Free/Hormone-Free Chicken Breast Steak","Homemade Mozzarella Cheese","Homemade Sourdough Bread","Napoli Sauce","Homemade Pickle Japanese Cucumber","Organic Salad Greens","Toasted Almond Sliced","Balsamic Dressing","Parmesan Cheese","Black Pepper","Organic Himalayan Pink Salt"]},
+        origin:{th:"ปรุงสดใหม่ทุกจานจากวัตถุดิบคุณภาพคัดสรร", en:"Freshly prepared each plate from quality selected ingredients"}},
+      "apple-waldorf-onsen-egg-mushrooms": {name:"Apple Waldorf with Onsen Egg & Sesame Mushrooms", cat:"Main", price:"270.-",
+        size:{th:"1 plate", en:"1 plate"},
+        desc:{th:"ผสมจาก เห็ดออรินจิออร์แกนิก · ซอสถั่วเหลือง · งาคั่วออร์แกนิก · มะเขือเทศออร์แกนิก", en:"Made from Organic King Oyster Mushroom, Soy Sauce, Organic Toasted Sesame, Organic Tomatoes."},
+        ingredients:{th:["เห็ดออรินจิออร์แกนิก","ซอสถั่วเหลือง","งาคั่วออร์แกนิก","มะเขือเทศออร์แกนิก","ไข่ออนเซ็นออร์แกนิก","ควินัว 3 สีออร์แกนิก","ผักสลัดออร์แกนิก","แอปเปิ้ล","คื่นฉ่ายออร์แกนิก","สะระแหน่ออร์แกนิก","แครนเบอร์รีอบแห้ง","ลูกเกด","วอลนัท","พิสตาชิโอ","มายองเนสโฮมเมด","โยเกิร์ตออร์แกนิก","กรีกโยเกิร์ตออร์แกนิก","น้ำเลมอนออร์แกนิก","เกลือหิมาลัยสีชมพู","พริกไทยดำ"], en:["Organic King Oyster Mushroom","Soy Sauce","Organic Toasted Sesame","Organic Tomatoes","Organic Onsen Egg","Organic 3-Color Quinoa","Organic Salad Greens","Apple","Organic Celery","Organic Mint","Dried Cranberry","Raisin","Walnut","Pistachio","Housemade Mayonnaise","Organic Yogurt","Organic Greek Yogurt","Organic Lemon Juice","Himalayan Pink Salt","Black Pepper"]},
+        origin:{th:"ปรุงสดใหม่ทุกจานจากวัตถุดิบคุณภาพคัดสรร", en:"Freshly prepared each plate from quality selected ingredients"}},
+      "sous-vide-miso-mackerel-quinoa": {name:"Sous-Vide Japanese Miso Mackerel with Quinoa and Grilled Vegetable Salad", cat:"Main", price:"450.-",
+        size:{th:"1 plate", en:"1 plate"},
+        desc:{th:"ผสมจาก ปลาแมคเคอเรลซูวี · ควินัว 3 สีออร์แกนิก · ซูกินีย่างออร์แกนิก · มะเขือม่วงย่างออร์แกนิก", en:"Made from Natural Mackerel Sous-Vide, Organic 3-Color Quinoa, Organic Grilled Zucchini, Organic Grilled Purple Eggplant."},
+        ingredients:{th:["ปลาแมคเคอเรลซูวี","ควินัว 3 สีออร์แกนิก","ซูกินีย่างออร์แกนิก","มะเขือม่วงย่างออร์แกนิก","ฟักทองย่างออร์แกนิก","ผักร็อกเก็ตป่าออร์แกนิก","ชีสนมแพะ","สาลี่น้ำผึ้ง","มะกอกเขียว","ซอสบัลซามิกข้น","พริกไทยดำ","เกลือหิมาลัยสีชมพูออร์แกนิก","เลมอนออร์แกนิก","ขิงดองออร์แกนิกโฮมเมด"], en:["Natural Mackerel Sous-Vide","Organic 3-Color Quinoa","Organic Grilled Zucchini","Organic Grilled Purple Eggplant","Organic Grilled Pumpkin","Organic Wild Rocket","Goat Milk Cheese","Honey Pear","Green Olive","Balsamic Glaze","Black Pepper","Organic Himalayan Pink Salt","Organic Lemon","Housemade Organic Pickled Ginger"]},
+        origin:{th:"ปรุงสดใหม่ทุกจานจากวัตถุดิบคุณภาพคัดสรร", en:"Freshly prepared each plate from quality selected ingredients"}},
+      "wild-saba-teriyaki-rainbow-quinoa": {name:"Wild Saba Teriyaki with Rainbow Quinoa", cat:"Main", price:"450.-",
+        size:{th:"1 plate", en:"1 plate"},
+        desc:{th:"ผสมจาก ปลาซาบะแมคเคอเรลจากธรรมชาติ · ซอสเทอริยากิโฮมเมด · ไทม์ · เห็ดออรินจิออร์แกนิก", en:"Made from Wild-caught Saba Mackerel, Housemade Teriyaki Sauce, Thyme, Organic King Oyster Mushroom."},
+        ingredients:{th:["ปลาซาบะแมคเคอเรลจากธรรมชาติ","ซอสเทอริยากิโฮมเมด","ไทม์","เห็ดออรินจิออร์แกนิก","ควินัว 3 สีออร์แกนิก","ถั่วแดงคิดนีย์ออร์แกนิก","ข้าวโพดหวานออร์แกนิก","มะเขือเทศเชอร์รีออร์แกนิก","ซอสถั่วเหลือง","ผักสลัดออร์แกนิก","ต้นอ่อนทานตะวันออร์แกนิก","ผักร็อกเก็ตป่า","ผักโขมอ่อน","หัวไชเท้า","น้ำมันมะกอกสกัดเย็น","เกลือหิมาลัยสีชมพู","พริกไทยดำ","เลมอนออร์แกนิก"], en:["Wild-caught Saba Mackerel","Housemade Teriyaki Sauce","Thyme","Organic King Oyster Mushroom","Organic 3-Color Quinoa","Organic Kidney Beans","Organic Sweet Corn","Organic Cherry Tomatoes","Soy Sauce","Organic Salad Greens","Organic Sunflower Sprouted","Wild Rocket","Baby Spinach","Radish","Extra Virgin Olive Oil","Himalayan Pink Salt","Black Pepper","Organic Lemon"]},
+        origin:{th:"ปรุงสดใหม่ทุกจานจากวัตถุดิบคุณภาพคัดสรร", en:"Freshly prepared each plate from quality selected ingredients"}},
+      "polenta-teriyaki-chicken": {name:"Polenta & Teriyaki Chicken", cat:"Main", price:"350.-",
+        size:{th:"1 plate", en:"1 plate"},
+        desc:{th:"ผสมจาก โพเลนต้าออร์แกนิก · เห็ดแชมปิญองออร์แกนิก · อกไก่ปลอดสารปฏิชีวนะ/ฮอร์โมน · ต้นอ่อนทานตะวันออร์แกนิก (มีตัวเลือกวีแกน)", en:"Made from Organic Polenta, Organic Champignon Mushroom, Antibiotic-Free/Hormone-Free Chicken Breast, Organic Sunflower Sprout. (Vegan option available)"},
+        ingredients:{th:["โพเลนต้าออร์แกนิก","เห็ดแชมปิญองออร์แกนิก","อกไก่ปลอดสารปฏิชีวนะ/ฮอร์โมน","ต้นอ่อนทานตะวันออร์แกนิก","นมออร์แกนิก","ชีสพาร์เมซาน","ซอสเทอริยากิ","พริกไทยดำ","เกลือหิมาลัยสีชมพูออร์แกนิก","ผักสลัดรวม","ขนมปังซาวโดวโฮมเมด","น้ำสลัดบัลซามิก","ใบพาร์สลีย์"], en:["Organic Polenta","Organic Champignon Mushroom","Antibiotic-Free/Hormone-Free Chicken Breast","Organic Sunflower Sprout","Organic Milk","Parmesan Cheese","Teriyaki Sauce","Black Pepper","Organic Himalayan Pink Salt","Mix Salad Greens","Homemade Sourdough Bread","Balsamic Dressing","Parsley Leaf"]},
+        origin:{th:"ปรุงสดใหม่ทุกจานจากวัตถุดิบคุณภาพคัดสรร", en:"Freshly prepared each plate from quality selected ingredients"}},
+      "baked-chicken-parmigiana-sandwich": {name:"Baked Chicken Parmigiana Sandwich", cat:"Main", price:"350.-",
+        size:{th:"1 plate", en:"1 plate"},
+        desc:{th:"ผสมจาก ขนมปังชาบัตต้าซาวโดว · อกไก่ซูวีปลอดสารปฏิชีวนะ/ฮอร์โมน · ชีสมอสซาเรลลาอาร์ทิซาน · ผักสลัดออร์แกนิก", en:"Made from Sourdough Ciabatta Bread, Antibiotic-Free/Hormone-Free Sous Vide Chicken Breast, Artisan Mozzarella Cheese, Organic Salad Greens."},
+        ingredients:{th:["ขนมปังชาบัตต้าซาวโดว","อกไก่ซูวีปลอดสารปฏิชีวนะ/ฮอร์โมน","ชีสมอสซาเรลลาอาร์ทิซาน","ผักสลัดออร์แกนิก","มะเขือเทศออร์แกนิกหั่นชิ้น","แครอทออร์แกนิกหั่นชิ้น","ซอสนาโปลีโฮมเมด","ซอสศรีราชา","ทาบาสโก้","มัสตาร์ด","มายองเนสโฮมเมด","แตงกวาญี่ปุ่นออร์แกนิกดองโฮมเมด"], en:["Sourdough Ciabatta Bread","Antibiotic-Free/Hormone-Free Sous Vide Chicken Breast","Artisan Mozzarella Cheese","Organic Salad Greens","Organic Tomato Sliced","Organic Carrot Sliced","Housemade Napoli Sauce","Sriracha Sauce","Tabasco","Mustard","Housemade Mayonnaise","Homemade Pickled Organic Japanese Cucumber"]},
+        origin:{th:"ปรุงสดใหม่ทุกจานจากวัตถุดิบคุณภาพคัดสรร", en:"Freshly prepared each plate from quality selected ingredients"}},
+      "grilled-vegetable-sourdough": {name:"Grilled Vegetable with Homemade Toasted Sourdough", cat:"Open Faced Sandwich", price:"230.-",
+        size:{th:"1 plate", en:"1 plate"},
+        desc:{th:"ผสมจาก ซาวโดวโฮมเมดปิ้ง · ผักร็อกเก็ตป่า · มะเขือม่วงย่าง · ฟักทองย่างออร์แกนิก (มีตัวเลือกวีแกนตามคำขอ)", en:"Made from Toasted Homemade Sourdough, Wild Rocket, Grilled Purple Eggplant, Organic Grilled Pumpkin. (Vegan option available on request)"},
+        ingredients:{th:["ซาวโดวโฮมเมดปิ้ง","ผักร็อกเก็ตป่า","มะเขือม่วงย่าง","ฟักทองย่างออร์แกนิก","ชีสนมแพะ","เห็ดแชมปิญองออร์แกนิก","น้ำสลัดบัลซามิกโฮมเมด","พริกไทยดำ","เกลือหิมาลัยสีชมพู"], en:["Toasted Homemade Sourdough","Wild Rocket","Grilled Purple Eggplant","Organic Grilled Pumpkin","Goat Milk Cheese","Organic Champignon Mushroom","Homemade Balsamic Dressing","Black Pepper","Himalayan Pink Salt"]},
+        origin:{th:"ปรุงสดใหม่ทุกจานจากวัตถุดิบคุณภาพคัดสรร", en:"Freshly prepared each plate from quality selected ingredients"}},
+      "mashed-pumpkin-roasted-coconut-sourdough": {name:"Mashed Pumpkin with Roasted Coconut on Homemade Sourdough Bread", cat:"Open Faced Sandwich", price:"170.-",
+        size:{th:"1 plate", en:"1 plate"},
+        desc:{th:"ผสมจาก ฟักทองบดกับเนื้อมะพร้าวคั่ว · ฟักทองออร์แกนิก · เนื้อมะพร้าวออร์แกนิก · ตะไคร้ออร์แกนิก", en:"Made from Mashed Pumpkin with Roasted Coconut Meat, Organic Pumpkin, Organic Coconut Meat, Organic Lemongrass."},
+        ingredients:{th:["ฟักทองบดกับเนื้อมะพร้าวคั่ว","ฟักทองออร์แกนิก","เนื้อมะพร้าวออร์แกนิก","ตะไคร้ออร์แกนิก","น้ำมันมะกอกสกัดเย็นออร์แกนิก","งาออร์แกนิก","กระเทียมออร์แกนิก","เม็ดมะม่วงหิมพานต์ออร์แกนิก","พริกไทยดำ","ใบไทม์","เกลือหิมาลัยสีชมพูออร์แกนิก","ขนมปังซาวโดวโฮมเมด"], en:["Mashed Pumpkin with Roasted Coconut Meat","Organic Pumpkin","Organic Coconut Meat","Organic Lemongrass","Organic Extra Virgin Olive Oil","Organic Sesame","Organic Garlic","Organic Cashew Nut","Black Pepper","Thyme Leaf","Organic Himalayan Pink Salt","Homemade Sourdough Bread"]},
+        origin:{th:"ปรุงสดใหม่ทุกจานจากวัตถุดิบคุณภาพคัดสรร", en:"Freshly prepared each plate from quality selected ingredients"}},
+      "egg-noodles-shredded-chicken-onsen-egg": {name:"Egg Noodles with Shredded Chicken & Onsen Egg", cat:"Noodle / Soup", price:"160.-",
+        size:{th:"1 plate", en:"1 plate"},
+        desc:{th:"ผสมจาก เส้นไข่ปราศจากสารเติมแต่ง · ไก่ฉีกปลอดสารปฏิชีวนะ/ฮอร์โมน · แครอทออร์แกนิก · ผักกวางตุ้งออร์แกนิก", en:"Made from Additive-free Egg Noodles, Antibiotic-Free/Hormone-Free Shredded Chicken, Organic Carrot, Organic Pak Choi."},
+        ingredients:{th:["เส้นไข่ปราศจากสารเติมแต่ง","ไก่ฉีกปลอดสารปฏิชีวนะ/ฮอร์โมน","แครอทออร์แกนิก","ผักกวางตุ้งออร์แกนิก","ข้าวโพดหวานออร์แกนิก","ไข่ออนเซ็นออร์แกนิก","เครื่องปรุง 3 รสออร์แกนิก"], en:["Additive-free Egg Noodles","Antibiotic-Free/Hormone-Free Shredded Chicken","Organic Carrot","Organic Pak Choi","Organic Sweet Corn","Organic Onsen Egg","Organic 3 Spice Seasoning"]},
+        origin:{th:"ปรุงสดใหม่ทุกจานจากวัตถุดิบคุณภาพคัดสรร", en:"Freshly prepared each plate from quality selected ingredients"}},
+      "egg-noodles-spicy-korean-chicken": {name:"Egg Noodles with Spicy Korean Chicken, Onsen Egg & Organic Veggies", cat:"Noodle / Soup", price:"180.-",
+        size:{th:"1 plate", en:"1 plate"},
+        desc:{th:"ผสมจาก เส้นไข่ปราศจากสารเติมแต่ง · อกไก่สไตล์เกาหลีปลอดสารปฏิชีวนะ/ฮอร์โมน · ซอสสไตล์เกาหลีรสเผ็ดโฮมเมด · แครอทออร์แกนิก", en:"Made from Additive-free Egg Noodles, Antibiotic-Free/Hormone-Free Korean-Style Chicken Breast, Housemade Spicy Korean-Style Sauce, Organic Carrot."},
+        ingredients:{th:["เส้นไข่ปราศจากสารเติมแต่ง","อกไก่สไตล์เกาหลีปลอดสารปฏิชีวนะ/ฮอร์โมน","ซอสสไตล์เกาหลีรสเผ็ดโฮมเมด","แครอทออร์แกนิก","ผักกวางตุ้งออร์แกนิก","ข้าวโพดหวานออร์แกนิก","ไข่ออนเซ็นออร์แกนิก","น้ำมันรำข้าว","เครื่องปรุง 3 รสออร์แกนิก","ไทม์","ปาปริก้า"], en:["Additive-free Egg Noodles","Antibiotic-Free/Hormone-Free Korean-Style Chicken Breast","Housemade Spicy Korean-Style Sauce","Organic Carrot","Organic Pak Choi","Organic Sweet Corn","Organic Onsen Egg","Rice Bran Oil","Organic 3 Spice Seasoning","Thyme","Paprika"]},
+        origin:{th:"ปรุงสดใหม่ทุกจานจากวัตถุดิบคุณภาพคัดสรร", en:"Freshly prepared each plate from quality selected ingredients"}},
+      "egg-noodles-teriyaki-chicken": {name:"Egg Noodles with Teriyaki Chicken, Onsen Egg & Organic Veggies", cat:"Noodle / Soup", price:"180.-",
+        size:{th:"1 plate", en:"1 plate"},
+        desc:{th:"ผสมจาก เส้นไข่ปราศจากสารเติมแต่ง · อกไก่เทอริยากิปลอดสารปฏิชีวนะ/ฮอร์โมน · ซอสเทอริยากิโฮมเมด · แครอทออร์แกนิก", en:"Made from Additive-free Egg Noodles, Antibiotic-Free/Hormone-Free Teriyaki Chicken Breast, Housemade Teriyaki Sauce, Organic Carrot."},
+        ingredients:{th:["เส้นไข่ปราศจากสารเติมแต่ง","อกไก่เทอริยากิปลอดสารปฏิชีวนะ/ฮอร์โมน","ซอสเทอริยากิโฮมเมด","แครอทออร์แกนิก","ผักกวางตุ้งออร์แกนิก","ข้าวโพดหวานออร์แกนิก","ไข่ออนเซ็นออร์แกนิก","น้ำมันรำข้าว","เครื่องปรุง 3 รสออร์แกนิก","ไทม์","ปาปริก้า"], en:["Additive-free Egg Noodles","Antibiotic-Free/Hormone-Free Teriyaki Chicken Breast","Housemade Teriyaki Sauce","Organic Carrot","Organic Pak Choi","Organic Sweet Corn","Organic Onsen Egg","Rice Bran Oil","Organic 3 Spice Seasoning","Thyme","Paprika"]},
+        origin:{th:"ปรุงสดใหม่ทุกจานจากวัตถุดิบคุณภาพคัดสรร", en:"Freshly prepared each plate from quality selected ingredients"}},
+      "organic-pure-corn-soup": {name:"Organic Pure Corn Soup", cat:"Noodle / Soup", price:"220.-",
+        size:{th:"1 bowl", en:"1 bowl"},
+        desc:{th:"ผสมจาก ข้าวโพดออร์แกนิก · เครื่องปรุงเห็ดหอม · เกลือหิมาลัยสีชมพูออร์แกนิก · พริกไทยดำ", en:"Made from Organic Corn, Shiitake Mushroom Seasoning, Organic Himalayan Pink Salt, Black Pepper."},
+        ingredients:{th:["ข้าวโพดออร์แกนิก","เครื่องปรุงเห็ดหอม","เกลือหิมาลัยสีชมพูออร์แกนิก","พริกไทยดำ","ขนมปังซาวโดว"], en:["Organic Corn","Shiitake Mushroom Seasoning","Organic Himalayan Pink Salt","Black Pepper","Sourdough Bread"]},
+        origin:{th:"ปรุงสดใหม่ทุกจานจากวัตถุดิบคุณภาพคัดสรร", en:"Freshly prepared each plate from quality selected ingredients"}},
+      "unbaked-brownies": {name:"Unbaked Brownies with Chocolate Ganache", cat:"Dessert", price:"75.-",
+        size:{th:"1 piece (40g)", en:"1 piece (40g)"},
+        desc:{th:"ผสมจาก เม็ดมะม่วงหิมพานต์ออร์แกนิก · อัลมอนด์ · นมมะม่วงหิมพานต์ออร์แกนิก · อินทผลัม", en:"Made from Organic Cashew, Almond, Organic Cashew Milk, Dates."},
+        ingredients:{th:["เม็ดมะม่วงหิมพานต์ออร์แกนิก","อัลมอนด์","นมมะม่วงหิมพานต์ออร์แกนิก","อินทผลัม","ผงโกโก้","เกลือหิมาลัยสีชมพู"], en:["Organic Cashew","Almond","Organic Cashew Milk","Dates","Cocoa Powder","Himalayan Pink Salt"]},
+        origin:{th:"ทำสดใหม่ทุกวันในครัวร้าน จากวัตถุดิบคัดสรร", en:"Made fresh daily in-house from selected ingredients"}},
+      "flourless-orange-almond-cake": {name:"Flourless Whole Orange Almond Cake", cat:"Dessert", price:"120.-",
+        size:{th:"1 slice", en:"1 slice"},
+        desc:{th:"ผสมจาก ส้มนาเวล · แป้งอัลมอนด์ · น้ำตาลมะพร้าว · ไข่ออร์แกนิก", en:"Made from Navel Orange, Almond Flour, Coconut Sugar, Organic Egg."},
+        ingredients:{th:["ส้มนาเวล","แป้งอัลมอนด์","น้ำตาลมะพร้าว","ไข่ออร์แกนิก","น้ำตาลปี๊บ","ผงฟู","เกลือหิมาลัยสีชมพู","ผงวุ้น","น้ำแอปเปิ้ลสด"], en:["Navel Orange","Almond Flour","Coconut Sugar","Organic Egg","Palm Sugar","Baking Powder","Himalayan Pink Salt","Agar Powder","Fresh Apple Juice"]},
+        origin:{th:"ทำสดใหม่ทุกวันในครัวร้าน จากวัตถุดิบคัดสรร", en:"Made fresh daily in-house from selected ingredients"}},
+      "chocolate-cake-strawberry-chia-jam": {name:"Chocolate Cake with Strawberry Chia Jam", cat:"Dessert", price:"120.-",
+        size:{th:"1 slice", en:"1 slice"},
+        desc:{th:"ผสมจาก แป้งข้าวหอมมะลิออร์แกนิก · แป้งอัลมอนด์ · นมโอ๊ต · น้ำส้มสายชูข้าวออร์แกนิก", en:"Made from Organic Hom Mali Rice Flour, Almond Flour, Oat Milk, Organic Rice Vinegar."},
+        ingredients:{th:["แป้งข้าวหอมมะลิออร์แกนิก","แป้งอัลมอนด์","นมโอ๊ต","น้ำส้มสายชูข้าวออร์แกนิก","ดาร์กช็อกโกแลต","น้ำตาลปี๊บ","เกลือทะเล","น้ำมันรำข้าว","ผงฟู","เบกกิ้งโซดา","แซนแทนกัม","ผงโกโก้","กลิ่นวานิลลาสกัด","น้ำมันมะพร้าว","กะทิออร์แกนิก","แยมสตรอว์เบอร์รีเมล็ดเจียโฮมเมด"], en:["Organic Hom Mali Rice Flour","Almond Flour","Oat Milk","Organic Rice Vinegar","Dark Chocolate","Palm Sugar","Sea Salt","Rice Bran Oil","Baking Powder","Baking Soda","Xanthan Gum","Cocoa Powder","Vanilla Extract","Coconut Oil","Organic Coconut Milk","Housemade Strawberry Chia Jam"]},
+        origin:{th:"ทำสดใหม่ทุกวันในครัวร้าน จากวัตถุดิบคัดสรร", en:"Made fresh daily in-house from selected ingredients"}},
+      "organic-grass-jelly-pudding": {name:"Organic Grass Jelly Pudding", cat:"Dessert", price:"45.-",
+        size:{th:"1 cup", en:"1 cup"},
+        desc:{th:"ผสมจาก เฉาก๊วยออร์แกนิก (ไม่มีสารเติมแต่ง ไม่มีสารกันบูด ไม่ใส่น้ำตาลทราย)", en:"Made from Organic Grass Jelly (no additives, no preservatives, no refined sugar)."},
+        ingredients:{th:["เฉาก๊วยออร์แกนิก (ไม่มีสารเติมแต่ง ไม่มีสารกันบูด ไม่ใส่น้ำตาลทราย)"], en:["Organic Grass Jelly (no additives, no preservatives, no refined sugar)"]},
+        origin:{th:"ทำสดใหม่ทุกวันในครัวร้าน จากวัตถุดิบคัดสรร", en:"Made fresh daily in-house from selected ingredients"}},
+      "vegan-caramel-custard-vanilla": {name:"Vegan Caramel Custard Vanilla - Almond Milk", cat:"Dessert", price:"70.-",
+        size:{th:"1 cup", en:"1 cup"},
+        desc:{th:"ผสมจาก นมอัลมอนด์เพาะงอก · น้ำตาลปี๊บ · กลิ่นวานิลลาสกัด · แป้งข้าวโพด", en:"Made from Sprouted Almond Milk, Palm Sugar, Vanilla Extract, Corn Flour."},
+        ingredients:{th:["นมอัลมอนด์เพาะงอก","น้ำตาลปี๊บ","กลิ่นวานิลลาสกัด","แป้งข้าวโพด","ผงวุ้น","กะทิออร์แกนิก"], en:["Sprouted Almond Milk","Palm Sugar","Vanilla Extract","Corn Flour","Agar Powder","Organic Coconut Milk"]},
+        origin:{th:"ทำสดใหม่ทุกวันในครัวร้าน จากวัตถุดิบคัดสรร", en:"Made fresh daily in-house from selected ingredients"}},
+      "vegan-caramel-custard-earl-grey": {name:"Vegan Caramel Custard Earl Grey - Almond Milk", cat:"Dessert", price:"70.-",
+        size:{th:"1 cup", en:"1 cup"},
+        desc:{th:"ผสมจาก นมอัลมอนด์เพาะงอก · น้ำตาลปี๊บ · ชาเอิร์ลเกรย์ · แป้งข้าวโพด", en:"Made from Sprouted Almond Milk, Palm Sugar, Earl Grey Tea, Corn Flour."},
+        ingredients:{th:["นมอัลมอนด์เพาะงอก","น้ำตาลปี๊บ","ชาเอิร์ลเกรย์","แป้งข้าวโพด","ผงวุ้น","กะทิออร์แกนิก"], en:["Sprouted Almond Milk","Palm Sugar","Earl Grey Tea","Corn Flour","Agar Powder","Organic Coconut Milk"]},
+        origin:{th:"ทำสดใหม่ทุกวันในครัวร้าน จากวัตถุดิบคัดสรร", en:"Made fresh daily in-house from selected ingredients"}},
+      "housemade-granola-classic": {name:"Housemade Granola \"Classic\"", cat:"Dessert", price:"150.-",
+        size:{th:"1 pack", en:"1 pack"},
+        desc:{th:"ผสมจาก ข้าวโอ๊ตแผ่น · อัลมอนด์เพาะงอก · เมล็ดฟักทองออร์แกนิก · เม็ดมะม่วงหิมพานต์ออร์แกนิก", en:"Made from Rolled Oats, Sprouted Almond, Organic Pumpkin Seeds, Organic Cashew Nuts."},
+        ingredients:{th:["ข้าวโอ๊ตแผ่น","อัลมอนด์เพาะงอก","เมล็ดฟักทองออร์แกนิก","เม็ดมะม่วงหิมพานต์ออร์แกนิก","เมล็ดทานตะวันออร์แกนิก","เมล็ดงาขี้ม้อนออร์แกนิก","ลูกเกดทอง","น้ำหวานมะพร้าวออร์แกนิก","กลิ่นวานิลลาสกัด","น้ำมันมะพร้าว","อบเชยป่น"], en:["Rolled Oats","Sprouted Almond","Organic Pumpkin Seeds","Organic Cashew Nuts","Organic Sunflower Seeds","Organic Perilla Seeds","Golden Raisin","Organic Coconut Nectar","Vanilla Extract","Coconut Oil","Ground Cinnamon"]},
+        origin:{th:"ทำสดใหม่ทุกวันในครัวร้าน จากวัตถุดิบคัดสรร", en:"Made fresh daily in-house from selected ingredients"}},
+      "housemade-granola-chocolate": {name:"Housemade Granola \"Chocolate\"", cat:"Dessert", price:"160.-",
+        size:{th:"1 pack", en:"1 pack"},
+        desc:{th:"ผสมจาก ข้าวโอ๊ตแผ่น · อัลมอนด์เพาะงอก · แมคคาเดเมีย · เมล็ดฟักทองออร์แกนิก", en:"Made from Rolled Oats, Sprouted Almond, Macadamia, Organic Pumpkin Seeds."},
+        ingredients:{th:["ข้าวโอ๊ตแผ่น","อัลมอนด์เพาะงอก","แมคคาเดเมีย","เมล็ดฟักทองออร์แกนิก","แครนเบอร์รีอบแห้ง","ผงโกโก้ออร์แกนิก","น้ำหวานมะพร้าวออร์แกนิก","กลิ่นวานิลลาสกัด","น้ำมันมะพร้าว"], en:["Rolled Oats","Sprouted Almond","Macadamia","Organic Pumpkin Seeds","Dried Cranberries","Organic Cacao Powder","Organic Coconut Nectar","Vanilla Extract","Coconut Oil"]},
+        origin:{th:"ทำสดใหม่ทุกวันในครัวร้าน จากวัตถุดิบคัดสรร", en:"Made fresh daily in-house from selected ingredients"}},
+      "strawberry-chia-jam": {name:"Strawberry Chia Jam", cat:"Condiment", price:"130.-",
+        size:{th:"1 jar", en:"1 jar"},
+        desc:{th:"ผสมจาก น้ำตาลมะพร้าวออร์แกนิก · สตรอว์เบอร์รีนิวซีแลนด์ · เมล็ดเจียออร์แกนิก · น้ำเลมอนออร์แกนิก", en:"Made from Organic Coconut Sugar, New Zealand Strawberry, Organic Chia Seed, Organic Lemon Juice."},
+        ingredients:{th:["น้ำตาลมะพร้าวออร์แกนิก","สตรอว์เบอร์รีนิวซีแลนด์","เมล็ดเจียออร์แกนิก","น้ำเลมอนออร์แกนิก","น้ำบีทรูทออร์แกนิก"], en:["Organic Coconut Sugar","New Zealand Strawberry","Organic Chia Seed","Organic Lemon Juice","Organic Beetroot Juice"]},
+        origin:{th:"ทำสดใหม่ทุกวันในครัวร้าน จากวัตถุดิบคัดสรร", en:"Made fresh daily in-house from selected ingredients"}},
+      "raspberry-carrot-jam": {name:"Raspberry & Carrot Jam", cat:"Condiment", price:"130.-",
+        size:{th:"1 jar", en:"1 jar"},
+        desc:{th:"ผสมจาก น้ำตาลมะพร้าวออร์แกนิก · ราสป์เบอร์รีนิวซีแลนด์ · แครอทออร์แกนิก", en:"Made from Organic Coconut Sugar, New Zealand Raspberry, Organic Carrot."},
+        ingredients:{th:["น้ำตาลมะพร้าวออร์แกนิก","ราสป์เบอร์รีนิวซีแลนด์","แครอทออร์แกนิก"], en:["Organic Coconut Sugar","New Zealand Raspberry","Organic Carrot"]},
+        origin:{th:"ทำสดใหม่ทุกวันในครัวร้าน จากวัตถุดิบคัดสรร", en:"Made fresh daily in-house from selected ingredients"}},
+      "sprouted-almond-butter-smooth": {name:"Sprouted Almond Butter \"Smooth\"", cat:"Condiment", price:"155.-",
+        size:{th:"1 jar", en:"1 jar"},
+        desc:{th:"ผสมจาก อัลมอนด์เพาะงอกล้วนๆ", en:"Made from Just Sprouted Almond."},
+        ingredients:{th:["อัลมอนด์เพาะงอกล้วนๆ"], en:["Just Sprouted Almond"]},
+        origin:{th:"ทำสดใหม่ทุกวันในครัวร้าน จากวัตถุดิบคัดสรร", en:"Made fresh daily in-house from selected ingredients"}},
+      "sprouted-almond-butter-crunchy": {name:"Sprouted Almond Butter \"Crunchy\"", cat:"Condiment", price:"155.-",
+        size:{th:"1 jar", en:"1 jar"},
+        desc:{th:"ผสมจาก อัลมอนด์เพาะงอกล้วนๆ", en:"Made from Just Sprouted Almond."},
+        ingredients:{th:["อัลมอนด์เพาะงอกล้วนๆ"], en:["Just Sprouted Almond"]},
+        origin:{th:"ทำสดใหม่ทุกวันในครัวร้าน จากวัตถุดิบคัดสรร", en:"Made fresh daily in-house from selected ingredients"}},
+      "juice-flight": {name:"Juice Flight", cat:"Juice Flight", price:"350.-",
+        size:{th:"10 shots", en:"10 shots"},
+        desc:{th:"ผสมจาก น้ำผัก 10 ช็อต คัดจากเมนูที่มีอยู่ (ชุดชิมน้ำผักคั้นเย็น 10 ช็อต คัดจากเมนูน้ำผักที่มีอยู่แล้ว (ไม่ใช่สูตรใหม่))", en:"Made from 10 Juice Shots — Selection from Existing Menu. (A 10-shot cold-pressed juice flight sampler, selected from our existing juice menu (not a separate recipe))"},
+        ingredients:{th:["น้ำผัก 10 ช็อต คัดจากเมนูที่มีอยู่"], en:["10 Juice Shots — Selection from Existing Menu"]},
+        origin:{th:"คั้นสดใหม่ทุกวัน จากผักผลไม้ออร์แกนิกคัดสรร", en:"Cold-pressed fresh daily from selected organic produce"}}
+    };
+
+    function applyLang(lang){
+      currentLang = lang;
+      document.documentElement.lang = lang;
+      document.querySelectorAll('[data-th]').forEach(function(el){
+        el.textContent = lang === 'th' ? el.dataset.th : el.dataset.en;
+      });
+      document.getElementById('langThBtn').classList.toggle('active', lang === 'th');
+      document.getElementById('langEnBtn').classList.toggle('active', lang === 'en');
+      localStorage.setItem('vgl_lang', lang);
+      const openSlug = document.getElementById('modalBackdrop').dataset.openSlug;
+      if(openSlug){ openModal(openSlug); }
+    }
+
+    function openModal(slug){
+      const it = ITEMS[slug];
+      if(!it) return;
+      document.getElementById('modalBackdrop').dataset.openSlug = slug;
+      document.getElementById('modalCat').textContent = it.cat;
+      document.getElementById('modalName').textContent = it.name;
+      document.getElementById('modalPrice').textContent = it.price;
+      document.getElementById('modalSize').textContent = it.size[currentLang];
+      document.getElementById('modalDesc').textContent = it.desc[currentLang];
+      document.getElementById('modalOrigin').textContent = it.origin[currentLang];
+      const ul = document.getElementById('modalIngredients');
+      ul.innerHTML = '';
+      it.ingredients[currentLang].forEach(function(ing){
+        const li = document.createElement('li');
+        li.textContent = ing;
+        ul.appendChild(li);
+      });
+      document.getElementById('modalBackdrop').classList.add('open');
+    }
+    function closeModal(){
+      document.getElementById('modalBackdrop').classList.remove('open');
+      document.getElementById('modalBackdrop').dataset.openSlug = '';
+    }
+    document.addEventListener('click', function(e){
+      const card = e.target.closest('[data-item]');
+      if(card){ openModal(card.dataset.item); return; }
+      // Close on click anywhere on the backdrop OR anywhere on the floating card itself —
+      // no need to hunt for the small × button.
+      if(e.target.id === 'modalBackdrop' || e.target.closest('.modal')){ closeModal(); }
+    });
+    document.addEventListener('keydown', function(e){
+      if(e.key === 'Escape') closeModal();
+    });
+
+    applyLang(currentLang);
+
+    // --- Sticky category nav: smoother interaction ---------------------------
+    (function(){
+      const nav = document.querySelector('.cat-nav');
+      const inner = document.querySelector('.cat-nav-inner');
+      if(!nav || !inner) return;
+
+      // 1) Let desktop mouse-wheel scroll the bar horizontally (not just touch/trackpad)
+      inner.addEventListener('wheel', function(e){
+        if(Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return; // already horizontal, let it be
+        e.preventDefault();
+        inner.scrollLeft += e.deltaY;
+      }, {passive:false});
+
+      // 2) Click-and-drag to scroll (desktop mouse users, since scrollbar is hidden)
+      let isDown = false, startX = 0, startScroll = 0, moved = false;
+      inner.addEventListener('mousedown', function(e){
+        isDown = true; moved = false;
+        startX = e.pageX; startScroll = inner.scrollLeft;
+        inner.classList.add('dragging');
+      });
+      window.addEventListener('mouseup', function(){
+        isDown = false;
+        inner.classList.remove('dragging');
+      });
+      inner.addEventListener('mouseleave', function(){
+        isDown = false;
+        inner.classList.remove('dragging');
+      });
+      inner.addEventListener('mousemove', function(e){
+        if(!isDown) return;
+        const dx = e.pageX - startX;
+        if(Math.abs(dx) > 3) moved = true;
+        inner.scrollLeft = startScroll - dx;
+      });
+      // Suppress the click-through to an anchor if the user was actually dragging
+      inner.addEventListener('click', function(e){
+        if(moved){ e.preventDefault(); e.stopPropagation(); moved = false; }
+      }, true);
+
+      // 3) Fade hint on left/right edges depending on scroll position
+      function updateEdges(){
+        const atStart = inner.scrollLeft <= 2;
+        const atEnd = inner.scrollLeft >= inner.scrollWidth - inner.clientWidth - 2;
+        nav.classList.toggle('at-start', atStart);
+        nav.classList.toggle('at-end', atEnd);
+      }
+      inner.addEventListener('scroll', updateEdges, {passive:true});
+      window.addEventListener('resize', updateEdges);
+      updateEdges();
+
+      // 4) Highlight the nav link for whichever section is currently in view,
+      //    and keep that link scrolled into view within the nav bar itself.
+      const links = Array.from(inner.querySelectorAll('a[href^="#"]'));
+      const targets = links
+        .map(function(a){ return { a: a, el: document.getElementById(a.getAttribute('href').slice(1)) }; })
+        .filter(function(t){ return t.el; });
+
+      let currentActive = null;
+      function setActive(a){
+        if(a === currentActive) return;
+        if(currentActive) currentActive.classList.remove('active');
+        if(a){
+          a.classList.add('active');
+          const r = a.getBoundingClientRect(), ir = inner.getBoundingClientRect();
+          if(r.left < ir.left || r.right > ir.right){
+            const target = inner.scrollLeft + (r.left - ir.left) - (inner.clientWidth - r.width) / 2;
+            inner.scrollTo({left: Math.max(0, target), behavior: 'smooth'});
+          }
+        }
+        currentActive = a;
+      }
+
+      if('IntersectionObserver' in window){
+        const io = new IntersectionObserver(function(entries){
+          // pick the entry closest to the top of the viewport among those intersecting
+          let best = null, bestTop = Infinity;
+          entries.forEach(function(entry){
+            if(entry.isIntersecting && entry.boundingClientRect.top < bestTop){
+              bestTop = entry.boundingClientRect.top;
+              best = entry.target;
+            }
+          });
+          if(best){
+            const match = targets.find(function(t){ return t.el === best; });
+            if(match) setActive(match.a);
+          }
+        }, { rootMargin: '-84px 0px -70% 0px', threshold: 0 });
+        targets.forEach(function(t){ io.observe(t.el); });
+      }
+    })();
+  </script>
+
+</body>
+</html>
