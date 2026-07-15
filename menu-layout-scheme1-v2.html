@@ -90,6 +90,14 @@
   .cat-nav-inner::-webkit-scrollbar{display:none}
   .cat-nav a{flex:none;display:inline-flex;align-items:center;gap:6px;font-family:var(--font-accent);font-weight:800;font-size:11.5px;letter-spacing:.04em;text-transform:uppercase;text-decoration:none;color:var(--vgl-black);padding:8px 16px;border:1px solid var(--vgl-hairline);border-radius:0;white-space:nowrap;background:var(--vgl-card);transition:background .15s,color .15s}
   .cat-nav a:hover{background:var(--vgl-black);color:var(--vgl-off-white)}
+
+.cat-nav a.active {
+  background: var(--vgl-black);
+  color: var(--vgl-off-white);
+  border-color: var(--vgl-black);
+}
+
+  
   .cat-nav a .swatch{width:8px;height:8px;border-radius:0;flex:none}
   .cat-nav .divider{flex:none;width:1px;background:var(--vgl-hairline);margin:4px 4px}
 
@@ -1509,5 +1517,84 @@
     applyLang(currentLang);
   </script>
 
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const navContainer = document.querySelector(".cat-nav-inner");
+  const navLinks = Array.from(
+    document.querySelectorAll('.cat-nav a[href^="#"]')
+  );
+
+  const menuItems = navLinks
+    .map(function (link) {
+      const id = link.getAttribute("href").substring(1);
+      const section = document.getElementById(id);
+
+      return {
+        link: link,
+        section: section
+      };
+    })
+    .filter(function (item) {
+      return item.section;
+    });
+
+  function activateMenu(currentItem) {
+    menuItems.forEach(function (item) {
+      item.link.classList.toggle(
+        "active",
+        item.link === currentItem.link
+      );
+    });
+
+    currentItem.link.scrollIntoView({
+      behavior: "smooth",
+      block: "nearest",
+      inline: "center"
+    });
+  }
+
+  function updateActiveMenu() {
+    const navHeight =
+      document.querySelector(".cat-nav").offsetHeight;
+
+    const checkpoint = navHeight + 40;
+    let currentItem = menuItems[0];
+
+    menuItems.forEach(function (item) {
+      const position =
+        item.section.getBoundingClientRect().top;
+
+      if (position <= checkpoint) {
+        currentItem = item;
+      }
+    });
+
+    if (
+      currentItem &&
+      !currentItem.link.classList.contains("active")
+    ) {
+      activateMenu(currentItem);
+    }
+  }
+
+  let scrollTimer;
+
+  window.addEventListener(
+    "scroll",
+    function () {
+      window.clearTimeout(scrollTimer);
+
+      scrollTimer = window.setTimeout(
+        updateActiveMenu,
+        40
+      );
+    },
+    { passive: true }
+  );
+
+  updateActiveMenu();
+});
+</script>  
+  
 </body>
 </html>
