@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Veggiology — Mini Web CI Reference</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@700&family=Archivo+Black&family=Work+Sans:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Prompt:wght@300;400;500;700&family=Bai+Jamjuree:wght@300;400;600;700&family=Noto+Serif+Thai:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  /* ============================================================
+     LOCAL PREVIEW FONTS — TEMPORARY, NOT PRODUCTION-LICENSED
+     PP Woodland is Pangram Pangram's FREE-FOR-PERSONAL-USE build,
+     TT Drugs is TypeType's TRIAL build, and Kulachat Serif is
+     fontlot's FREE-FOR-PERSONAL-USE "DEMO" build. All three are fine
+     for an internal/offline reference like this file, but none is
+     licensed for a live/public/commercial site. Swap these blocks
+     out once the designer sends the official licensed files (same
+     file names below, or update the paths).
+  ============================================================ */
+  @font-face{
+    font-family:"PP Woodland";
+    src:url("./fonts/PPWoodland-Bold.woff2") format("woff2");
+    font-weight:700; font-style:normal; font-display:swap;
+  }
+  @font-face{
+    font-family:"TT Drugs";
+    src:url("./fonts/TT_Drugs_Trial_Bold.woff2") format("woff2");
+    font-weight:700; font-style:normal; font-display:swap;
+  }
+  @font-face{
+    font-family:"Kulachat Serif";
+    src:url("./fonts/KulachatSerif-Medium.woff2") format("woff2");
+    font-weight:500; font-style:normal; font-display:swap;
+  }
+  :root{
+    /* ===== CORE COLORS (official, PDF p.36) ===== */
+    --vgl-warm-neutral: #F7F1E3;   /* Pantone 111C 5% tint — primary background */
+    --vgl-soil-black:   #000000;  /* Pantone Black C — text / logo */
+    --vgl-veggie-green: #0E2517;  /* Pantone 560C — secondary background / footer */
+
+    /* ===== SUPPORTING COLORS — Tint / Pure / Tone (PDF p.37) ===== */
+    --vgl-blue-tint:#AFDCEB;   --vgl-blue-pure:#82CDE6;   --vgl-blue-tone:#5ABEDC;
+    --vgl-green-tint:#C3D7A5;  --vgl-green-pure:#73C378;  --vgl-green-tone:#87B978;
+    --vgl-yellow-tint:#FFDC91; --vgl-yellow-pure:#FACD55; --vgl-yellow-tone:#FFC300;
+    --vgl-pink-tint:#F5CDD2;   --vgl-pink-pure:#F5A5B4;   --vgl-pink-tone:#F07DA0;
+    --vgl-red-tint:#FAB9A0;    --vgl-red-pure:#F58773;    --vgl-red-tone:#EB6446;
+
+    /* ===== FONT STACKS ===== */
+    /* PP Woodland / TT Drugs / Kulachat Serif are licensed — real name listed first,
+       falls back to a free placeholder automatically until the @font-face files exist */
+    --font-display-en: "PP Woodland", "Fraunces", Georgia, serif;
+    --font-accent-en:  "TT Drugs", "Archivo Black", "Arial Narrow", sans-serif;
+    --font-body-en:    "Work Sans", Arial, sans-serif;      /* = official tertiary, real font */
+    --font-display-th: "Kulachat Serif", "Noto Serif Thai", serif;
+    --font-body-th:     "Prompt", sans-serif;                /* = official secondary, real font */
+    --font-small-th:    "Bai Jamjuree", sans-serif;          /* = official tertiary, real font */
+
+    --radius: 16px;
+    --page-max: 1080px;
+  }
+
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0; background:var(--vgl-warm-neutral); color:var(--vgl-soil-black);
+    font-family:var(--font-body-en); font-weight:400; line-height:1.6;
+  }
+  a{color:inherit}
+  .container{max-width:var(--page-max); margin:auto; padding:0 24px}
+
+  .nav{position:sticky; top:0; z-index:20; background:rgba(247,241,227,.92); backdrop-filter:blur(10px); border-bottom:1px solid rgba(0,0,0,.12)}
+  .nav .container{display:flex; align-items:center; justify-content:space-between; min-height:64px; gap:24px; flex-wrap:wrap}
+  .brand{font-family:var(--font-display-en); font-weight:700; font-size:20px; letter-spacing:.04em; text-decoration:none}
+  .nav-links{display:flex; gap:20px; font-size:14px; flex-wrap:wrap}
+  .nav-links a{text-decoration:none; opacity:.75}
+  .nav-links a:hover{opacity:1}
+
+  header.hero{padding:64px 0 48px; border-bottom:1px solid rgba(0,0,0,.1)}
+  .eyebrow{font-family:var(--font-accent-en); font-size:12px; letter-spacing:.16em; text-transform:uppercase; opacity:.7; margin:0 0 12px}
+  h1{font-family:var(--font-display-en); font-size:clamp(34px,5vw,56px); font-weight:700; line-height:1.05; margin:0 0 16px}
+  .lede{max-width:640px; font-size:16px; opacity:.85; margin:0 0 8px}
+  .tag{display:inline-block; margin-top:16px; padding:6px 14px; border-radius:999px; background:var(--vgl-veggie-green); color:var(--vgl-warm-neutral); font-family:var(--font-accent-en); font-size:12px; letter-spacing:.06em}
+
+  main section{padding:56px 0; border-bottom:1px solid rgba(0,0,0,.08)}
+  h2{font-family:var(--font-display-en); font-weight:700; font-size:clamp(24px,3vw,32px); margin:0 0 6px}
+  .section-note{max-width:640px; font-size:14px; opacity:.75; margin:0 0 28px}
+
+  /* Core color cards */
+  .core-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:16px}
+  .core-card{border-radius:var(--radius); min-height:140px; padding:18px; display:flex; flex-direction:column; justify-content:flex-end; border:1px solid rgba(0,0,0,.1)}
+  .core-card .name{font-family:var(--font-accent-en); font-size:13px; margin-bottom:6px}
+  .core-card .code{font-size:12px; opacity:.85}
+
+  /* Supporting color matrix */
+  .support-matrix{display:grid; grid-template-columns:repeat(5,1fr); gap:10px}
+  .hue-col{display:flex; flex-direction:column; gap:8px}
+  .hue-label{font-family:var(--font-accent-en); font-size:12px; text-align:center; letter-spacing:.06em; text-transform:uppercase; opacity:.7}
+  .swatch{border-radius:10px; min-height:64px; padding:8px; display:flex; align-items:flex-end; font-size:10px; font-family:var(--font-body-en); border:1px solid rgba(0,0,0,.08)}
+
+  /* Typography section */
+  .type-block{margin-bottom:34px}
+  .type-meta{font-size:12px; letter-spacing:.06em; text-transform:uppercase; opacity:.6; margin-bottom:8px}
+  .type-meta .lic{color:#a4491f}
+  .sample-en{font-family:var(--font-display-en); font-size:clamp(30px,4vw,46px); line-height:1.05}
+  .sample-accent{font-family:var(--font-accent-en); font-size:20px; letter-spacing:.02em}
+  .sample-body{font-family:var(--font-body-en); font-size:16px; max-width:560px}
+  .sample-th-display{font-family:var(--font-display-th); font-size:clamp(26px,4vw,38px)}
+  .sample-th-body{font-family:var(--font-body-th); font-size:17px; max-width:560px}
+  .sample-th-small{font-family:var(--font-small-th); font-size:14px; max-width:560px}
+
+  /* Logo rules */
+  .rules-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:16px}
+  .rule-card{border:1px solid rgba(0,0,0,.12); border-radius:var(--radius); padding:20px; background:#fff}
+  .rule-card strong{display:block; font-family:var(--font-accent-en); font-size:14px; margin-bottom:8px}
+  .rule-card p, .rule-card ul{margin:0; font-size:14px; opacity:.85}
+  .rule-card ul{padding-left:18px}
+
+  /* Tokens code block */
+  pre{background:var(--vgl-soil-black); color:var(--vgl-warm-neutral); border-radius:var(--radius); padding:20px; overflow-x:auto; font-size:13px; line-height:1.6}
+
+  /* Components */
+  .comp-row{display:flex; flex-wrap:wrap; gap:14px; align-items:center; margin-bottom:20px}
+  .btn{font-family:var(--font-accent-en); font-size:13px; letter-spacing:.03em; padding:12px 22px; border-radius:6px; border:0; cursor:pointer}
+  .btn-primary{background:var(--vgl-veggie-green); color:var(--vgl-warm-neutral)}
+  .btn-secondary{background:transparent; border:1.5px solid var(--vgl-soil-black); color:var(--vgl-soil-black)}
+  .pill{font-family:var(--font-accent-en); font-size:12px; padding:6px 14px; border-radius:999px; background:var(--vgl-yellow-tint)}
+  .input{padding:12px 14px; border-radius:8px; border:1px solid rgba(0,0,0,.25); font-family:var(--font-body-en); background:#fff; min-width:220px}
+
+  footer{padding:32px 0 60px; font-size:13px; opacity:.7}
+  footer strong{opacity:1}
+
+  @media (max-width:820px){
+    .core-grid{grid-template-columns:1fr 1fr}
+    .support-matrix{grid-template-columns:repeat(5,minmax(50px,1fr))}
+    .rules-grid{grid-template-columns:1fr}
+  }
+  @media (max-width:560px){
+    .core-grid{grid-template-columns:1fr}
+    .support-matrix{grid-template-columns:repeat(5,minmax(40px,1fr))}
+    .swatch{font-size:8px}
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="container">
+    <a class="brand" href="#top">VEGGIOLOGY</a>
+    <div class="nav-links">
+      <a href="#colors">Colors</a>
+      <a href="#typography">Typography</a>
+      <a href="#logo">Logo</a>
+      <a href="#tokens">Tokens</a>
+      <a href="#components">Components</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="container">
+    <p class="eyebrow">Mini Web CI · Dev Reference</p>
+    <h1>Always Create<br>The Better-More.</h1>
+    <p class="lede">Condensed reference for building the Veggiology web app, extracted directly from the official <strong>210219_VGL_Brand Guidelines.pdf</strong>. For packaging, print, or logo artwork, always go back to the source PDF — this page only covers what a web build needs.</p>
+    <span class="tag">#YourBetterMore</span>
+  </div>
+</header>
+
+<main>
+
+  <section id="colors">
+    <div class="container">
+      <h2>01 — Core Colors</h2>
+      <p class="section-note">Primary palette. Warm Neutral is the main background, Soil Black is for text/logo, Veggie Green is for secondary backgrounds and footers.</p>
+      <div class="core-grid">
+        <div class="core-card" style="background:var(--vgl-warm-neutral)">
+          <div class="name">Warm Neutral</div>
+          <div class="code">#F7F1E3 · Pantone 111C (5% tint)</div>
+        </div>
+        <div class="core-card" style="background:var(--vgl-soil-black); color:var(--vgl-warm-neutral); border-color:transparent">
+          <div class="name">Soil Black</div>
+          <div class="code">#000000 · Pantone Black C</div>
+        </div>
+        <div class="core-card" style="background:var(--vgl-veggie-green); color:var(--vgl-warm-neutral); border-color:transparent">
+          <div class="name">Veggie Green</div>
+          <div class="code">#0E2517 · Pantone 560C</div>
+        </div>
+      </div>
+
+      <h2 style="margin-top:44px">Supporting Colors</h2>
+      <p class="section-note">5 hues × 3 levels (Tint / Pure / Tone). Use one hue per product category or section — don't mix hues within the same block. Tint = diluted, Pure = clean/saturated, Tone = deepened.</p>
+      <div class="support-matrix">
+        <div class="hue-col">
+          <div class="hue-label">Blue</div>
+          <div class="swatch" style="background:var(--vgl-blue-tint)">Tint #AFDCEB</div>
+          <div class="swatch" style="background:var(--vgl-blue-pure)">Pure #82CDE6</div>
+          <div class="swatch" style="background:var(--vgl-blue-tone)">Tone #5ABEDC</div>
+        </div>
+        <div class="hue-col">
+          <div class="hue-label">Green</div>
+          <div class="swatch" style="background:var(--vgl-green-tint)">Tint #C3D7A5</div>
+          <div class="swatch" style="background:var(--vgl-green-pure)">Pure #73C378</div>
+          <div class="swatch" style="background:var(--vgl-green-tone)">Tone #87B978</div>
+        </div>
+        <div class="hue-col">
+          <div class="hue-label">Yellow</div>
+          <div class="swatch" style="background:var(--vgl-yellow-tint)">Tint #FFDC91</div>
+          <div class="swatch" style="background:var(--vgl-yellow-pure)">Pure #FACD55</div>
+          <div class="swatch" style="background:var(--vgl-yellow-tone)">Tone #FFC300</div>
+        </div>
+        <div class="hue-col">
+          <div class="hue-label">Pink</div>
+          <div class="swatch" style="background:var(--vgl-pink-tint)">Tint #F5CDD2</div>
+          <div class="swatch" style="background:var(--vgl-pink-pure)">Pure #F5A5B4</div>
+          <div class="swatch" style="background:var(--vgl-pink-tone)">Tone #F07DA0</div>
+        </div>
+        <div class="hue-col">
+          <div class="hue-label">Red</div>
+          <div class="swatch" style="background:var(--vgl-red-tint)">Tint #FAB9A0</div>
+          <div class="swatch" style="background:var(--vgl-red-pure)">Pure #F58773</div>
+          <div class="swatch" style="background:var(--vgl-red-tone)">Tone #EB6446</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="typography">
+    <div class="container">
+      <h2>02 — Typography</h2>
+      <p class="section-note">Official hierarchy is 3 English + 3 Thai typefaces. Where the official font is a paid/licensed file, a free placeholder is shown below (marked) — swap in the real font file before shipping to production.</p>
+
+      <div class="type-block">
+        <div class="type-meta">Primary (Display) — PP Woodland Bold <span class="lic">· free-for-personal-use build, not production-licensed</span></div>
+        <div class="sample-en">Better Every Day.</div>
+      </div>
+      <div class="type-block">
+        <div class="type-meta">Secondary (Accent / Buttons) — TT Drugs Bold <span class="lic">· trial build, not production-licensed</span></div>
+        <div class="sample-accent">HONEST &amp; HANDCRAFTED VEGGIE PRODUCTS</div>
+      </div>
+      <div class="type-block">
+        <div class="type-meta">Tertiary (Body / UI) — Work Sans <em>(free, real font loaded)</em></div>
+        <p class="sample-body">Eat more greens, drink the rainbow. Cold-pressed, bottled fresh daily, no HPP and no sugary junk.</p>
+      </div>
+
+      <div class="type-block" style="margin-top:34px">
+        <div class="type-meta">Thai Primary (Display) — Kulachat Serif <span class="lic">· free-for-personal-use demo build, not production-licensed</span></div>
+        <div class="sample-th-display">เราตั้งใจมอบสิ่งที่ดีที่สุดเสมอ</div>
+      </div>
+      <div class="type-block">
+        <div class="type-meta">Thai Secondary (Body) — Prompt <em>(free, real font loaded)</em></div>
+        <p class="sample-th-body">คัดสรรแต่วัตถุดิบที่มีคุณภาพดี ให้ตัวเองและคนรอบข้าง</p>
+      </div>
+      <div class="type-block">
+        <div class="type-meta">Thai Tertiary (Small text) — Bai Jamjuree <em>(free, real font loaded)</em></div>
+        <p class="sample-th-small">เรามีความตั้งใจที่จะผลิตน้ำเพื่อสุขภาพ แบบที่ปลอดภัยจากสารเคมีหรือสิ่งเจือปนที่อาจเป็นอันตรายต่อสุขภาพ</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="logo">
+    <div class="container">
+      <h2>03 — Logo Quick Rules</h2>
+      <p class="section-note">Text-only summary — actual logo artwork (.ai / .eps / .png) lives in the Drive folder <strong>VGL_Artwork &gt; 01_Brand Identity</strong>, not reproduced here.</p>
+      <div class="rules-grid">
+        <div class="rule-card">
+          <strong>Clear space &amp; minimum size</strong>
+          <p>Clear space = 1.5X around the Primary Logotype (X = width of the letter "I"). Minimum height: 0.4cm for Primary Logotype, 0.2cm for Secondary Logotype — switch to Secondary below 0.4cm. Symbol clear space = 0.5× its own size, min height 0.4cm.</p>
+        </div>
+        <div class="rule-card">
+          <strong>3 color modes</strong>
+          <p>Color Positive (Soil Black) on light backgrounds. Color Negative (Warm Neutral) on dark backgrounds. Grayscale (black or white only) for 1-color print.</p>
+        </div>
+        <div class="rule-card">
+          <strong>Symbol meaning</strong>
+          <p>Plant (ingredients &amp; sustainability) + Water (the product itself) + Heart (honesty and care) — the three combine to represent the brand's promise.</p>
+        </div>
+        <div class="rule-card">
+          <strong>Don't</strong>
+          <ul>
+            <li>Recolor outside approved modes</li>
+            <li>Rotate, distort, or outline it</li>
+            <li>Add shadows or effects</li>
+            <li>Place on low-contrast backgrounds</li>
+            <li>Alter the typeface or structure</li>
+            <li>Print an unapproved tagline</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="tokens">
+    <div class="container">
+      <h2>04 — CSS Design Tokens</h2>
+      <p class="section-note">Copy-paste ready. Corrects the earlier scraped file, which had aliased the cream background to plain white and used an unofficial green.</p>
+      <pre>:root{
+  /* Core */
+  --vgl-warm-neutral: #F7F1E3;
+  --vgl-soil-black:   #000000;
+  --vgl-veggie-green: #0E2517;
+
+  /* Supporting — Tint / Pure / Tone */
+  --vgl-blue-tint:#AFDCEB;   --vgl-blue-pure:#82CDE6;   --vgl-blue-tone:#5ABEDC;
+  --vgl-green-tint:#C3D7A5;  --vgl-green-pure:#73C378;  --vgl-green-tone:#87B978;
+  --vgl-yellow-tint:#FFDC91; --vgl-yellow-pure:#FACD55; --vgl-yellow-tone:#FFC300;
+  --vgl-pink-tint:#F5CDD2;   --vgl-pink-pure:#F5A5B4;   --vgl-pink-tone:#F07DA0;
+  --vgl-red-tint:#FAB9A0;    --vgl-red-pure:#F58773;    --vgl-red-tone:#EB6446;
+
+  /* Fonts — replace licensed placeholders with real files when available */
+  --font-display-en: "PP Woodland", "Fraunces", Georgia, serif;
+  --font-accent-en:  "TT Drugs", "Archivo Black", sans-serif;
+  --font-body-en:    "Work Sans", Arial, sans-serif;
+  --font-display-th: "Kulachat Serif", "Noto Serif Thai", serif;
+  --font-body-th:    "Prompt", sans-serif;
+  --font-small-th:   "Bai Jamjuree", sans-serif;
+}</pre>
+    </div>
+  </section>
+
+  <section id="components" style="border-bottom:none">
+    <div class="container">
+      <h2>05 — Component Examples</h2>
+      <p class="section-note">Built from the tokens above, on the correct Warm Neutral background (not white).</p>
+      <div class="comp-row">
+        <button class="btn btn-primary">SHOP NOW</button>
+        <button class="btn btn-secondary">LEARN MORE</button>
+        <span class="pill">YOUR BETTER-MORE</span>
+      </div>
+      <div class="comp-row">
+        <input class="input" type="email" placeholder="Email address">
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="container">
+    <p><strong>Source:</strong> 210219_VGL_Brand Guidelines.pdf (official CI, Veggiology Drive &gt; 02-CI). This is a condensed dev reference only — verify against the source PDF for packaging, print, or any use outside the web app.</p>
+  </div>
+</footer>
+
+</body>
+</html>
