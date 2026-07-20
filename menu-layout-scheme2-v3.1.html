@@ -136,18 +136,19 @@
   .theme-block-head .desc{font-family:var(--font-ui-medium);font-size:12px;color:rgba(0,0,0,.55)}
   .theme-items{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
   .theme-card{position:relative;background:transparent;border:none;border-radius:0;padding:0;display:block}
-  .theme-card .stock-dot{position:absolute;top:12px;left:12px;width:7px;height:7px;border-radius:0;background:#3F8C4A;z-index:1}
+  .theme-card .stock-dot{display:none}
   /* No hard-edged photo box: a soft radial mask fades each photo into the section's own
-     background color instead of showing its own rectangular backdrop, so there's no "frame". */
+     background color instead of showing its own rectangular backdrop, so there's no "frame".
+     Photo is sized down and centered within its cell so it reads smaller than the name/price. */
   .theme-card .photo-mark{
-    width:100%;aspect-ratio:2/3;margin:0 0 8px;background:transparent;border-radius:0;
+    width:68%;aspect-ratio:2/3;margin:0 auto 10px;background:transparent;border-radius:0;
     -webkit-mask-image:radial-gradient(ellipse 72% 68% at center,#000 58%,transparent 100%);
     mask-image:radial-gradient(ellipse 72% 68% at center,#000 58%,transparent 100%);
   }
-  .theme-card .row{display:flex;justify-content:space-between;align-items:baseline;padding-top:0;border-top:none}
-  .theme-card .item-name{font-size:14px;text-align:left;color:var(--vgl-black);margin:0}
+  .theme-card .row{display:flex;justify-content:flex-start;align-items:baseline;gap:10px;padding-top:0;border-top:none}
+  .theme-card .item-name{font-size:17px;font-weight:800;text-align:left;color:var(--vgl-black);margin:0}
   .theme-card .item-cat{display:none}
-  .theme-card .price{color:var(--vgl-black)}
+  .theme-card .price{color:var(--vgl-black);font-size:17px}
 
   .menu{padding:56px 0 90px;background:var(--vgl-off-white)}
   .menu-head{margin-bottom:36px}
@@ -195,6 +196,13 @@
   .modal{background:var(--vgl-off-white);border-radius:0;max-width:520px;width:100%;max-height:88vh;overflow-y:auto;position:relative}
   .modal-close{position:absolute;top:14px;right:14px;width:32px;height:32px;border-radius:0;border:1px solid var(--vgl-hairline);background:var(--vgl-card);font-size:18px;line-height:1;cursor:pointer;color:var(--vgl-black);z-index:2}
   .modal-photo{width:100%;aspect-ratio:1/1;background:#EFE7D4;display:flex;align-items:center;justify-content:center;font-family:var(--font-ui-medium);font-size:12px;letter-spacing:.1em;color:#a8a7a1;border-radius:0}
+  /* Cold Pressed items open in the same portrait ratio + edge-fade + theme color as their grid card. */
+  .modal-photo.cp-photo{
+    aspect-ratio:2/3;display:block;padding:26px;
+    -webkit-mask-image:radial-gradient(ellipse 72% 68% at center,#000 58%,transparent 100%);
+    mask-image:radial-gradient(ellipse 72% 68% at center,#000 58%,transparent 100%);
+  }
+  .modal-photo.cp-photo img{width:100%;height:100%;object-fit:contain}
   .photo img,.photo-mark img,.modal-photo img{width:100%;height:100%;object-fit:cover;display:block}
   .modal-body{padding:22px 24px 28px}
   .modal-cat{font-family:var(--font-ui-medium);font-weight:500;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--vgl-grey);margin:0 0 4px}
@@ -669,7 +677,50 @@
       "sous-vide-japanese-miso-mackerel-with-quinoa-and-grilled-vegetable-salad": "images/sousvide-japanese-miso-mackerel-with-quinoa-and-grilled-vegetable-salad.webp",
       "sriracha-shakshuka-baked-eggs-with-homemade-sausage": "images/sriracha-shakshuka-baked-eggs-with-homemade-sausage.webp",
       "waldorf-salad": "images/waldorf-salad.webp",
-      "wild-saba-teriyaki-with-rainbow-quinoa": "images/wild-saba-teriyaki-with-rainbow-quinoa.webp"
+      "wild-saba-teriyaki-with-rainbow-quinoa": "images/wild-saba-teriyaki-with-rainbow-quinoa.webp",
+      "level-up": "images-coldpressed/ChatGPT%20Image%20Jul%2020%2C%202026%2C%2002_39_26%20PM.png",
+      "pra-chan": "images-coldpressed/ChatGPT%20Image%20Jul%2020%2C%202026%2C%2002_39_30%20PM.png",
+      "happy-cells": "images-coldpressed/ChatGPT%20Image%20Jul%2020%2C%202026%2C%2002_39_35%20PM.png",
+      "tummy-buddy": "images-coldpressed/ChatGPT%20Image%20Jul%2020%2C%202026%2C%2002_39_26%20PM.png",
+      "c-force": "images-coldpressed/ChatGPT%20Image%20Jul%2020%2C%202026%2C%2002_39_30%20PM.png",
+      "coco-snow": "images-coldpressed/ChatGPT%20Image%20Jul%2020%2C%202026%2C%2002_39_35%20PM.png",
+      "glow": "images-coldpressed/ChatGPT%20Image%20Jul%2020%2C%202026%2C%2002_39_26%20PM.png",
+      "the-hope": "images-coldpressed/ChatGPT%20Image%20Jul%2020%2C%202026%2C%2002_39_30%20PM.png",
+      "be-kind": "images-coldpressed/ChatGPT%20Image%20Jul%2020%2C%202026%2C%2002_39_35%20PM.png",
+      "neon-neuron": "images-coldpressed/ChatGPT%20Image%20Jul%2020%2C%202026%2C%2002_39_26%20PM.png",
+      "conscious-love": "images-coldpressed/ChatGPT%20Image%20Jul%2020%2C%202026%2C%2002_39_30%20PM.png",
+      "symphony": "images-coldpressed/ChatGPT%20Image%20Jul%2020%2C%202026%2C%2002_39_35%20PM.png",
+      "starry-bright": "images-coldpressed/ChatGPT%20Image%20Jul%2020%2C%202026%2C%2002_39_26%20PM.png",
+      "humble-warrior": "images-coldpressed/ChatGPT%20Image%20Jul%2020%2C%202026%2C%2002_39_30%20PM.png",
+      "gravity-green": "images-coldpressed/ChatGPT%20Image%20Jul%2020%2C%202026%2C%2002_39_35%20PM.png",
+      "the-greenlaxy": "images-coldpressed/ChatGPT%20Image%20Jul%2020%2C%202026%2C%2002_39_26%20PM.png",
+      "mini-oasis": "images-coldpressed/ChatGPT%20Image%20Jul%2020%2C%202026%2C%2002_39_30%20PM.png",
+      "skin-dive": "images-coldpressed/ChatGPT%20Image%20Jul%2020%2C%202026%2C%2002_39_35%20PM.png",
+      "root-matters": "images-coldpressed/ChatGPT%20Image%20Jul%2020%2C%202026%2C%2002_39_26%20PM.png",
+      "antidote": "images-coldpressed/ChatGPT%20Image%20Jul%2020%2C%202026%2C%2002_39_30%20PM.png",
+      "balanced": "images-coldpressed/ChatGPT%20Image%20Jul%2020%2C%202026%2C%2002_39_35%20PM.png",
+      "adam-and-leaf": "images-coldpressed/ChatGPT%20Image%20Jul%2020%2C%202026%2C%2002_39_26%20PM.png",
+      "awaken": "images-coldpressed/ChatGPT%20Image%20Jul%2020%2C%202026%2C%2002_39_30%20PM.png",
+      "lean-green": "images-coldpressed/ChatGPT%20Image%20Jul%2020%2C%202026%2C%2002_39_35%20PM.png",
+      "the-3-milkyteers": "images-coldpressed/ChatGPT%20Image%20Jul%2020%2C%202026%2C%2002_39_26%20PM.png",
+      "unicorn-milk": "images-coldpressed/ChatGPT%20Image%20Jul%2020%2C%202026%2C%2002_39_30%20PM.png",
+      "clouds-milk": "images-coldpressed/ChatGPT%20Image%20Jul%2020%2C%202026%2C%2002_39_35%20PM.png",
+      "mermaid": "images-coldpressed/ChatGPT%20Image%20Jul%2020%2C%202026%2C%2002_39_26%20PM.png"
+    };
+
+    // Theme color per Cold Pressed item — used to tint the modal photo box to match its section.
+    const CP_COLOR = {
+      "level-up": "var(--vgl-sky)", "pra-chan": "var(--vgl-sky)", "happy-cells": "var(--vgl-sky)",
+      "tummy-buddy": "var(--vgl-sky)", "c-force": "var(--vgl-sky)", "coco-snow": "var(--vgl-sky)",
+      "glow": "var(--vgl-sky)", "the-hope": "var(--vgl-sky)",
+      "be-kind": "var(--vgl-sage)", "neon-neuron": "var(--vgl-sage)", "conscious-love": "var(--vgl-sage)",
+      "symphony": "var(--vgl-sage)", "starry-bright": "var(--vgl-sage)", "humble-warrior": "var(--vgl-sage)",
+      "gravity-green": "var(--vgl-coral)", "the-greenlaxy": "var(--vgl-coral)", "mini-oasis": "var(--vgl-coral)",
+      "skin-dive": "var(--vgl-coral)", "root-matters": "var(--vgl-coral)", "antidote": "var(--vgl-coral)",
+      "balanced": "var(--vgl-coral)", "adam-and-leaf": "var(--vgl-coral)", "awaken": "var(--vgl-coral)",
+      "lean-green": "var(--vgl-coral)",
+      "the-3-milkyteers": "var(--vgl-yellow)", "unicorn-milk": "var(--vgl-yellow)",
+      "clouds-milk": "var(--vgl-yellow)", "mermaid": "var(--vgl-yellow)"
     };
 
     const ITEMS = {
@@ -1509,6 +1560,13 @@
       document.getElementById('modalBackdrop').dataset.openSlug = slug;
       const modalPhoto = document.getElementById('modalPhoto');
       modalPhoto.innerHTML = PHOTOS[slug] ? '<img src="' + PHOTOS[slug] + '" alt="' + it.name + '" loading="lazy">' : 'PHOTO';
+      if(CP_COLOR[slug]){
+        modalPhoto.classList.add('cp-photo');
+        modalPhoto.style.background = CP_COLOR[slug];
+      } else {
+        modalPhoto.classList.remove('cp-photo');
+        modalPhoto.style.background = '';
+      }
       document.getElementById('modalCat').textContent = it.cat;
       document.getElementById('modalName').textContent = it.name;
       document.getElementById('modalPrice').textContent = it.price;
