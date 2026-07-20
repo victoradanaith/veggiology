@@ -88,13 +88,13 @@
   body{margin:0;background:var(--vgl-off-white);color:var(--vgl-black);font-family:var(--font-ui-light);font-weight:300;line-height:1.6}
   .container{max-width:var(--page-max);margin:auto;padding:0 24px}
 
-  .nav{padding:24px 0;text-align:center;border-bottom:1px solid var(--vgl-hairline);background:var(--vgl-off-white)}
-  .nav img.logo{height:40px;width:auto}
+  .nav{padding:24px 0;text-align:center;background:var(--vgl-off-white)}
+  .nav img.logo{height:62px;width:auto}
 
   .tabbar{position:sticky;top:0;z-index:55;background:var(--vgl-off-white);border-bottom:1px solid var(--vgl-hairline)}
   .tabbar-inner{max-width:var(--page-max);margin:auto;padding:14px 24px;display:flex;gap:10px}
   .tab-btn{flex:1;font-family:var(--font-accent);font-weight:800;font-size:15px;letter-spacing:.05em;text-transform:uppercase;padding:18px 22px;border-radius:0;border:1px solid var(--vgl-hairline);background:var(--vgl-card);color:var(--vgl-black);cursor:pointer;transition:background .15s,color .15s}
-  .tab-btn.active{background:var(--vgl-black);color:var(--vgl-off-white);border-color:var(--vgl-black)}
+  .tab-btn.active{background:var(--vgl-forest);color:var(--vgl-off-white);border-color:var(--vgl-forest)}
   .tab-btn:hover:not(.active){background:#EFE7D4}
 
   .tab-panel.hidden{display:none}
@@ -145,10 +145,10 @@
     -webkit-mask-image:radial-gradient(ellipse 72% 68% at center,#000 58%,transparent 100%);
     mask-image:radial-gradient(ellipse 72% 68% at center,#000 58%,transparent 100%);
   }
-  .theme-card .row{display:flex;justify-content:flex-start;align-items:baseline;gap:10px;padding-top:0;border-top:none}
-  .theme-card .item-name{font-size:17px;font-weight:800;text-align:left;color:var(--vgl-black);margin:0}
+  .theme-card .row{display:flex;flex-direction:column;align-items:center;gap:3px;padding-top:0;border-top:none}
+  .theme-card .item-name{font-size:17px;font-weight:800;text-align:center;color:var(--vgl-forest);margin:0}
   .theme-card .item-cat{display:none}
-  .theme-card .price{color:var(--vgl-black);font-size:17px}
+  .theme-card .price{color:var(--vgl-forest);font-size:17px;text-align:center}
 
   .menu{padding:56px 0 90px;background:var(--vgl-off-white)}
   .menu-head{margin-bottom:36px}
@@ -195,14 +195,8 @@
   .modal-backdrop.open{display:flex}
   .modal{background:var(--vgl-off-white);border-radius:0;max-width:520px;width:100%;max-height:88vh;overflow-y:auto;position:relative}
   .modal-close{position:absolute;top:14px;right:14px;width:32px;height:32px;border-radius:0;border:1px solid var(--vgl-hairline);background:var(--vgl-card);font-size:18px;line-height:1;cursor:pointer;color:var(--vgl-black);z-index:2}
+  /* Every item — Cold Pressed included — opens the same way: square photo, off-white background. */
   .modal-photo{width:100%;aspect-ratio:1/1;background:#EFE7D4;display:flex;align-items:center;justify-content:center;font-family:var(--font-ui-medium);font-size:12px;letter-spacing:.1em;color:#a8a7a1;border-radius:0}
-  /* Cold Pressed items open in the same portrait ratio + edge-fade + theme color as their grid card. */
-  .modal-photo.cp-photo{
-    aspect-ratio:2/3;display:block;padding:26px;
-    -webkit-mask-image:radial-gradient(ellipse 72% 68% at center,#000 58%,transparent 100%);
-    mask-image:radial-gradient(ellipse 72% 68% at center,#000 58%,transparent 100%);
-  }
-  .modal-photo.cp-photo img{width:100%;height:100%;object-fit:contain}
   .photo img,.photo-mark img,.modal-photo img{width:100%;height:100%;object-fit:cover;display:block}
   .modal-body{padding:22px 24px 28px}
   .modal-cat{font-family:var(--font-ui-medium);font-weight:500;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--vgl-grey);margin:0 0 4px}
@@ -706,21 +700,6 @@
       "unicorn-milk": "images-coldpressed/ChatGPT%20Image%20Jul%2020%2C%202026%2C%2002_39_30%20PM.png",
       "clouds-milk": "images-coldpressed/ChatGPT%20Image%20Jul%2020%2C%202026%2C%2002_39_35%20PM.png",
       "mermaid": "images-coldpressed/ChatGPT%20Image%20Jul%2020%2C%202026%2C%2002_39_26%20PM.png"
-    };
-
-    // Theme color per Cold Pressed item — used to tint the modal photo box to match its section.
-    const CP_COLOR = {
-      "level-up": "var(--vgl-sky)", "pra-chan": "var(--vgl-sky)", "happy-cells": "var(--vgl-sky)",
-      "tummy-buddy": "var(--vgl-sky)", "c-force": "var(--vgl-sky)", "coco-snow": "var(--vgl-sky)",
-      "glow": "var(--vgl-sky)", "the-hope": "var(--vgl-sky)",
-      "be-kind": "var(--vgl-sage)", "neon-neuron": "var(--vgl-sage)", "conscious-love": "var(--vgl-sage)",
-      "symphony": "var(--vgl-sage)", "starry-bright": "var(--vgl-sage)", "humble-warrior": "var(--vgl-sage)",
-      "gravity-green": "var(--vgl-coral)", "the-greenlaxy": "var(--vgl-coral)", "mini-oasis": "var(--vgl-coral)",
-      "skin-dive": "var(--vgl-coral)", "root-matters": "var(--vgl-coral)", "antidote": "var(--vgl-coral)",
-      "balanced": "var(--vgl-coral)", "adam-and-leaf": "var(--vgl-coral)", "awaken": "var(--vgl-coral)",
-      "lean-green": "var(--vgl-coral)",
-      "the-3-milkyteers": "var(--vgl-yellow)", "unicorn-milk": "var(--vgl-yellow)",
-      "clouds-milk": "var(--vgl-yellow)", "mermaid": "var(--vgl-yellow)"
     };
 
     const ITEMS = {
@@ -1560,13 +1539,6 @@
       document.getElementById('modalBackdrop').dataset.openSlug = slug;
       const modalPhoto = document.getElementById('modalPhoto');
       modalPhoto.innerHTML = PHOTOS[slug] ? '<img src="' + PHOTOS[slug] + '" alt="' + it.name + '" loading="lazy">' : 'PHOTO';
-      if(CP_COLOR[slug]){
-        modalPhoto.classList.add('cp-photo');
-        modalPhoto.style.background = CP_COLOR[slug];
-      } else {
-        modalPhoto.classList.remove('cp-photo');
-        modalPhoto.style.background = '';
-      }
       document.getElementById('modalCat').textContent = it.cat;
       document.getElementById('modalName').textContent = it.name;
       document.getElementById('modalPrice').textContent = it.price;
